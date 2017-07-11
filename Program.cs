@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -12,9 +14,9 @@ using System.Xml;
 namespace Disrupt.FCBastard
 {
     using HashLookup = Dictionary<int, string>;
-    using TypeLookup = SortedDictionary<string, AttributeType>;
+    using TypeLookup = Dictionary<int, AttributeType>;
 
-    enum AttributeType
+    public enum AttributeType
     {
         Reserved,
 
@@ -35,63 +37,75 @@ namespace Disrupt.FCBastard
         String,
         StringHash,
 
+        Vector2,
         Vector3,
         Vector4,
     }
 
-    class Program
+    public static class StringHasher
     {
-        static readonly MagicNumber FCBMagic = "nbCF";
+        static HashLookup m_lookup = new HashLookup();
         
-        static readonly int LibraryType = 0x4005;
-        static int indentLevel = 0;
-        
-        static int ReadOffset(BinaryStream bs)
+        public static void AddToLookup(int hash, string value)
         {
-            var buffer = new byte[4];
-            bs.Read(buffer, 0, 3);
-
-            return BitConverter.ToInt32(buffer, 0);
-        }
-        
-        public static HashLookup LookupTable;
-
-        static void PrepareLookupTable()
-        {
-            if (LookupTable == null)
-            {
-                LookupTable = new HashLookup();
-
-                var lookups = File.ReadAllLines(Path.Combine(Environment.CurrentDirectory, "strings.txt"));
-                var lookupsFix = new List<String>();
-                
-                foreach (var lookup in lookups)
-                {
-                    var bytes = Encoding.UTF8.GetBytes(lookup);
-                    var hash = (int)Memory.GetCRC32(bytes);
-
-                    if (!LookupTable.ContainsKey(hash))
-                    {
-                        lookupsFix.Add(lookup);
-                        LookupTable.Add(hash, lookup);
-                    }
-                }
-
-                File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, "gen_strings.txt"), lookupsFix);
-            }
+            if (!m_lookup.ContainsKey(hash))
+                m_lookup.Add(hash, value);
         }
 
-        static string GetStringByHash(int hash)
+        public static void AddToLookup(string value)
         {
-            PrepareLookupTable();
+            var hash = GetHash(value);
+            AddToLookup(hash, value);
+        }
 
-            if (LookupTable.ContainsKey(hash))
-                return LookupTable[hash];
+        public static int GetHash(string value)
+        {
+            if (value == null)
+                return 0;
+
+            var bytes = Encoding.UTF8.GetBytes(value);
+            var hash = (int)Memory.GetCRC32(bytes);
+
+            return hash;
+        }
+
+        public static bool CanResolveHash(int hash)
+        {
+            return m_lookup.ContainsKey(hash);
+        }
+
+        public static string ResolveHash(int hash)
+        {
+            if (CanResolveHash(hash))
+                return m_lookup[hash];
 
             return null;
         }
 
-        static string Bytes2HexString(byte[] bytes)
+        public static void AddLookupsFile(string lookupFile)
+        {
+            var lines = File.ReadAllLines(lookupFile);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var line = lines[i];
+
+                // skip empty lines
+                if (line.Length == 0)
+                    continue;
+
+                // skip first line if it's a comment
+                if ((i == 0) && line[0] == '#')
+                    continue;
+
+                AddToLookup(line);
+            }       
+        }
+    }
+    
+    public static class Utils
+    {
+        public static string Bytes2HexString(byte[] bytes)
         {
             var str = "";
 
@@ -106,18 +120,338 @@ namespace Disrupt.FCBastard
             return str;
         }
 
-        static string IndentString(string str)
+        public static AttributeType GetAttributeTypeBestGuess(int size)
         {
-            var sb = new StringBuilder();
+            switch (size)
+            {
+            case 1:
+                return AttributeType.Byte;
+            case 2:
+                return AttributeType.Int16;
+            case 4:
+                return AttributeType.Int32;
+            case 12:
+                return AttributeType.Vector3;
+            case 16:
+                return AttributeType.Vector4;
+            }
 
-            for (int i = 0; i < indentLevel; i++)
-                sb.Append("\t");
-
-            sb.Append(str);
-
-            return sb.ToString();
+            return AttributeType.BinHex;
         }
 
+        public static int GetAttributeTypeSize(AttributeType type)
+        {
+            switch (type)
+            {
+            case AttributeType.Bool:
+            case AttributeType.Byte:
+                return 1;
+
+            case AttributeType.Int16:
+            case AttributeType.UInt16:
+                return 2;
+
+            case AttributeType.Int32:
+            case AttributeType.UInt32:
+            case AttributeType.Float:
+            case AttributeType.StringHash:
+                return 4;
+
+            case AttributeType.Vector3:
+                return 12;
+
+            case AttributeType.Vector4:
+                return 16;
+            }
+
+            // flexible size
+            return -1;
+        }
+
+        public static string GetAttributeTypeDefault(AttributeType type)
+        {
+            switch (type)
+            {
+            case AttributeType.Bool:
+            case AttributeType.Byte:
+            case AttributeType.Int16:
+            case AttributeType.UInt16:
+            case AttributeType.Int32:
+            case AttributeType.UInt32:
+            case AttributeType.StringHash:
+                return "0";
+
+            case AttributeType.BinHex:
+            case AttributeType.String:
+                return "";
+
+            case AttributeType.Vector2:
+            case AttributeType.Vector3:
+            case AttributeType.Vector4:
+                return "[]";
+            }
+
+            return "???";
+        }
+
+        public static byte[] GetAttributeDataBuffer(byte[] buffer, AttributeType type)
+        {
+            var size = GetAttributeTypeSize(type);
+            
+            if (size == -1)
+            {
+                var len = (buffer != null) ? buffer.Length : 0;
+
+                var newBuffer = new byte[len];
+
+                // return a copy of the data if not null
+                // otherwise return an empty array
+                if (buffer != null)
+                    Array.Copy(buffer, newBuffer, buffer.Length);
+
+                return newBuffer;
+            }
+
+            var data = new byte[size];
+
+            if (buffer != null)
+            {
+                var copySize = (buffer.Length > size) ? size : buffer.Length;
+
+                Array.Copy(buffer, data, copySize);
+            }
+
+            // return a properly-sized buffer :)
+            return data;
+        }
+    }
+
+    public struct AttributeTypeValue
+    {
+        AttributeType Type;
+
+        public static implicit operator AttributeType(AttributeTypeValue typeVal)
+        {
+            return typeVal.Type;
+        }
+
+        public static AttributeTypeValue Parse(string content)
+        {
+            return new AttributeTypeValue(content);
+        }
+
+        public override string ToString()
+        {
+            return Type.ToString();
+        }
+        
+        private AttributeTypeValue(string content)
+        {
+            Type = (AttributeType)Enum.Parse(typeof(AttributeType), content);
+        }
+
+        public AttributeTypeValue(AttributeType type)
+        {
+            Type = type;
+        }
+    }
+
+    public struct AttributeData
+    {
+        byte[] Buffer;
+        AttributeType Type;
+
+        public bool IsBufferValid()
+        {
+            // obviously not...
+            if (Buffer == null)
+                return false;
+
+            var typeSize = Utils.GetAttributeTypeSize(Type);
+
+            if (typeSize == -1)
+                return (Buffer.Length != 0);
+
+            return (Buffer.Length <= typeSize);
+        }
+
+        private T ConvertTo<T>(Func<byte[], int, T> fnConvert)
+        {
+            var buffer = Utils.GetAttributeDataBuffer(Buffer, Type);
+            return fnConvert(buffer, 0);
+        }
+
+        public byte ToByte()
+        {
+            return Utils.GetAttributeDataBuffer(Buffer, Type)[0];
+        }
+
+        public short ToInt16()
+        {
+            return ConvertTo(BitConverter.ToInt16);
+        }
+
+        public ushort ToUInt16()
+        {
+            return ConvertTo(BitConverter.ToUInt16);
+        }
+
+        public int ToInt32()
+        {
+            return ConvertTo(BitConverter.ToInt32);
+        }
+
+        public uint ToUInt32()
+        {
+            return ConvertTo(BitConverter.ToUInt32);
+        }
+
+        public float ToFloat()
+        {
+            return ConvertTo(BitConverter.ToSingle);
+        }
+        
+        public string ToHashString()
+        {
+            var value = ToInt32();
+            var hashStr = StringHasher.ResolveHash(value);
+
+            return (hashStr != null) ? $"$({hashStr})" : $"_{value:X8}";
+        }
+
+        public string ToHexString()
+        {
+            return Utils.Bytes2HexString(Buffer);
+        }
+
+        public override string ToString()
+        {
+            if (!IsBufferValid())
+                return Utils.GetAttributeTypeDefault(Type);
+
+            // neatly retrieve the type :)
+            switch (Type)
+            {
+            case AttributeType.Bool:
+            case AttributeType.Byte:
+                {
+                    var value = ToByte();
+                    return value.ToString();
+                }
+            case AttributeType.Int16:
+                {
+                    var value = ToInt16();
+                    return value.ToString();
+                }
+            case AttributeType.UInt16:
+                {
+                    var value = ToUInt16();
+                    return value.ToString();
+                }
+            case AttributeType.Int32:
+                {
+                    var value = ToInt32();
+                    return value.ToString();
+                }
+            case AttributeType.UInt32:
+                {
+                    var value = ToUInt32();
+                    return value.ToString();
+                }
+            case AttributeType.Float:
+                {
+                    var value = ToFloat();
+                    return value.ToString();
+                }
+            case AttributeType.String:
+                {
+                    var buffer = Utils.GetAttributeDataBuffer(Buffer, Type);
+                    var value = "";
+
+                    for (int idx = 0; idx < (buffer.Length - 1); idx++)
+                    {
+                        var c = (char)buffer[idx];
+
+                        if (c != 0)
+                            value += c;
+                    }
+
+                    return value;
+                }
+            case AttributeType.Vector2:
+            case AttributeType.Vector3:
+            case AttributeType.Vector4:
+                {
+                    var buffer = Utils.GetAttributeDataBuffer(Buffer, Type);
+
+                    var x = BitConverter.ToSingle(buffer, 0);
+                    var y = BitConverter.ToSingle(buffer, 4);
+
+                    switch (Type)
+                    {
+                    case AttributeType.Vector3:
+                    case AttributeType.Vector4:
+                        {
+                            var z = BitConverter.ToSingle(buffer, 8);
+
+                            if (Type == AttributeType.Vector4)
+                            {
+                                var w = BitConverter.ToSingle(buffer, 12);
+
+                                return $"[{x},{y},{z},{w}]";
+                            }
+                            else
+                            {
+                                return $"[{x},{y},{z}]";
+                            }
+                        }
+                    }
+
+                    return $"[{x},{y}]";
+                }
+            case AttributeType.StringHash:
+                {
+                    return ToHashString();   
+                }
+            }
+
+            return ToHexString();
+        }
+        
+        public AttributeData(byte[] buffer, AttributeType type = AttributeType.BinHex)
+        {
+            Buffer = buffer;
+            Type = type;
+        }
+    }
+    
+    class Program
+    {
+        static readonly MagicNumber FCBMagic = "nbCF";
+        
+        static readonly int LibraryType = 0x4005;
+
+        static List<int> m_hints = new List<int>();
+
+        static void WriteUniqueHint(string value)
+        {
+            var hash = StringHasher.GetHash(value);
+
+            if (!m_hints.Contains(hash))
+            {
+                m_hints.Add(hash);
+                Console.WriteLine(value);
+            }
+        }
+        
+        static int ReadOffset(BinaryStream bs)
+        {
+            var buffer = new byte[4];
+            bs.Read(buffer, 0, 3);
+
+            return BitConverter.ToInt32(buffer, 0);
+        }
+        
         static int[] ReadAttributeHashes(BinaryStream bs, out int ptr)
         {
             ptr = (int)bs.Position;
@@ -192,133 +526,173 @@ namespace Disrupt.FCBastard
 
             NewLineOnAttributes = true,
         });
-        
-        static TypeLookup m_attrTypes = new TypeLookup(StringComparer.Ordinal) {
-            { "Value", AttributeType.Reserved },
+
+        static XmlReaderSettings xmlAttrTypeSettings = new XmlReaderSettings() {
+            ConformanceLevel                = ConformanceLevel.Document,
+            DtdProcessing                   = DtdProcessing.Parse,
+            IgnoreComments                  = true,
+            IgnoreProcessingInstructions    = true,
+            IgnoreWhitespace                = true,
         };
+        
+        static TypeLookup m_attrTypes = new TypeLookup();
+        static TypeLookup m_userTypes = new TypeLookup();
 
-static void DumpTypesLookup(string file)
+        static readonly string DefaultTypesName = "types.default.xml";
+        static readonly string UserTypesName    = "types.user.xml";
+        
+        static TypeLookup GetAttributesLookup(string name)
         {
-            var xmlDoc = new XmlDocument();
-            var rootElem = xmlDoc.CreateElement("AttributeTypes");
-            
-            var types = m_attrTypes.OrderBy(kv => {
-                // forcefully put hashes at the end
-                // kinda hacky but should work fine
-                if (kv.Key[0] == '_')
-                    return '~' + kv.Key;
-
-                return kv.Key;
-            }, StringComparer.Ordinal);
-
-            foreach (var type in types)
+            switch (name)
             {
-                var elem = xmlDoc.CreateElement("Attribute");
-
-                elem.SetAttribute("Name", type.Key);
-                elem.SetAttribute("Type", type.Value.ToString());
-
-                rootElem.AppendChild(elem);
+            case "UserTypes":
+                return m_userTypes;
+            case "VerifiedTypes":
+                return m_attrTypes;
             }
-
-            xmlDoc.AppendChild(rootElem);
-
-            using (var xmlFile = XmlWriter.Create(file, new XmlWriterSettings() { Indent = true }))
-            {
-                xmlDoc.WriteTo(xmlFile);
-            }
+            return null;
         }
 
-        static bool IsAttributeTypeKnown(string name)
+        static bool IsAttributeTypeKnown(int hash)
         {
-            return m_attrTypes.ContainsKey(name);
+            return (m_attrTypes.ContainsKey(hash) || m_userTypes.ContainsKey(hash));
         }
 
-        static AttributeType GetAttributeType(string name)
+        static AttributeType GetAttributeType(int hash)
         {
-            if (m_attrTypes.ContainsKey(name))
-                return m_attrTypes[name];
+            if (m_attrTypes.ContainsKey(hash))
+                return m_attrTypes[hash];
+            if (m_userTypes.ContainsKey(hash))
+                return m_userTypes[hash];
 
             return AttributeType.BinHex;
         }
 
-        static int GetAttributeTypeSize(AttributeType type)
-        {
-            switch (type)
-            {
-            case AttributeType.Bool:
-            case AttributeType.Byte:
-                return 1;
-
-            case AttributeType.Int16:
-                return 2;
-
-            case AttributeType.Int32:
-            case AttributeType.Float:
-            case AttributeType.StringHash:
-                return 4;
-
-            case AttributeType.Vector3:
-                return 12;
-
-            case AttributeType.Vector4:
-                return 16;
-            }
-
-            // flexible size
-            return -1;
-        }
-
-        static string GetAttributeTypeDefault(AttributeType type)
-        {
-            switch (type)
-            {
-            case AttributeType.Bool:
-            case AttributeType.Byte:
-            case AttributeType.Int16:
-            case AttributeType.Int32:
-            case AttributeType.StringHash:
-                return "0";
-            }
-
-            return "";
-        }
-
-        static bool IsBufferPossiblyAttribute(byte[] buffer, AttributeType type)
-        {
-            // obviously not...
-            if (buffer == null)
-                return false;
-
-            var typeSize = GetAttributeTypeSize(type);
-            
-            if (typeSize == -1)
-                return (buffer.Length != 0);
-
-            return (buffer.Length == typeSize);
-        }
-        
         static void RegisterAttributeType(string name, AttributeType type)
         {
-            if (!m_attrTypes.ContainsKey(name))
-                m_attrTypes.Add(name, type);
+            var hash = StringHasher.GetHash(name);
+
+            if (!m_userTypes.ContainsKey(hash))
+                m_userTypes.Add(hash, type);
+        }
+
+        static void LoadAttributeTypesXml(string xmlName)
+        {
+            var file = Path.Combine(Environment.CurrentDirectory, xmlName);
+
+            using (var fs = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var xml = XmlReader.Create(fs, xmlAttrTypeSettings))
+            {
+                if (!xml.ReadToFollowing("AttributeTypes"))
+                    throw new XmlException("Attribute types data corrupted!!");
+
+                var kind = xml.GetAttribute("Kind");
+                var lookup = GetAttributesLookup(kind);
+
+                if (lookup == null)
+                    throw new XmlException("Cannot load attribute types due to unknown 'Kind' parameter!");
+
+                var groupType = AttributeType.BinHex;
+                var inGroup = false;
+
+                while (xml.Read())
+                {
+                    switch (xml.Name)
+                    {
+                    case "AttributeGroup":
+                        {
+                            // reset current group type
+                            if (inGroup)
+                                groupType = AttributeType.BinHex;
+                            
+                            var type = xml.GetAttribute("Type");
+
+                            if (type != null)
+                                groupType = AttributeTypeValue.Parse(xml.GetAttribute("Type"));
+
+                            inGroup = true;
+                        } continue;
+                    case "Attribute":
+                        {
+                            var name = xml.GetAttribute("Name");
+                            var hash = xml.GetAttribute("Hash");
+                            var type = xml.GetAttribute("Type");
+
+                            var attrType = AttributeType.BinHex;
+                            var attrHash = (hash != null) ? int.Parse(hash, NumberStyles.HexNumber) : -1;
+
+                            if (inGroup)
+                                attrType = groupType;
+                            if (type != null)
+                                attrType = AttributeTypeValue.Parse(type);
+
+                            if (name != null)
+                            {
+                                if (attrHash != -1)
+                                {
+                                    // add manual lookup
+                                    StringHasher.AddToLookup(attrHash, name);
+                                }
+                                else
+                                {
+                                    attrHash = StringHasher.GetHash(name);
+
+                                    // try adding this to the lookup
+                                    if (!StringHasher.CanResolveHash(attrHash))
+                                    {
+                                        Console.WriteLine($"- Adding '{name}' to lookup");
+                                        StringHasher.AddToLookup(name);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // attribute can't be assigned to anything, just skip it
+                                if (attrHash == -1)
+                                    continue;
+
+                                var canResolve = StringHasher.CanResolveHash(attrHash);
+
+                                name = (canResolve) ? StringHasher.ResolveHash(attrHash) : $"_{attrHash:X8}";
+                                
+                                if (canResolve)
+                                {
+                                    if (IsAttributeTypeKnown(attrHash))
+                                    {
+                                        var knownType = GetAttributeType(attrHash);
+
+                                        WriteUniqueHint($"<Attribute Hash=\"{attrHash:X8}\" Type=\"{attrType.ToString()}\" /> <!-- EqualTo --> <Attribute Name=\"{name}\" Type=\"{knownType.ToString()}\" />");
+                                    }
+                                    else
+                                    {
+                                        WriteUniqueHint($"<Attribute Hash=\"{attrHash:X8}\" Type=\"{attrType.ToString()}\" /> <!-- CanEqual --> <Attribute Name=\"{name}\" Type=\"{attrType.ToString()}\" />");
+                                    }
+                                }
+                            }
+                            
+                            if (!lookup.ContainsKey(attrHash))
+                                lookup.Add(attrHash, attrType);
+                        } continue;
+                    }
+                } 
+            }
         }
         
         static void ReadEntry(BinaryStream bs/*, int level*/)
         {
             var ptrA = (int)bs.Position;
             
-            var n1c = bs.ReadByte();
+            var nChildren = bs.ReadByte();
 
-            if (n1c >= 254)
-                n1c = ReadOffset(bs);
-
-            var ptrB = (int)bs.Position;
-            var hash = bs.ReadInt32();
+            // not actually an offset,
+            // but rather a tri-byte (because there's so many children)
+            if (nChildren >= 254)
+                nChildren = ReadOffset(bs);
             
+            var hash = bs.ReadInt32();
             var size = bs.ReadInt16();
 
-            var name = GetStringByHash(hash);
+            var name = StringHasher.ResolveHash(hash);
 
             if (name == null)
                 name = $"_{hash:X6}";
@@ -337,239 +711,53 @@ static void DumpTypesLookup(string file)
                 
                 for (int i = 0; i < attrs.Length; i++)
                 {
-                    var attr = attrs[i];
+                    var attrHash = attrs[i];
 
-                    var attrName = GetStringByHash(attr);
-                    var buffer = ReadAttribute(bs);
-                    
+                    var attrName = StringHasher.ResolveHash(attrHash);
+                    var attrType = GetAttributeType(attrHash);
+
+                    var isResolved = (attrName != null);
+
                     // cannot be null or contain spaces
-                    if (attrName == null || attrName.Contains(" "))
-                        attrName = $"_{attr:X8}";
-                    
-                    var attrValueStr = "";
-                    var attrType = GetAttributeType(attrName);
-
-                    var isUnknown = (attrType == AttributeType.BinHex);
-
-                    if (isUnknown)
+                    if (!isResolved || attrName.Contains(" "))
                     {
-                        // HACK HACK HACK!
-                        if (attrName.Contains("Name") || (buffer.Length > 4))
-                        {
-                            if ((buffer.Length > 1) && (buffer.Last() == '\0'))
-                            {
-                                attrType = AttributeType.String;
-                                isUnknown = false;
-
-                                for (int idx = 0; idx < (buffer.Length - 1); idx++)
-                                {
-                                    var c = (char)buffer[idx];
-
-                                    if (c < 0x9 || (c > 0xD && c < 0x20) || c > 0x7F)
-                                    {
-                                        attrType = AttributeType.BinHex;
-                                        isUnknown = true;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        attrValueStr += c;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (isUnknown)
-                        {
-                            // boolean?
-                            if ((buffer.Length <= 1) && attrName[0] == 'b')
-                            {
-                                attrType = AttributeType.Bool;
-                                isUnknown = false;
-
-                                var value = (buffer.Length == 1) ? buffer[0] : 0;
-                                attrValueStr = value.ToString();
-                            }
-
-                            // float?
-                            if ((buffer.Length <= 4) && attrName[0] == 'f')
-                            {
-                                attrType = AttributeType.Float;
-                                isUnknown = false;
-
-                                var value = (buffer.Length == 4) ? BitConverter.ToSingle(buffer, 0) : 0.0f;
-                                attrValueStr = value.ToString();
-
-                                // hacks are bad, mmkay?
-                                if (attrValueStr.Contains("E") || attrValueStr.Contains("NaN"))
-                                {
-                                    attrType = AttributeType.BinHex;
-                                    isUnknown = true;
-                                }
-                            }
-
-                            // integer?
-                            if ((buffer.Length <= 4) && attrName[0] == 'i')
-                            {
-                                isUnknown = false;
-
-                                var value = 0;
-
-                                switch (buffer.Length)
-                                {
-                                case 1:
-                                    attrType = AttributeType.Byte;
-                                    value = buffer[0];
-                                    break;
-                                case 2:
-                                    attrType = AttributeType.Int16;
-                                    value = BitConverter.ToInt16(buffer, 0);
-                                    break;
-                                case 4:
-                                    attrType = AttributeType.Int32;
-                                    value = BitConverter.ToInt32(buffer, 0);
-                                    break;
-                                default:
-                                    isUnknown = true;
-                                    break;
-                                }
-
-                                if (!isUnknown)
-                                    attrValueStr = value.ToString();
-                            }
-
-                            if (isUnknown)
-                            {
-                                var iVal = 0;
-
-                                switch (buffer.Length)
-                                {
-                                case 1:
-                                    attrType = AttributeType.Byte;
-                                    isUnknown = false;
-
-                                    iVal = buffer[0];
-                                    attrValueStr = iVal.ToString();
-                                    break;
-                                case 2:
-                                    attrType = AttributeType.Int16;
-                                    isUnknown = false;
-
-                                    iVal = BitConverter.ToInt16(buffer, 0);
-                                    attrValueStr = iVal.ToString();
-                                    break;
-                                case 4:
-                                    var fVal = BitConverter.ToSingle(buffer, 0);
-                                    iVal = BitConverter.ToInt32(buffer, 0);
-
-                                    // hacky as fuck D:
-                                    if (!(fVal > 9999.9999f || fVal < -9999.9999f))
-                                    {
-                                        isUnknown = false;
-                                        attrValueStr = fVal.ToString();
-
-                                        // hacks are bad, mmkay?
-                                        if (attrValueStr.Contains("E-") || attrValueStr.Contains("NaN"))
-                                            isUnknown = true;
-
-                                        if (!isUnknown)
-                                            attrType = AttributeType.Float;
-                                    }
-
-                                    if (isUnknown)
-                                    {
-                                        attrType = AttributeType.Int32;
-                                        isUnknown = false;
-
-                                        var valueStr = GetStringByHash(iVal);
-                                        attrValueStr = (valueStr != null) ? $"$({valueStr})" : iVal.ToString();
-
-                                        if (valueStr != null)
-                                            attrType = AttributeType.StringHash;
-                                    }
-
-                                    break;
-                                }
-
-                                if (isUnknown)
-                                {
-                                    // either hex array or zero
-                                    attrValueStr = (buffer.Length != 0) ? Bytes2HexString(buffer) : "0";
-                                }
-                            }
-                        }
-
-                        // only add unique attributes we definitely resolved
-                        if (!IsAttributeTypeKnown(attrName) && (attrType != AttributeType.BinHex))
-                            RegisterAttributeType(attrName, attrType);
+                        attrName = $"_{attrHash:X8}";
                     }
-                    else
+
+                    var attrClassName = $"{name}.{attrName}";
+                    var attrClassHash = StringHasher.GetHash(attrClassName);
+
+                    if (IsAttributeTypeKnown(attrClassHash))
+                        attrType = GetAttributeType(attrClassHash);
+                    
+                    var buffer = ReadAttribute(bs);
+                    var attrValue = new AttributeData(buffer, attrType);
+
+                    if (!IsAttributeTypeKnown(attrHash))
                     {
-                        var attrMayBeType = IsBufferPossiblyAttribute(buffer, attrType);
-
-                        if (attrMayBeType)
+                        if (attrValue.IsBufferValid())
                         {
-                            // neatly retrieve the type :)
-                            switch (attrType)
+                            var guess = Utils.GetAttributeTypeBestGuess(buffer.Length);
+
+                            if (guess != AttributeType.BinHex)
                             {
-                            case AttributeType.Bool:
-                            case AttributeType.Byte:
+                                if (isResolved)
                                 {
-                                    var value = buffer[0];
-                                    attrValueStr = value.ToString();
+                                    WriteUniqueHint($"<!-- Add: --><Attribute Name=\"{attrName}\" Type=\"{guess.ToString()}\" />");
                                 }
-                                break;
-                            case AttributeType.Int16:
+                                else
                                 {
-                                    var value = BitConverter.ToInt16(buffer, 0);
-                                    attrValueStr = value.ToString();
+                                    WriteUniqueHint($"<!-- MaybeAdd: --><Attribute Hash=\"{attrHash:X8}\" Type=\"{guess.ToString()}\" />");
                                 }
-                                break;
-                            case AttributeType.Int32:
-                                {
-                                    var value = BitConverter.ToInt32(buffer, 0);
-                                    attrValueStr = value.ToString();
-                                }
-                                break;
-                            case AttributeType.Float:
-                                {
-                                    var value = BitConverter.ToSingle(buffer, 0);
-                                    attrValueStr = value.ToString();
-                                }
-                                break;
-                            case AttributeType.String:
-                                {
-                                    for (int idx = 0; idx < (buffer.Length - 1); idx++)
-                                    {
-                                        var c = (char)buffer[idx];
-
-                                        if (c != 0)
-                                            attrValueStr += c;
-                                    }
-                                }
-                                break;
-                            case AttributeType.StringHash:
-                                {
-                                    var value = BitConverter.ToInt32(buffer, 0);
-                                    var hashStr = GetStringByHash(value);
-
-                                    attrValueStr = (hashStr != null) ? $"$({hashStr})" : $"_{value:X8}";
-                                }
-                                break;
-                            default:
-                                {
-                                    attrValueStr = Bytes2HexString(buffer);
-                                }
-                                break;
                             }
                         }
                         else
                         {
-                            attrValueStr = (buffer.Length == 0) ? GetAttributeTypeDefault(attrType) : Bytes2HexString(buffer);
+                            WriteUniqueHint($"<!-- UnknownType: --><Attribute Hash=\"{attrHash:X8}\" Type=\"BinHex\" />");
                         }
                     }
-
-                    fcbLog.WriteAttributeString(attrName, attrValueStr);
+                    
+                    fcbLog.WriteAttributeString(attrName, attrValue.ToString());
                 }
             }
             else
@@ -580,10 +768,8 @@ static void DumpTypesLookup(string file)
             if (bs.Position != next)
                 throw new InvalidOperationException("You dun fucked up, son!");
             
-            //var myLevel = indentLevel++;
-            
-            /* fourth */
-            for (int n = 0; n < n1c; n++)
+            // read children
+            for (int n = 0; n < nChildren; n++)
             {
                 var nC = bs.ReadByte();
                 var isOffset = (nC == 254);
@@ -594,24 +780,19 @@ static void DumpTypesLookup(string file)
                 if (isOffset)
                 {
                     bs.Position -= (nC + 4);
-                    ReadEntry(bs/*, indentLevel*/);
+                    ReadEntry(bs);
 
                     bs.Position = (next += 4);
                 }
                 else
                 {
                     bs.Position = next;
-                    ReadEntry(bs/*, indentLevel*/);
+                    ReadEntry(bs);
 
                     next = (int)bs.Position;
                 }
             }
-
-            //--indentLevel;
-            //
-            //if ((n1c > 0) && (indentLevel == myLevel))
-            //    xmlLog.AppendLine(IndentString($"</{name}>"));
-
+            
             fcbLog.WriteEndElement();
         }
         
@@ -626,7 +807,7 @@ static void DumpTypesLookup(string file)
             });
         }
         
-        static void LoadLibrary(BinaryStream bs)
+        static void LoadLibrary(BinaryStream bs, string logFile)
         {
             var datOffset = bs.ReadInt32();
             var datCount = bs.ReadInt32();
@@ -646,10 +827,6 @@ static void DumpTypesLookup(string file)
             
             var memSize = ((count1 * 3) + count2) * 4;
             var memSizeAlign = Memory.Align(memSize, 16);
-
-            //Console.WriteLine($"({datOffset:X8})[{datCount}]");
-            //Console.WriteLine($"[{count1:X8}, {count2:X8}] : {memSize:X8} ({memSizeAlign:X8})");
-            //Console.WriteLine("-------------------");
             
             try
             {
@@ -662,18 +839,24 @@ static void DumpTypesLookup(string file)
             }
             finally
             {
-                Console.WriteLine(fcbBuilder.ToString());
-                DumpTypesLookup(Path.Combine(Environment.CurrentDirectory, "types.xml"));
+                File.WriteAllText(logFile, fcbBuilder.ToString());
             }
         }
         
         static void Main(string[] args)
         {
-            var filename = (args.Length > 0) ? args[0] : @"C:\Dev\Research\WD2\entitylibrary.fcb";
+            var filename = (args.Length >= 1) ? args[0] : @"C:\Dev\Research\WD2\entitylibrary.fcb";
+            var xmlFile = (args.Length >= 2) ? args[1] : Path.ChangeExtension(filename, ".xml");
+
+            StringHasher.AddLookupsFile(Path.Combine(Environment.CurrentDirectory, "strings.txt"));
+            StringHasher.AddLookupsFile(Path.Combine(Environment.CurrentDirectory, "strings.user.txt"));
+
+            LoadAttributeTypesXml(DefaultTypesName);
+            LoadAttributeTypesXml(UserTypesName);
 
             using (var bs = new BinaryStream(filename))
             {
-                LoadLibrary(bs);
+                LoadLibrary(bs, xmlFile);
             }
         }
     }
