@@ -6,11 +6,38 @@
     * Please put custom types in 'types.user.xml' as this file may be updated!
 -->
 <AttributeTypes Kind="VerifiedTypes">
+    <!-- Reserved attributes (DO NOT TOUCH!) -->
+    <AttributeGroup>
+        <Attribute Name="Name"      Type="String" />
+        <Attribute Name="Value"     Type="BinHex" />
+        <Attribute Name="Type"      Type="BinHex" />
+    </AttributeGroup>
 	<!--
 		Attributes with a valid type prefix
 		Some of these are weird, but hey...Ubisoft!
 	-->
 	<AttributeGroup Type="Bool">
+        <Attribute Name="bActivateTrailOnStart" />
+        <Attribute Name="bAlwaysUpdateBounds" />
+        <Attribute Name="bATV" />
+        <Attribute Name="bAi" />
+        <Attribute Name="bCanUseUncontrolledRCComponent" />
+        <Attribute Name="bCanAnimationBeInterrupted" />
+        <Attribute Name="bDoNetHackAntennasAnimations" />
+        <Attribute Name="bDisabledUnloadWhenActiveBreakableListIsFull" />
+        <Attribute Name="bIgnoreIngredientType" />
+        <Attribute Name="bIsInteractableInSessionJoin" />
+        <Attribute Name="bKart" />
+        <Attribute Name="bMassHackVehicle" />
+        <Attribute Name="bMassHackNPC" />
+        <Attribute Name="bMassHackIngredient" />
+        <Attribute Name="bNeedsRaycastCheckForUse" />
+        <Attribute Name="bProximitySoundsEnabled" />
+        <Attribute Name="bReverseRoll" />
+        <Attribute Name="bShouldUseSignalJammer" />
+        <Attribute Name="bUseEmergencyDispatchBehavior" />
+        <Attribute Name="bUseForRetinaScan" />
+        <Attribute Name="bUsedByMissionCharacter" />
 		<Attribute Name="bARWeapon" />
 		<Attribute Name="bActivate" />
 		<Attribute Name="bActivateByDefault" />
@@ -552,6 +579,27 @@
 		<Attribute Name="bWorldStart" />
 	</AttributeGroup>
 	<AttributeGroup Type="Float">
+        <Attribute Name="fAirBlastShakeDuration" />
+        <Attribute Name="fAirBlastShakeStrength" />
+        <Attribute Name="fAirBlastShakeAttenuationPower" />
+        <Attribute Name="fDetectionSphereRadius" />
+        <Attribute Name="fHornEffectsDuration" />
+        <Attribute Name="fIndependenceDayFXDynamicLightFadeSpeed" />
+        <Attribute Name="fIndependenceDayFXBlastHeight" />
+        <Attribute Name="fIndependenceDayFXBlastMinDelay" />
+        <Attribute Name="fIndependenceDayFXBlastRange" />
+        <Attribute Name="fIndependenceDayFXBlastMaxDelay" />
+        <Attribute Name="fIndependenceDayFXBlastHeightRange" />
+        <Attribute Name="fIndependanceDayFXDistance" />
+        <Attribute Name="fLeaveDetectionSphereHysteresis" />
+        <Attribute Name="fMinTimeBetweenSplattersForPaint" />
+        <Attribute Name="fPaintRotationRnd" />
+        <Attribute Name="fPaintShakeAttenuationPower" />
+        <Attribute Name="fPaintShakeStrength" />
+        <Attribute Name="fPaintShakeDuration" />
+        <Attribute Name="fShutdownJammerTime" />
+        <Attribute Name="fStimSearchPropagationRadius" />
+        <Attribute Name="fZ" />
 		<Attribute Name="fAIDisableRatio" />
 		<Attribute Name="fAIUnblockDelayTime" />
 		<Attribute Name="fAccelSplashBig" />
@@ -1315,6 +1363,10 @@
 		<Attribute Name="fZoneMinRadius" />
 		<Attribute Name="fZoneZOffset" />
 		<Attribute Name="fZoomFovSpeed" />
+        <Attribute Name="angPitch" />
+        <Attribute Name="angShadowInnerAngle" />
+        <Attribute Name="angShadowOuterAngle" />
+        <Attribute Name="angYaw" />
 	</AttributeGroup>
 	<AttributeGroup Type="Int32">
 		<Attribute Name="iAllowedHacksBeforeDisable" />

@@ -1,753 +1,1111 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 	User-defined attribute types
-    
-    * Composed of mostly auto-generated types courtesy of The Bastard ;)
-    * Default attributes will NOT be overriden with a user type!
-    * Don't add more than one attribute with the same name, you'll fuck everything up!
+	
+	* Composed of mostly auto-generated types courtesy of The Bastard ;)
+	* Default attributes will NOT be overriden with a user type!
+	* Don't add more than one attribute with the same name, you'll fuck everything up!
 -->
 <AttributeTypes Kind="UserTypes">
 	<!-- [dis]rupt -->
-	<Attribute Name="disLayerId"								Type="Int32" />
-	<Attribute Name="disName"									Type="Int32" />
-	<Attribute Name="disNodeName"								Type="Int32" />
+	<AttributeGroup>
+		<Attribute Name="disLayerId"									Type="Int32" />
+		<Attribute Name="disName"										Type="StringHash" />
+		<Attribute Name="disNodeName"									Type="StringHash" />
+		<Attribute Name="text_disName"									Type="String" />
+		<Attribute Name="text_disNodeName"								Type="String" />
+	</AttributeGroup>
 	
 	<!-- hid ? -->
-	<Attribute Name="hidBoneIndex"								Type="Byte" />
-	<Attribute Name="hidCanDetach"								Type="Byte" />
-	<Attribute Name="hidCanHang"								Type="Byte" />
-	<Attribute Name="hidComponentClassName"						Type="String" />
-	<Attribute Name="hidConstEntity"							Type="Byte" />
-	<Attribute Name="hidDamageStatePartIndex"					Type="Byte" />
-	<Attribute Name="hidDetailObject"							Type="Byte" />
-	<Attribute Name="hidEaseTimeInMovementCurve"				Type="Float" />
-	<Attribute Name="hidEaseTimeInMovementCurveOnEaseTimeRatio" Type="Float" />
-	<Attribute Name="hidEntityClass"							Type="StringHash" />
-	<Attribute Name="hidEventName"								Type="StringHash" />
-	<Attribute Name="hidEventType"								Type="Byte" />
-	<Attribute Name="hidFXNode"									Type="Int32" />
-	<Attribute Name="hidHasAliasName"							Type="Byte" />
-	<Attribute Name="hidIndex"									Type="Byte" />
-	<Attribute Name="hidInjected"								Type="Byte" />
-	<Attribute Name="hidLayerCount"								Type="Byte" />
-	<Attribute Name="hidLeftWheelIndex"							Type="Byte" />
-	<Attribute Name="hidLightIndex"								Type="Byte" />
-	<Attribute Name="hidLightindex"								Type="Byte" />
-	<Attribute Name="hidMaxKnotInEaseTime"						Type="Float" />
-	<Attribute Name="hidMaxKnotTime"							Type="Float" />
-	<Attribute Name="hidMeshName"								Type="StringHash" />
-	<Attribute Name="hidName"									Type="String" />
-	<Attribute Name="hidNodeName"								Type="Int32" />
-	<Attribute Name="hidNodeNameLOD0"							Type="Int32" />
-	<Attribute Name="hidNumKnots"								Type="Byte" />
-	<Attribute Name="hidParentBoneNameID"						Type="Int32" />
-	<Attribute Name="hidPartIndex"								Type="Byte" />
-	<Attribute Name="hidPoints"									Type="Float" />
-	<Attribute Name="hidResourceCount"							Type="Byte" />
-	<Attribute Name="hidRightWheelIndex"						Type="Byte" />
-	<Attribute Name="hidShape"									Type="Float" />
-	<Attribute Name="hidShapePoints"							Type="Float" />
-	<Attribute Name="hidTireDeformationIndex"					Type="Byte" />
-	<Attribute Name="hidType"									Type="StringHash" />
-	<Attribute Name="hidUseAlternateSimpleCollision"			Type="Byte" />
-	<Attribute Name="hidUseHierarchial"							Type="Byte" />
-	<Attribute Name="hidVehiclePartIndex"						Type="Byte" />
+	<AttributeGroup>
+		<Attribute Name="hidCentet"										Type="Vector3" />
+		<Attribute Name="hidCenter"										Type="Vector3" />
+		<Attribute Name="hidAngles"										Type="Vector3" />
+		<Attribute Name="hidBoneIndex"									Type="Byte" />
+		<Attribute Name="hidCanDetach"									Type="Byte" />
+		<Attribute Name="hidCanHang"									Type="Byte" />
+		<Attribute Name="hidComponentClassName"							Type="String" />
+		<Attribute Name="hidConstEntity"								Type="Byte" />
+		<Attribute Name="hidDamageStatePartIndex"						Type="Byte" />
+		<Attribute Name="hidDetailObject"								Type="Byte" />
+		<Attribute Name="hidEaseTimeInMovementCurve"					Type="Float" />
+		<Attribute Name="hidEaseTimeInMovementCurveOnEaseTimeRatio"		Type="Float" />
+		<Attribute Name="hidEntityClass"								Type="StringHash" />
+		<Attribute Name="hidEventName"									Type="StringHash" />
+		<Attribute Name="hidEventType"									Type="Byte" />
+		<Attribute Name="hidFXNode"										Type="Int32" />
+		<Attribute Name="hidHasAliasName"								Type="Byte" />
+		<Attribute Name="hidIndex"										Type="Byte" />
+		<Attribute Name="hidInjected"									Type="Byte" />
+		<Attribute Name="hidLayerCount"									Type="Byte" />
+		<Attribute Name="hidLeftWheelIndex"								Type="Byte" />
+		<Attribute Name="hidLightIndex"									Type="Byte" />
+		<Attribute Name="hidLightindex"									Type="Byte" />
+		<Attribute Name="hidLightPositionOffset"						Type="Vector3" />
+		<Attribute Name="hidLightRotation"								Type="Vector3" />
+		<Attribute Name="hidMaxKnotInEaseTime"							Type="Float" />
+		<Attribute Name="hidMaxKnotTime"								Type="Float" />
+		<Attribute Name="hidMeshName"									Type="StringHash" />
+		<Attribute Name="hidName"										Type="String" />
+		<Attribute Name="hidNodeName"									Type="StringHash" />
+		<Attribute Name="hidNodeNameLOD0"								Type="Int32" />
+		<Attribute Name="hidNumKnots"									Type="Byte" />
+		<Attribute Name="hidParentBoneNameID"							Type="Int32" />
+		<Attribute Name="hidPartIndex"									Type="Byte" />
+		<Attribute Name="hidPoints"										Type="Float" />
+		<Attribute Name="hidPos"										Type="Vector3" />
+		<Attribute Name="hidPos_precise"								Type="Vector3" />
+		<Attribute Name="hidResourceCount"								Type="Byte" />
+		<Attribute Name="hidRightWheelIndex"							Type="Byte" />
+		<Attribute Name="hidShape"										Type="Float" />
+		<Attribute Name="hidShapePoints"								Type="Float" />
+		<Attribute Name="hidTireDeformationIndex"						Type="Byte" />
+		<Attribute Name="hidType"										Type="StringHash" />
+		<Attribute Name="hidUseAlternateSimpleCollision"				Type="Byte" />
+		<Attribute Name="hidUseHierarchial"								Type="Byte" />
+		<Attribute Name="hidVehiclePartIndex"							Type="Byte" />
+        
+		<Attribute Name="text_hidEntityClass"							Type="String" />
+        <Attribute Name="text_hidEventName"							    Type="String" />
+        <Attribute Name="text_hidGeometryResourceForGamePlay"           Type="String" />
+        <Attribute Name="text_hidMeshName"							    Type="String" />
+        <Attribute Name="text_hidNodeName"							    Type="String" />
+        <Attribute Name="text_hidNodeNameLOD0"							Type="String" />
+		<Attribute Name="text_hidResourceId"							Type="String" />
+        <Attribute Name="text_hidType"							        Type="String" />
+	</AttributeGroup>
 	
-	<Attribute Name="boneMovementBoneName"						Type="Int32" />
-	<Attribute Name="child"										Type="Byte" />
-	<Attribute Name="compobjstatdataStaticDataType"				Type="StringHash" />
-
-	<Attribute Name="distanceInterval"							Type="Float" />
-	<Attribute Name="driverActionMap"							Type="String" />
-	<Attribute Name="enableSpecular"							Type="Byte" />
-	<Attribute Name="entSpawnMissionTrigger"					Type="Byte" />
-
-
-	<Attribute Name="fileBoxPath"								Type="String" />
-
-
-	<Attribute Name="intensity"									Type="Int32" />
-	<Attribute Name="lightRadius"								Type="Float" />
-	<Attribute Name="meshNameID"								Type="Int32" />
+	<Attribute Name="Knot.Type"											Type="Byte" />
+	<Attribute Name="Knot.Info"											Type="Vector4" />
+	<Attribute Name="Knot.Value"										Type="Vector4" />
 	
-    <!-- good fucking lord this is one long attribute name! -->
+	<Attribute Name="Elem.Value"										Type="StringHash" />
+	
+	<Attribute Name="boneMovementBoneName"								Type="Int32" />
+	<Attribute Name="child"												Type="Byte" />
+	<Attribute Name="compobjstatdataStaticDataType"						Type="StringHash" />
+
+	<Attribute Name="distanceInterval"									Type="Float" />
+	<Attribute Name="driverActionMap"									Type="String" />
+	<Attribute Name="enableSpecular"									Type="Byte" />
+	<Attribute Name="entSpawnMissionTrigger"							Type="Byte" />
+
+    <AttributeGroup Type="String">
+        <Attribute Name="text_compobjstatdataStaticDataType" />
+        
+        <Attribute Name="text_fileModel" />
+        <Attribute Name="text_fileName" />
+        <Attribute Name="text_fileTexture" />
+        
+        <Attribute Name="text_sBoneName" />
+        
+        <Attribute Name="text_sndInitStart"	/>
+        <Attribute Name="text_sndDeinitStart" />
+        <Attribute Name="text_sndMovementStart" />
+        <Attribute Name="text_sndMovementEnd" />
+        <Attribute Name="text_sndEndGridMode" />
+        <Attribute Name="text_sndZoomingStart" />
+        <Attribute Name="text_sndZoomingEnd" />
+        <Attribute Name="text_sndStartGridMode" />
+        <Attribute Name="text_sndEndGridMode" />
+        
+        <Attribute Name="text_Value" />
+    </AttributeGroup>
+    
+    
+	<Attribute Name="fileBoxPath"										Type="String" />
+
+	<Attribute Name="intensity"											Type="Int32" />
+	<Attribute Name="lightPosition"										Type="Vector3" />
+	<Attribute Name="lightRadius"										Type="Float" />
+	<Attribute Name="meshNameID"										Type="Int32" />
+	
+	<Attribute Name="angRainFalloffAngle"								Type="Float" />
+	<Attribute Name="angRainVerticalRotation"							Type="Float" />
+	
+	<Attribute Name="iIndependanceDayFXInclusiveStartHour"				Type="BinHex" />
+	<Attribute Name="iIndependanceDayFXInclusiveEndHour"				Type="BinHex" />
+	<Attribute Name="iVariedBulletsCountIndependenceDay"				Type="BinHex" />
+	<Attribute Name="iVariedBulletsCount"								Type="BinHex" />
+	
+	<!-- good fucking lord this is one long attribute name! -->
 	<Attribute Name="missionareashapedescriptoridMissionAreaShapeDescriptorId"
-																Type="Int32" />
-																
-	<Attribute Name="nCollisionCountToRoll"						Type="Byte" />
-	<Attribute Name="nMaxAiEntity"								Type="Byte" />
-	<Attribute Name="nMaxAnchors"								Type="Byte" />
-	<Attribute Name="nMaxPeople"								Type="Byte" />
-	<Attribute Name="nMaxSparksInSingleBurst"					Type="Byte" />
-	<Attribute Name="nMaxSplattersOnScreen"						Type="Byte" />
-	<Attribute Name="nMinAiEntity"								Type="Byte" />
-	<Attribute Name="nNodesLimit"								Type="Float" />
-	<Attribute Name="nQuantity"									Type="Byte" />
-	<Attribute Name="name"										Type="Int32" />
-	<Attribute Name="olgLightGroup"								Type="Int16" />
-	<Attribute Name="passengerActionMap"						Type="String" />
-	<Attribute Name="radiusOfInfluence"							Type="Float" />
-	<Attribute Name="remoteDriverActionMap"						Type="String" />
-	<Attribute Name="remoteDriverHackingAction"					Type="Byte" />
-	<Attribute Name="sAnchorName"								Type="Int32" />
-	<Attribute Name="sAnchorPartName"							Type="Int32" />
-	<Attribute Name="sBehavior"									Type="Float" />
-	<Attribute Name="sBoneName"									Type="Int32" />
-	<Attribute Name="sBulletHitPostFxName"						Type="Int32" />
-	<Attribute Name="sBulletHitRumbleId"						Type="Int32" />
-	<Attribute Name="sCameraBoneName"							Type="String" />
-	<Attribute Name="sCameraCinemaPostFx"						Type="Int32" />
-	<Attribute Name="sCelebrationActionMap"						Type="Int32" />
-	<Attribute Name="sCinemaPostFXName"							Type="Int32" />
-	<Attribute Name="sClass"									Type="StringHash" />
-	<Attribute Name="sCollisionRumbleId"						Type="Int32" />
-	<Attribute Name="sCommandName"								Type="Byte" />
-	<Attribute Name="sCraterPartID"								Type="Int32" />
-	<Attribute Name="sCustomName"								Type="Byte" />
-	<Attribute Name="sDetail"									Type="StringHash" />
-	<Attribute Name="sDropObjectRumbleId"						Type="Int32" />
-	<Attribute Name="sEffectName"								Type="Int32" />
-	<Attribute Name="sExplosionBoneName"						Type="Int32" />
-	<Attribute Name="sFellDownMovingVehicleRumbleId"			Type="Float" />
-	<Attribute Name="sFirstPersonCamPosFxName"					Type="Int32" />
-	<Attribute Name="sFxId"										Type="Int32" />
-	<Attribute Name="sGroupName"								Type="Int32" />
-	<Attribute Name="sHackingIcon"								Type="Byte" />
-	<Attribute Name="sInteractionImpactRumbleId"				Type="Int32" />
-	<Attribute Name="sJumpRumbleId"								Type="Int32" />
-	<Attribute Name="sKickedRumbleId"							Type="Int32" />
-	<Attribute Name="sLandRumbleId"								Type="Int32" />
-	<Attribute Name="sLeftEngineBoneName"						Type="Int32" />
-	<Attribute Name="sLeftTriggerRumbleID"						Type="Int32" />
-	<Attribute Name="sLeftWheelRumbleId"						Type="Int32" />
-	<Attribute Name="sMaterialOverrideSlotName"					Type="Int32" />
-	<Attribute Name="sMaterialSlot"								Type="Int32" />
-	<Attribute Name="sMistPostFXName"							Type="Float" />
-	<Attribute Name="sNextPuzzleGroupToActivate"				Type="Int32" />
-	<Attribute Name="sPartName"									Type="Int32" />
-	<Attribute Name="sPatchPartID"								Type="Int32" />
-	<Attribute Name="sPostFXName"								Type="Int32" />
-	<Attribute Name="sPuzzleGroup"								Type="Int32" />
-	<Attribute Name="sPuzzleGroupToActivate"					Type="Int32" />
-	<Attribute Name="sRightEngineBoneName"						Type="Int32" />
-	<Attribute Name="sRightTriggerRumbleID"						Type="Int32" />
-	<Attribute Name="sRightWheelRumbleId"						Type="Int32" />
-	<Attribute Name="sRoadworksPartID"							Type="Int32" />
-	<Attribute Name="sRumble"									Type="Int32" />
-	<Attribute Name="sRumbleID"									Type="Int32" />
-	<Attribute Name="sRumbleId"									Type="Int32" />
-	<Attribute Name="sSpeedBoostRumbleId"						Type="Int32" />
-	<Attribute Name="sSpotLightBoneName"						Type="Float" />
-	<Attribute Name="sSupportVehicleCollisionRumbleId"			Type="Int32" />
-	<Attribute Name="sSupportVehicleFallingRumbleId"			Type="Int32" />
-	<Attribute Name="sSurfaceProximityRumbleId"					Type="Int32" />
-	<Attribute Name="sTransitionCinemaPostFx"					Type="Int32" />
-	<Attribute Name="selActivityType"							Type="Byte" />
-	<Attribute Name="selAgentType"								Type="Byte" />
-	<Attribute Name="selAnchorH"								Type="Byte" />
-	<Attribute Name="selAnchorV"								Type="Byte" />
-	<Attribute Name="selAnimalSpecies"							Type="Byte" />
-	<Attribute Name="selAttachedBone"							Type="Byte" />
-	<Attribute Name="selBlockedMovementDirection"				Type="Byte" />
-	<Attribute Name="selBodyStance"								Type="Byte" />
-	<Attribute Name="selBone"									Type="Byte" />
-	<Attribute Name="selBroadcastChannel"						Type="Byte" />
-	<Attribute Name="selButtonType"								Type="Byte" />
-	<Attribute Name="selCategory"								Type="Byte" />
-	<Attribute Name="selCollisionLayer"							Type="Byte" />
-	<Attribute Name="selColorMode"								Type="Byte" />
-	<Attribute Name="selConstraintType"							Type="Byte" />
-	<Attribute Name="selCraneType"								Type="Byte" />
-	<Attribute Name="selDamageType"								Type="Byte" />
-	<Attribute Name="selEmitterType"							Type="Byte" />
-	<Attribute Name="selEmotes"									Type="Byte" />
-	<Attribute Name="selEventType"								Type="Byte" />
-	<Attribute Name="selFirearm"								Type="Byte" />
-	<Attribute Name="selFlyingDrone"							Type="Byte" />
-	<Attribute Name="selHackType"								Type="Byte" />
-	<Attribute Name="selHasWind"								Type="Byte" />
-	<Attribute Name="selHighlightColor"							Type="Byte" />
-	<Attribute Name="selHornStimType"							Type="Byte" />
-	<Attribute Name="selInitWeaponType"							Type="Byte" />
-	<Attribute Name="selInitialGateState"						Type="Byte" />
-	<Attribute Name="selInteractionActionMap"					Type="Byte" />
-	<Attribute Name="selInteractionIconType"					Type="Int16" />
-	<Attribute Name="selInteractionReason"						Type="Byte" />
-	<Attribute Name="selInteractionType"						Type="Byte" />
-	<Attribute Name="selInventorySlot0"							Type="Byte" />
-	<Attribute Name="selInventorySlot1"							Type="Byte" />
-	<Attribute Name="selInventorySlot10"						Type="Byte" />
-	<Attribute Name="selInventorySlot11"						Type="Byte" />
-	<Attribute Name="selInventorySlot12"						Type="Byte" />
-	<Attribute Name="selInventorySlot13"						Type="Byte" />
-	<Attribute Name="selInventorySlot14"						Type="Byte" />
-	<Attribute Name="selInventorySlot15"						Type="Byte" />
-	<Attribute Name="selInventorySlot16"						Type="Byte" />
-	<Attribute Name="selInventorySlot17"						Type="Byte" />
-	<Attribute Name="selInventorySlot18"						Type="Byte" />
-	<Attribute Name="selInventorySlot19"						Type="Byte" />
-	<Attribute Name="selInventorySlot2"							Type="Byte" />
-	<Attribute Name="selInventorySlot20"						Type="Byte" />
-	<Attribute Name="selInventorySlot3"							Type="Byte" />
-	<Attribute Name="selInventorySlot4"							Type="Byte" />
-	<Attribute Name="selInventorySlot5"							Type="Byte" />
-	<Attribute Name="selInventorySlot6"							Type="Byte" />
-	<Attribute Name="selInventorySlot7"							Type="Byte" />
-	<Attribute Name="selInventorySlot8"							Type="Byte" />
-	<Attribute Name="selInventorySlot9"							Type="Byte" />
-	<Attribute Name="selLiftToolObjectType"						Type="Byte" />
-	<Attribute Name="selLocomotionType"							Type="Byte" />
-	<Attribute Name="selLoopType"								Type="Byte" />
-	<Attribute Name="selLuminousUnit"							Type="Byte" />
-	<Attribute Name="selMaxSpeedType"							Type="Byte" />
-	<Attribute Name="selNethackColor"							Type="Byte" />
-	<Attribute Name="selNitroPerkOverride"						Type="Byte" />
-	<Attribute Name="selNoMatchMakingZonePriority"				Type="Byte" />
-	<Attribute Name="selObjectInWheel"							Type="Byte" />
-	<Attribute Name="selObjectSizePerceptionWhenBroken"			Type="Byte" />
-	<Attribute Name="selObjectType"								Type="Byte" />
-	<Attribute Name="selOffsetBone"								Type="Byte" />
-	<Attribute Name="selOnLeafBeingDetached"					Type="Byte" />
-	<Attribute Name="selPartBoneIndex"							Type="Byte" />
-	<Attribute Name="selPatchType"								Type="Byte" />
-	<Attribute Name="selPathfindType"							Type="Byte" />
-	<Attribute Name="selPermanentStimType"						Type="Byte" />
-	<Attribute Name="selPlayerRelation"							Type="Byte" />
-	<Attribute Name="selPriority"								Type="Int16" />
-	<Attribute Name="selProfileColorTypeOverride"				Type="Byte" />
-	<Attribute Name="selProjectileType"							Type="Byte" />
-	<Attribute Name="selReactionType"							Type="Byte" />
-	<Attribute Name="selReinforcementAffiliation"				Type="Byte" />
-	<Attribute Name="selRemoteObjectType"						Type="Byte" />
-	<Attribute Name="selRewardSpecificBehaviour"				Type="Byte" />
-	<Attribute Name="selRopePhysicsModelType"					Type="Byte" />
-	<Attribute Name="selSeatType"								Type="Byte" />
-	<Attribute Name="selShape"									Type="Byte" />
-	<Attribute Name="selShapeType"								Type="Byte" />
-	<Attribute Name="selSlot0"									Type="Byte" />
-	<Attribute Name="selSlot1"									Type="Byte" />
-	<Attribute Name="selSlot2"									Type="Byte" />
-	<Attribute Name="selSlot3"									Type="Byte" />
-	<Attribute Name="selSlot4"									Type="Byte" />
-	<Attribute Name="selSlot5"									Type="Byte" />
-	<Attribute Name="selSlot6"									Type="Byte" />
-	<Attribute Name="selSlot7"									Type="Byte" />
-	<Attribute Name="selSpecificInteractionType"				Type="Byte" />
-	<Attribute Name="selTakedownType"							Type="Byte" />
-	<Attribute Name="selTaser"									Type="Byte" />
-	<Attribute Name="selTexturePlane"							Type="Byte" />
-	<Attribute Name="selTile"									Type="Byte" />
-	<Attribute Name="selToyCar"									Type="Byte" />
-	<Attribute Name="selTranFromContext"						Type="Byte" />
-	<Attribute Name="selTranToContext"							Type="Byte" />
-	<Attribute Name="selTriggerType"							Type="Byte" />
-	<Attribute Name="selType"									Type="Byte" />
-	<Attribute Name="selTypeFilter"								Type="Byte" />
-	<Attribute Name="selUsageBehaviorType"						Type="Byte" />
-	<Attribute Name="selUserEntityType"							Type="Byte" />
-	<Attribute Name="selUserType"								Type="Byte" />
-	<Attribute Name="selVehicleType"							Type="Byte" />
-	<Attribute Name="selhidLampPositionFlag"					Type="Byte" />
-	<Attribute Name="sohcControllerType"						Type="StringHash" />
-	<Attribute Name="spawnNormalDistance"						Type="Float" />
-	<Attribute Name="static"									Type="Byte" />
-	<Attribute Name="statuseffectRangePerkID"					Type="Int32" />
-	<Attribute Name="timeInterval"								Type="Float" />
-	<Attribute Name="tmplDialogActor"							Type="Int32" />
-	<Attribute Name="tmplDialogActorHighEnd"					Type="Int32" />
-	<Attribute Name="tmplDialogActorNormalEnd"					Type="Int32" />
+																		Type="Int32" />
 	
+	<!-- 
+		Vectors
+	-->
+	<AttributeGroup Type="Vector3">
+		<Attribute Name="BBoxIncreaseMin" />
+		<Attribute Name="BBoxIncreaseMax" />
+		
+		<Attribute Name="angvecAttractFXAngleOffset" />
+		<Attribute Name="angvecRightWeaponFXAngleOffset" />
+		<Attribute Name="angvecPRYRange" />
+		<Attribute Name="angvecLeftWeaponFXAngleOffset" />
+		<Attribute Name="angvecBackWeaponFXAngleOffset" />
+		<Attribute Name="angvecLocalRotation" />
+		<Attribute Name="angvecFrontWeaponFXAngleOffset" />
+		
+        <Attribute Name="center" />
+        
+		<Attribute Name="clrColor" />
+		<Attribute Name="clrHighLightColor" />
+        
+		<Attribute Name="colorColor" />
+		<Attribute Name="colorLightColorWarning" />
+		<Attribute Name="colorProfilingLightColor" />
+		<Attribute Name="colorProjectilePulseColor" />
+		<Attribute Name="colorActivatingLightColor" />
+		<Attribute Name="colorGateColor" />
+		<Attribute Name="colorColumnColor" />
+		<Attribute Name="colorColumnBackColor" />
+		<Attribute Name="colorLightColor" />
+		<Attribute Name="colorLightColorConnected" />
+		<Attribute Name="colorLightColorDisconnected" />
+        
+        <Attribute Name="v" />
+		<Attribute Name="vColor" />
+		
+		<Attribute Name="vec3PosSysOffset" />
+		<Attribute Name="vec3PositionOffset" />
+		<Attribute Name="vecAutoNavOffset" />
+		<Attribute Name="vecWindFeedbackOffset" />
+		<Attribute Name="vecWindFeedbackOffsetFromBoat" />
+		<Attribute Name="vecGradientIntermediateColor1" />
+		<Attribute Name="vecGradientIntermediateColor2" />
+		<Attribute Name="vecGradientIntermediateColor3" />
+		<Attribute Name="vecIntermediateColor" />
+		<Attribute Name="vecFinalColor" />
+		<Attribute Name="vecInitialColor" />
+		<Attribute Name="vecIndicatorBoatAndSpeedMeterColor" />
+		
+		<Attribute Name="vectorBBoxMin" />
+		<Attribute Name="vectorBBoxMax" />
+		<Attribute Name="vectorCameraOffset" />
+		<Attribute Name="vectorCameraLensPosOffset" />
+		<Attribute Name="vectorAnglesOffset" />
+		<Attribute Name="vectorAlignAngles" />
+		<Attribute Name="vectorBoundingBoxSize" />
+		<Attribute Name="vectorRelativeLocation" />
+		<Attribute Name="vectorLimitsExtraRotations" />
+		<Attribute Name="vectorCenterOfMassOffset" />
+		<Attribute Name="vectorOffset" />
+		<Attribute Name="vectorMinVelocity" />
+		<Attribute Name="vectorMaxVelocity" />
+		<Attribute Name="vectorCenterOffset" />
+		<Attribute Name="vectorHackingSourcePositionOffset" />
+		<Attribute Name="vectorDestroyedFxLocalOffset" />
+		<Attribute Name="vectorTopIconOffset" />
+		<Attribute Name="vectorBaseEntityHackingIconOffset" />
+		<Attribute Name="vectorBottomLocalOffset" />
+		<Attribute Name="vectorRopeBreakParticleFXLocalOffset" />
+		<Attribute Name="vectorAutonavOffset" />
+		<Attribute Name="vectorOffsetFromEntity" />
+		<Attribute Name="vectorIconOffsetFromEntity" />
+		<Attribute Name="vectorAnchorLocalPositionOffset" />
+		<Attribute Name="vectorAnchorLocalOrientationOffset" />
+		<Attribute Name="vectorInertiaScale" />
+		<Attribute Name="vectorPos" />
+		<Attribute Name="vectorTwistAxis" />
+		<Attribute Name="vectorPlaneAxis" />
+		<Attribute Name="vectorSize" />
+		<Attribute Name="vectorPresetPositionOffset" />
+		<Attribute Name="vectorRotationOffset" />
+		<Attribute Name="vectorInitialTranslation" />
+		<Attribute Name="vectorTranslation" />
+		<Attribute Name="vectorInitialRotation" />
+		<Attribute Name="vectorRotation" />
+		<Attribute Name="vectorMovementElementForward" />
+		<Attribute Name="vectorOfflineOrientation" />
+		<Attribute Name="vectorDetectionIconOffset" />
+		<Attribute Name="vectorScale" />
+		<Attribute Name="vectorCameraPositionOffset" />
+		<Attribute Name="vectorCameraOrientationOffset" />
+		<Attribute Name="vectorLocalPosOffset" />
+		<Attribute Name="vectorRelativePosition" />
+		<Attribute Name="vectorSpecificEntryPoint" />
+		<Attribute Name="vectorObstacleTranslation" />
+		<Attribute Name="vectorBasePosition" />
+		<Attribute Name="vectorXYZRange" />
+		<Attribute Name="vectorBeamVolumeVelocity" />
+		<Attribute Name="vectorObstacleScaleFactor" />
+		<Attribute Name="vectorBoxesSize" />
+		<Attribute Name="vectorCamOffset" />
+		<Attribute Name="vectorRotationRange" />
+		<Attribute Name="vectorPositionRange" />
+		<Attribute Name="vectorBack" />
+		<Attribute Name="vectorMiddle" />
+		<Attribute Name="vectorFront" />
+		<Attribute Name="vectorDestroyedModelPartsLocalOffset" />
+		<Attribute Name="vectorDamagedParticleFXLocalOffset" />
+		<Attribute Name="vectorVerticalForce" />
+		<Attribute Name="vectorThirdRay" />
+		<Attribute Name="vectorSecondRay" />
+		<Attribute Name="vectorFirstRay" />
+		<Attribute Name="vectorStartPointSide" />
+		<Attribute Name="vectorForkLiftPlatformCastUnderSize" />
+		<Attribute Name="vectorForkLiftPlatformCastAboveSize" />
+		<Attribute Name="vectorStartPointFront" />
+		<Attribute Name="vectorScanAboveCastLocalPosOffset" />
+		<Attribute Name="vectorCameraLocationOffset" />
+		<Attribute Name="vectorCameraWorldOrientation" />
+		<Attribute Name="vectorCenterPoint" />
+		<Attribute Name="vectorStimPosition" />
+		<Attribute Name="vectorPropellerEndPoint" />
+		<Attribute Name="vectorPropellerStartPoint" />
+		<Attribute Name="vectorShakeRotationAmplitude" />
+		<Attribute Name="vectorShakeTranslationAmplitude" />
+		<Attribute Name="vectorBloodFadeInIdleOutTimeRnd" />
+		<Attribute Name="vectorBloodFadeInIdleOutTime" />
+		<Attribute Name="vectorCameraWorldLocation" />
+		<Attribute Name="vectorPhoneOffset" />
+		<Attribute Name="vectorMarkerPositon" />
+		<Attribute Name="vectorPosition" />
+		<Attribute Name="vectorBackWeaponExplosionOffset" />
+		<Attribute Name="vectorFrontWeaponFXPositionOffset" />
+		<Attribute Name="vectorRightWeaponFXPositionOffset" />
+		<Attribute Name="vectorLampRotation" />
+		<Attribute Name="vectorLampPositionOffset" />
+		<Attribute Name="vectorConnectionLineOffset" />
+		<Attribute Name="vectorLightEffectRotationOffset" />
+		<Attribute Name="vectorLightEffectOffset" />
+		<Attribute Name="vectorScanUnderCastLocalPosOffset" />
+		<Attribute Name="vectorLeftWeaponFXPositionOffset" />
+		<Attribute Name="vectorBackWeaponFXPositionOffset" />
+		<Attribute Name="vectorPositionOffset" />
+		<Attribute Name="vectorLocalNormal" />
+		<Attribute Name="vectorLocalOrigin" />
+		<Attribute Name="vectorLocalPointB" />
+		<Attribute Name="vectorLocalPointA" />
+		<Attribute Name="vectorLocalOffset" />
+		<Attribute Name="vectorBoundaryVelocity" />
+		<Attribute Name="vectorEmitterVelocity" />
+		<Attribute Name="vectorSoftwareLinkOffset" />
+		<Attribute Name="vectorShoppingAutonavOffset2" />
+		<Attribute Name="vectorAxis" />
+		<Attribute Name="vectorSteamEjectionPushBoxSize" />
+		<Attribute Name="vectorShoppingAutonavOffset" />
+		<Attribute Name="vectorCenterPosition" />
+		<Attribute Name="vectorIconOffsetFromTop" />
+		<Attribute Name="vectorAttractFXOffset" />
+		<Attribute Name="vectorLocalTranslationOffset" />
+		<Attribute Name="vectorProximityPosOffset" />
+		<Attribute Name="vectorProfilerSquareTargetOffset" />
+		<Attribute Name="vectorProfilerLineTargetOffset" />
+		<Attribute Name="vectorSoundObjectOffset" />
+		<Attribute Name="vectorBulletCaseEjectionOffset" />
+        <Attribute Name="vectorSphereParticleFxOffset" />
+        <Attribute Name="vectorPaintFadeInIdleOutTime" />
+        <Attribute Name="vectorPaintFadeInIdleOutTimeRnd" />
+        <Attribute Name="vectorIndependanceDayFXPos" />
+        <Attribute Name="vectorRightSideWeaponExplosionOffset" />
+        <Attribute Name="vectorLeftSideWeaponExplosionOffset" />
+	</AttributeGroup>
+	<AttributeGroup Type="Vector4">
+        <Attribute Name="colorFinal" />
+        <Attribute Name="colorInit" />
+        <Attribute Name="colorIntense" />
+        
+		<Attribute Name="vector4PostFxMask2" />
+		
+		<Attribute Name="waveMinValues" />
+		<Attribute Name="waveWidths" />
+		<Attribute Name="waveSpeeds" />
+		<Attribute Name="waveMaxValues" />
+	</AttributeGroup>
 	
-	<Attribute Name="useDistanceInterval"						Type="Byte" />
-	<Attribute Name="vehicleLoaded"								Type="Byte" />
-	<Attribute Name="wlucatBindToCategoryV3"					Type="Byte" />
-	<Attribute Name="wlucatLoadingUnitCategoryV3"				Type="Byte" />
+	<Attribute Name="nCollisionCountToRoll"								Type="Byte" />
+	<Attribute Name="nMaxAiEntity"										Type="Byte" />
+	<Attribute Name="nMaxAnchors"										Type="Byte" />
+	<Attribute Name="nMaxPeople"										Type="Byte" />
+	<Attribute Name="nMaxSparksInSingleBurst"							Type="Byte" />
+	<Attribute Name="nMaxSplattersOnScreen"								Type="Byte" />
+	<Attribute Name="nMinAiEntity"										Type="Byte" />
+	<Attribute Name="nNodesLimit"										Type="Float" />
+	<Attribute Name="nQuantity"											Type="Byte" />
+	<Attribute Name="name"												Type="Int32" />
+	<Attribute Name="olgLightGroup"										Type="Int16" />
+	<Attribute Name="passengerActionMap"								Type="String" />
+	<Attribute Name="radiusOfInfluence"									Type="Float" />
+	<Attribute Name="remoteDriverActionMap"								Type="String" />
+	<Attribute Name="remoteDriverHackingAction"							Type="Byte" />
+	<Attribute Name="sAnchorName"										Type="Int32" />
+	<Attribute Name="sAnchorPartName"									Type="Int32" />
+	<Attribute Name="sBehavior"											Type="Float" />
+	<Attribute Name="sBoneName"											Type="Int32" />
+	<Attribute Name="sBulletHitPostFxName"								Type="Int32" />
+	<Attribute Name="sBulletHitRumbleId"								Type="Int32" />
+	<Attribute Name="sCameraBoneName"									Type="String" />
+	<Attribute Name="sCameraCinemaPostFx"								Type="Int32" />
+	<Attribute Name="sCelebrationActionMap"								Type="Int32" />
+	<Attribute Name="sCinemaPostFXName"									Type="Int32" />
+	<Attribute Name="sClass"											Type="StringHash" />
+	<Attribute Name="sCollisionRumbleId"								Type="Int32" />
+	<Attribute Name="sCommandName"										Type="Byte" />
+	<Attribute Name="sCraterPartID"										Type="Int32" />
+	<Attribute Name="sCustomName"										Type="Byte" />
+	<Attribute Name="sDetail"											Type="StringHash" />
+	<Attribute Name="sDropObjectRumbleId"								Type="Int32" />
+	<Attribute Name="sEffectName"										Type="Int32" />
+	<Attribute Name="sExplosionBoneName"								Type="Int32" />
+	<Attribute Name="sFellDownMovingVehicleRumbleId"					Type="Float" />
+	<Attribute Name="sFirstPersonCamPosFxName"							Type="Int32" />
+	<Attribute Name="sFxId"												Type="Int32" />
+	<Attribute Name="sGroupName"										Type="Int32" />
+	<Attribute Name="sHackingIcon"										Type="Byte" />
+	<Attribute Name="sInteractionImpactRumbleId"						Type="Int32" />
+	<Attribute Name="sJumpRumbleId"										Type="Int32" />
+	<Attribute Name="sKickedRumbleId"									Type="Int32" />
+	<Attribute Name="sLandRumbleId"										Type="Int32" />
+	<Attribute Name="sLeftEngineBoneName"								Type="Int32" />
+	<Attribute Name="sLeftTriggerRumbleID"								Type="Int32" />
+	<Attribute Name="sLeftWheelRumbleId"								Type="Int32" />
+	<Attribute Name="sMaterialOverrideSlotName"							Type="Int32" />
+	<Attribute Name="sMaterialSlot"										Type="Int32" />
+	<Attribute Name="sMistPostFXName"									Type="Float" />
+	<Attribute Name="sNextPuzzleGroupToActivate"						Type="Int32" />
+	<Attribute Name="sPartName"											Type="Int32" />
+	<Attribute Name="sPatchPartID"										Type="Int32" />
+	<Attribute Name="sPostFXName"										Type="Int32" />
+	<Attribute Name="sPuzzleGroup"										Type="Int32" />
+	<Attribute Name="sPuzzleGroupToActivate"							Type="Int32" />
+	<Attribute Name="sRightEngineBoneName"								Type="Int32" />
+	<Attribute Name="sRightTriggerRumbleID"								Type="Int32" />
+	<Attribute Name="sRightWheelRumbleId"								Type="Int32" />
+	<Attribute Name="sRoadworksPartID"									Type="Int32" />
+	<Attribute Name="sRumble"											Type="Int32" />
+	<Attribute Name="sRumbleID"											Type="Int32" />
+	<Attribute Name="sRumbleId"											Type="Int32" />
+	<Attribute Name="sSpeedBoostRumbleId"								Type="Int32" />
+	<Attribute Name="sSpotLightBoneName"								Type="Float" />
+	<Attribute Name="sSupportVehicleCollisionRumbleId"					Type="Int32" />
+	<Attribute Name="sSupportVehicleFallingRumbleId"					Type="Int32" />
+	<Attribute Name="sSurfaceProximityRumbleId"							Type="Int32" />
+	<Attribute Name="sTransitionCinemaPostFx"							Type="Int32" />
+	<Attribute Name="selActivityType"									Type="Byte" />
+	<Attribute Name="selAgentType"										Type="Byte" />
+	<Attribute Name="selAnchorH"										Type="Byte" />
+	<Attribute Name="selAnchorV"										Type="Byte" />
+	<Attribute Name="selAnimalSpecies"									Type="Byte" />
+	<Attribute Name="selAttachedBone"									Type="Byte" />
+	<Attribute Name="selBlockedMovementDirection"						Type="Byte" />
+	<Attribute Name="selBodyStance"										Type="Byte" />
+	<Attribute Name="selBone"											Type="Byte" />
+	<Attribute Name="selBroadcastChannel"								Type="Byte" />
+	<Attribute Name="selButtonType"										Type="Byte" />
+	<Attribute Name="selCategory"										Type="Byte" />
+	<Attribute Name="selCollisionLayer"									Type="Byte" />
+	<Attribute Name="selColorMode"										Type="Byte" />
+	<Attribute Name="selConstraintType"									Type="Byte" />
+	<Attribute Name="selCraneType"										Type="Byte" />
+	<Attribute Name="selDamageType"										Type="Byte" />
+	<Attribute Name="selEmitterType"									Type="Byte" />
+	<Attribute Name="selEmotes"											Type="Byte" />
+	<Attribute Name="selEventType"										Type="Byte" />
+	<Attribute Name="selFirearm"										Type="Byte" />
+	<Attribute Name="selFlyingDrone"									Type="Byte" />
+	<Attribute Name="selHackType"										Type="Byte" />
+	<Attribute Name="selHasWind"										Type="Byte" />
+	<Attribute Name="selHighlightColor"									Type="Byte" />
+	<Attribute Name="selHornStimType"									Type="Byte" />
+	<Attribute Name="selInitWeaponType"									Type="Byte" />
+	<Attribute Name="selInitialGateState"								Type="Byte" />
+	<Attribute Name="selInteractionActionMap"							Type="Byte" />
+	<Attribute Name="selInteractionIconType"							Type="Int16" />
+	<Attribute Name="selInteractionReason"								Type="Byte" />
+	<Attribute Name="selInteractionType"								Type="Byte" />
+	<Attribute Name="selInventorySlot0"									Type="Byte" />
+	<Attribute Name="selInventorySlot1"									Type="Byte" />
+	<Attribute Name="selInventorySlot10"								Type="Byte" />
+	<Attribute Name="selInventorySlot11"								Type="Byte" />
+	<Attribute Name="selInventorySlot12"								Type="Byte" />
+	<Attribute Name="selInventorySlot13"								Type="Byte" />
+	<Attribute Name="selInventorySlot14"								Type="Byte" />
+	<Attribute Name="selInventorySlot15"								Type="Byte" />
+	<Attribute Name="selInventorySlot16"								Type="Byte" />
+	<Attribute Name="selInventorySlot17"								Type="Byte" />
+	<Attribute Name="selInventorySlot18"								Type="Byte" />
+	<Attribute Name="selInventorySlot19"								Type="Byte" />
+	<Attribute Name="selInventorySlot2"									Type="Byte" />
+	<Attribute Name="selInventorySlot20"								Type="Byte" />
+	<Attribute Name="selInventorySlot3"									Type="Byte" />
+	<Attribute Name="selInventorySlot4"									Type="Byte" />
+	<Attribute Name="selInventorySlot5"									Type="Byte" />
+	<Attribute Name="selInventorySlot6"									Type="Byte" />
+	<Attribute Name="selInventorySlot7"									Type="Byte" />
+	<Attribute Name="selInventorySlot8"									Type="Byte" />
+	<Attribute Name="selInventorySlot9"									Type="Byte" />
+	<Attribute Name="selLiftToolObjectType"								Type="Byte" />
+	<Attribute Name="selLocomotionType"									Type="Byte" />
+	<Attribute Name="selLoopType"										Type="Byte" />
+	<Attribute Name="selLuminousUnit"									Type="Byte" />
+	<Attribute Name="selMaxSpeedType"									Type="Byte" />
+	<Attribute Name="selNethackColor"									Type="Byte" />
+	<Attribute Name="selNitroPerkOverride"								Type="Byte" />
+	<Attribute Name="selNoMatchMakingZonePriority"						Type="Byte" />
+	<Attribute Name="selObjectInWheel"									Type="Byte" />
+	<Attribute Name="selObjectSizePerceptionWhenBroken"					Type="Byte" />
+	<Attribute Name="selObjectType"										Type="Byte" />
+	<Attribute Name="selOffsetBone"										Type="Byte" />
+	<Attribute Name="selOnLeafBeingDetached"							Type="Byte" />
+	<Attribute Name="selPartBoneIndex"									Type="Byte" />
+	<Attribute Name="selPatchType"										Type="Byte" />
+	<Attribute Name="selPathfindType"									Type="Byte" />
+	<Attribute Name="selPermanentStimType"								Type="Byte" />
+	<Attribute Name="selPlayerRelation"									Type="Byte" />
+	<Attribute Name="selPriority"										Type="Int16" />
+	<Attribute Name="selProfileColorTypeOverride"						Type="Byte" />
+	<Attribute Name="selProjectileType"									Type="Byte" />
+	<Attribute Name="selReactionType"									Type="Byte" />
+	<Attribute Name="selReinforcementAffiliation"						Type="Byte" />
+	<Attribute Name="selRemoteObjectType"								Type="Byte" />
+	<Attribute Name="selRewardSpecificBehaviour"						Type="Byte" />
+	<Attribute Name="selRopePhysicsModelType"							Type="Byte" />
+	<Attribute Name="selSeatType"										Type="Byte" />
+	<Attribute Name="selShape"											Type="Byte" />
+	<Attribute Name="selShapeType"										Type="Byte" />
+	<Attribute Name="selSlot0"											Type="Byte" />
+	<Attribute Name="selSlot1"											Type="Byte" />
+	<Attribute Name="selSlot2"											Type="Byte" />
+	<Attribute Name="selSlot3"											Type="Byte" />
+	<Attribute Name="selSlot4"											Type="Byte" />
+	<Attribute Name="selSlot5"											Type="Byte" />
+	<Attribute Name="selSlot6"											Type="Byte" />
+	<Attribute Name="selSlot7"											Type="Byte" />
+	<Attribute Name="selSpecificInteractionType"						Type="Byte" />
+	<Attribute Name="selTakedownType"									Type="Byte" />
+	<Attribute Name="selTaser"											Type="Byte" />
+	<Attribute Name="selTexturePlane"									Type="Byte" />
+	<Attribute Name="selTile"											Type="Byte" />
+	<Attribute Name="selToyCar"											Type="Byte" />
+	<Attribute Name="selTranFromContext"								Type="Byte" />
+	<Attribute Name="selTranToContext"									Type="Byte" />
+	<Attribute Name="selTriggerType"									Type="Byte" />
+	<Attribute Name="selType"											Type="Byte" />
+	<Attribute Name="selTypeFilter"										Type="Byte" />
+	<Attribute Name="selUsageBehaviorType"								Type="Byte" />
+	<Attribute Name="selUserEntityType"									Type="Byte" />
+	<Attribute Name="selUserType"										Type="Byte" />
+	<Attribute Name="selVehicleType"									Type="Byte" />
+	<Attribute Name="selhidLampPositionFlag"							Type="Byte" />
+	<Attribute Name="sohcControllerType"								Type="StringHash" />
+	<Attribute Name="spawnNormalDistance"								Type="Float" />
+	<Attribute Name="static"											Type="Byte" />
+	<Attribute Name="statuseffectRangePerkID"							Type="Int32" />
+	<Attribute Name="timeInterval"										Type="Float" />
+	<Attribute Name="tmplDialogActor"									Type="Int32" />
+	<Attribute Name="tmplDialogActorHighEnd"							Type="Int32" />
+	<Attribute Name="tmplDialogActorNormalEnd"							Type="Int32" />
+	
+	<Attribute Name="useDistanceInterval"								Type="Byte" />
+	<Attribute Name="vehicleLoaded"										Type="Byte" />
+	<Attribute Name="wlucatBindToCategoryV3"							Type="Byte" />
+	<Attribute Name="wlucatLoadingUnitCategoryV3"						Type="Byte" />
 
+	<Attribute Name="TargetSwitchBark" Type="BinHex" />
+	
+	<Attribute Name="PlayerDetectedBark" Type="Int32" />
+	<Attribute Name="selMassHackNPC" Type="Byte" />
+	
 	<!-- Unknown attribute names -->
-	<Attribute Name="_012B9F7A" Type="String" />
-	<Attribute Name="_0178F26E" Type="String" />
-	<Attribute Name="_02DA1FE6" Type="Float" />
-	<Attribute Name="_02FAAA7B" Type="String" />
-	<Attribute Name="_0327953F" Type="String" />
-	<Attribute Name="_034AB9AA" Type="String" />
-	<Attribute Name="_04BCCFB8" Type="Int32" />
-	<Attribute Name="_0669AF27" Type="Byte" />
-	<Attribute Name="_07F0EC09" Type="String" />
-	<Attribute Name="_084B20B0" Type="String" />
-	<Attribute Name="_087FBE65" Type="String" />
-	<Attribute Name="_08E50480" Type="String" />
-	<Attribute Name="_0900413E" Type="String" />
-	<Attribute Name="_0955785E" Type="String" />
-	<Attribute Name="_0964801B" Type="String" />
-	<Attribute Name="_0976B341" Type="String" />
-	<Attribute Name="_0A50A924" Type="String" />
-	<Attribute Name="_0B6BC5E8" Type="String" />
-	<Attribute Name="_0BCE4752" Type="String" />
-	<Attribute Name="_0BDEFF89" Type="String" />
-	<Attribute Name="_0BF45C88" Type="String" />
-	<Attribute Name="_0D9C8B1A" Type="String" />
-	<Attribute Name="_0E7E406F" Type="Byte" />
-	<Attribute Name="_0E9D5384" Type="String" />
-	<Attribute Name="_0FB517F4" Type="String" />
-	<Attribute Name="_1022E62B" Type="String" />
-	<Attribute Name="_1134CC78" Type="String" />
-	<Attribute Name="_11AFBF1F" Type="String" />
-	<Attribute Name="_1200CC64" Type="String" />
-	<Attribute Name="_122B8E89" Type="String" />
-	<Attribute Name="_1274496E" Type="String" />
-	<Attribute Name="_1289C98B" Type="String" />
-	<Attribute Name="_131CF115" Type="String" />
-	<Attribute Name="_134D2EF9" Type="String" />
-	<Attribute Name="_13E1DBD8" Type="String" />
-	<Attribute Name="_143E7B72" Type="String" />
-	<Attribute Name="_14AE9C4D" Type="Byte" />
-	<Attribute Name="_1543A6BC" Type="String" />
-	<Attribute Name="_1600FCC9" Type="Int32" />
-	<Attribute Name="_16848038" Type="String" />
-	<Attribute Name="_16D01A31" Type="Byte" />
-	<Attribute Name="_16D1BE41" Type="String" />
-	<Attribute Name="_170C86A2" Type="String" />
-	<Attribute Name="_18AA8292" Type="Byte" />
-	<Attribute Name="_18E0D730" Type="String" />
-	<Attribute Name="_1900667A" Type="String" />
-	<Attribute Name="_19139B91" Type="String" />
-	<Attribute Name="_191665F3" Type="String" />
-	<Attribute Name="_1943B130" Type="String" />
-	<Attribute Name="_19B8945F" Type="String" />
-	<Attribute Name="_1A032A6D" Type="String" />
-	<Attribute Name="_1B96F244" Type="String" />
-	<Attribute Name="_1CB97581" Type="String" />
-	<Attribute Name="_1CC4F364" Type="String" />
-	<Attribute Name="_1D1BDA33" Type="String" />
-	<Attribute Name="_1DD4BA3F" Type="String" />
-	<Attribute Name="_1F77F457" Type="String" />
-	<Attribute Name="_1F8062E2" Type="String" />
-	<Attribute Name="_1FB4C362" Type="String" />
-	<Attribute Name="_20415141" Type="String" />
-	<Attribute Name="_20542E3B" Type="Float" />
-	<Attribute Name="_209B5936" Type="String" />
-	<Attribute Name="_20CB698F" Type="String" />
-	<Attribute Name="_219FF858" Type="String" />
-	<Attribute Name="_21C1AEF1" Type="String" />
-	<Attribute Name="_231B5329" Type="String" />
-	<Attribute Name="_23728CC1" Type="String" />
-	<Attribute Name="_24C05B65" Type="String" />
-	<Attribute Name="_2554D2B8" Type="Byte" />
-	<Attribute Name="_257B32E3" Type="String" />
-	<Attribute Name="_25876AD3" Type="String" />
-	<Attribute Name="_25CEA882" Type="String" />
-	<Attribute Name="_25EACB4F" Type="String" />
-	<Attribute Name="_26328724" Type="String" />
-	<Attribute Name="_266F7AD1" Type="Byte" />
-	<Attribute Name="_26789509" Type="String" />
-	<Attribute Name="_27103611" Type="String" />
-	<Attribute Name="_27A97854" Type="Float" />
-	<Attribute Name="_27DC52DB" Type="String" />
-	<Attribute Name="_290A29BC" Type="String" />
-	<Attribute Name="_299CC0D8" Type="String" />
-	<Attribute Name="_29C1A24F" Type="String" />
-	<Attribute Name="_2A2FBF6C" Type="Int32" />
-	<Attribute Name="_2A7BCA49" Type="String" />
-	<Attribute Name="_2B8E3650" Type="String" />
-	<Attribute Name="_2BFB52AC" Type="String" />
-	<Attribute Name="_2C239426" Type="Float" />
-	<Attribute Name="_2CC55BBC" Type="String" />
-	<Attribute Name="_2CC8C55A" Type="Float" />
-	<Attribute Name="_2D1C4069" Type="String" />
-	<Attribute Name="_2D54FAB6" Type="String" />
-	<Attribute Name="_2DE1A184" Type="Byte" />
-	<Attribute Name="_2DFAD4B4" Type="String" />
-	<Attribute Name="_2E91468E" Type="Float" />
-	<Attribute Name="_2FE01C59" Type="String" />
-	<Attribute Name="_3030F2A0" Type="String" />
-	<Attribute Name="_3044DB2D" Type="String" />
-	<Attribute Name="_30914730" Type="String" />
-	<Attribute Name="_3128B110" Type="String" />
-	<Attribute Name="_31491B5F" Type="String" />
-	<Attribute Name="_3182766C" Type="String" />
-	<Attribute Name="_347B4CF0" Type="String" />
-	<Attribute Name="_35713324" Type="String" />
-	<Attribute Name="_36BF8BC0" Type="Int32" />
-	<Attribute Name="_36D66171" Type="String" />
-	<Attribute Name="_37359949" Type="String" />
-	<Attribute Name="_378378D6" Type="String" />
-	<Attribute Name="_37BAF9F3" Type="String" />
-	<Attribute Name="_37E04D75" Type="String" />
-	<Attribute Name="_37E96641" Type="String" />
-	<Attribute Name="_3863B00A" Type="String" />
-	<Attribute Name="_399D4477" Type="String" />
-	<Attribute Name="_3A097AD2" Type="String" />
-	<Attribute Name="_3C0A3824" Type="String" />
-	<Attribute Name="_3CFBE494" Type="String" />
-	<Attribute Name="_3ED2E127" Type="String" />
-	<Attribute Name="_3F742D26" Type="String" />
-	<Attribute Name="_3F896996" Type="String" />
-	<Attribute Name="_41141BB9" Type="String" />
-	<Attribute Name="_415C9112" Type="String" />
-	<Attribute Name="_41646A9F" Type="Float" />
-	<Attribute Name="_431FD918" Type="String" />
-	<Attribute Name="_43E5CAFC" Type="String" />
-	<Attribute Name="_44F43ED2" Type="String" />
-	<Attribute Name="_455955CF" Type="String" />
-	<Attribute Name="_45A95010" Type="Float" />
-	<Attribute Name="_463EA461" Type="String" />
-	<Attribute Name="_46B09C09" Type="String" />
-	<Attribute Name="_47218E00" Type="String" />
-	<Attribute Name="_474B51D8" Type="Byte" />
-	<Attribute Name="_475237F9" Type="Byte" />
-	<Attribute Name="_479E818C" Type="Float" />
-	<Attribute Name="_47E40F16" Type="String" />
-	<Attribute Name="_4866A42D" Type="String" />
-	<Attribute Name="_4891040E" Type="String" />
-	<Attribute Name="_48C31CFF" Type="String" />
-	<Attribute Name="_48E7C846" Type="Float" />
-	<Attribute Name="_498DD7A3" Type="String" />
-	<Attribute Name="_4A12DEF9" Type="Float" />
-	<Attribute Name="_4A69982F" Type="String" />
-	<Attribute Name="_4AC9D549" Type="Float" />
-	<Attribute Name="_4C5D5824" Type="String" />
-	<Attribute Name="_4D05DB51" Type="String" />
-	<Attribute Name="_4E3D8B0A" Type="String" />
-	<Attribute Name="_4ED844F9" Type="String" />
-	<Attribute Name="_4F755AD7" Type="String" />
-	<Attribute Name="_50A0B808" Type="String" />
-	<Attribute Name="_5104CAFC" Type="String" />
-	<Attribute Name="_51684A47" Type="Byte" />
-	<Attribute Name="_527E7674" Type="String" />
-	<Attribute Name="_52856C37" Type="String" />
-	<Attribute Name="_52B3296D" Type="String" />
-	<Attribute Name="_531A45E7" Type="String" />
-	<Attribute Name="_545CC8B4" Type="Float" />
-	<Attribute Name="_5469F08E" Type="String" />
-	<Attribute Name="_54CE5D78" Type="String" />
-	<Attribute Name="_565EE5F6" Type="Float" />
-	<Attribute Name="_56B6020C" Type="String" />
-	<Attribute Name="_58325F9E" Type="String" />
-	<Attribute Name="_58338865" Type="String" />
-	<Attribute Name="_585BF3E9" Type="Byte" />
-	<Attribute Name="_588A2979" Type="Byte" />
-	<Attribute Name="_58B11CA6" Type="String" />
-	<Attribute Name="_58BAFCFC" Type="String" />
-	<Attribute Name="_5945CE6C" Type="String" />
-	<Attribute Name="_595D0033" Type="String" />
-	<Attribute Name="_59E941B0" Type="Float" />
-	<Attribute Name="_5B59FFC1" Type="String" />
-	<Attribute Name="_5B8D3BB2" Type="String" />
-	<Attribute Name="_5C934AB1" Type="String" />
-	<Attribute Name="_5CA34EE9" Type="Int32" />
-	<Attribute Name="_5CF7DD64" Type="Byte" />
-	<Attribute Name="_5D75212C" Type="String" />
-	<Attribute Name="_5DBE7E97" Type="Float" />
-	<Attribute Name="_5DBFDBF2" Type="Byte" />
-	<Attribute Name="_5EC465CD" Type="String" />
-	<Attribute Name="_5F08C545" Type="String" />
-	<Attribute Name="_5F840C99" Type="String" />
-	<Attribute Name="_5FBC05EF" Type="String" />
-	<Attribute Name="_60B6B4B4" Type="String" />
-	<Attribute Name="_62094984" Type="String" />
-	<Attribute Name="_62B67D58" Type="Int32" />
-	<Attribute Name="_62D7B87C" Type="String" />
-	<Attribute Name="_6513C65B" Type="String" />
-	<Attribute Name="_656703F1" Type="String" />
-	<Attribute Name="_6607BD7C" Type="String" />
-	<Attribute Name="_66376232" Type="String" />
-	<Attribute Name="_665D00D6" Type="String" />
-	<Attribute Name="_6671B2D8" Type="Float" />
-	<Attribute Name="_66743FE1" Type="String" />
-	<Attribute Name="_678612EC" Type="String" />
-	<Attribute Name="_68500092" Type="String" />
-	<Attribute Name="_686A2995" Type="String" />
-	<Attribute Name="_691E61E4" Type="Byte" />
-	<Attribute Name="_69741F08" Type="String" />
-	<Attribute Name="_6AB1034A" Type="Byte" />
-	<Attribute Name="_6AB3A189" Type="String" />
-	<Attribute Name="_6B0D0F01" Type="String" />
-	<Attribute Name="_6CA916E6" Type="String" />
-	<Attribute Name="_6CFED958" Type="String" />
-	<Attribute Name="_6D1E1959" Type="String" />
-	<Attribute Name="_6D569356" Type="String" />
-	<Attribute Name="_6DBC0779" Type="String" />
-	<Attribute Name="_6ED35D9D" Type="String" />
-	<Attribute Name="_6FAAE5C1" Type="String" />
-	<Attribute Name="_70020FCD" Type="String" />
-	<Attribute Name="_7018DFB2" Type="String" />
-	<Attribute Name="_7043614E" Type="String" />
-	<Attribute Name="_70CAFA74" Type="String" />
-	<Attribute Name="_71746190" Type="String" />
-	<Attribute Name="_71F3E3CB" Type="String" />
-	<Attribute Name="_74377F48" Type="String" />
-	<Attribute Name="_74428960" Type="String" />
-	<Attribute Name="_745F87D3" Type="String" />
-	<Attribute Name="_7491BE2D" Type="String" />
-	<Attribute Name="_74DE4E90" Type="Byte" />
-	<Attribute Name="_75D7B00C" Type="String" />
-	<Attribute Name="_75E92BEA" Type="String" />
-	<Attribute Name="_7617B9D5" Type="String" />
-	<Attribute Name="_7640D911" Type="String" />
-	<Attribute Name="_7645EF16" Type="Float" />
-	<Attribute Name="_766BFB99" Type="String" />
-	<Attribute Name="_76E2473C" Type="String" />
-	<Attribute Name="_76E701B4" Type="String" />
-	<Attribute Name="_77089ED1" Type="String" />
-	<Attribute Name="_78031226" Type="String" />
-	<Attribute Name="_795F32D4" Type="String" />
-	<Attribute Name="_7A82EE06" Type="String" />
-	<Attribute Name="_7B87B004" Type="String" />
-	<Attribute Name="_7BD7C5F5" Type="String" />
-	<Attribute Name="_7CC5F53E" Type="Float" />
-	<Attribute Name="_7D522BBE" Type="Byte" />
-	<Attribute Name="_7DC670E6" Type="String" />
-	<Attribute Name="_7FC21A3C" Type="String" />
-	<Attribute Name="_8034B7D9" Type="String" />
-	<Attribute Name="_80F7DFED" Type="String" />
-	<Attribute Name="_81578A03" Type="String" />
-	<Attribute Name="_82344CDF" Type="String" />
-	<Attribute Name="_8250C96B" Type="Float" />
-	<Attribute Name="_8490D407" Type="String" />
-	<Attribute Name="_85D2FB27" Type="String" />
-	<Attribute Name="_87E038DB" Type="String" />
-	<Attribute Name="_881DA5D1" Type="String" />
-	<Attribute Name="_88E8521E" Type="String" />
-	<Attribute Name="_891363E2" Type="String" />
-	<Attribute Name="_89647578" Type="String" />
-	<Attribute Name="_8972696E" Type="String" />
-	<Attribute Name="_8994AF5B" Type="String" />
-	<Attribute Name="_89A1D4BD" Type="Float" />
-	<Attribute Name="_89FEF18A" Type="String" />
-	<Attribute Name="_8A02CD6D" Type="String" />
-	<Attribute Name="_8A6739BA" Type="String" />
-	<Attribute Name="_8ADB65DE" Type="Float" />
-	<Attribute Name="_8B06392D" Type="String" />
-	<Attribute Name="_8B26E03A" Type="String" />
-	<Attribute Name="_8B325542" Type="Byte" />
-	<Attribute Name="_8B6DE45A" Type="String" />
-	<Attribute Name="_8B8B08ED" Type="String" />
-	<Attribute Name="_8BF2C7C7" Type="String" />
-	<Attribute Name="_8BF742CE" Type="String" />
-	<Attribute Name="_8CFE90A2" Type="String" />
-	<Attribute Name="_8DD32D82" Type="String" />
-	<Attribute Name="_8DEB1326" Type="String" />
-	<Attribute Name="_8E0EA160" Type="String" />
-	<Attribute Name="_8E5555F6" Type="String" />
-	<Attribute Name="_8EDE3D5A" Type="Byte" />
-	<Attribute Name="_8F595815" Type="String" />
-	<Attribute Name="_8F6B04FD" Type="String" />
-	<Attribute Name="_8FA15F81" Type="String" />
-	<Attribute Name="_8FD4B96F" Type="String" />
-	<Attribute Name="_90665ACB" Type="String" />
-	<Attribute Name="_92210DFC" Type="String" />
-	<Attribute Name="_924218C6" Type="String" />
-	<Attribute Name="_9301DFBD" Type="String" />
-	<Attribute Name="_9323E6DC" Type="String" />
-	<Attribute Name="_93CC8A38" Type="String" />
-	<Attribute Name="_94D003B4" Type="String" />
-	<Attribute Name="_9603D6F2" Type="Float" />
-	<Attribute Name="_96534E80" Type="String" />
-	<Attribute Name="_978B22AC" Type="String" />
-	<Attribute Name="_97FC9696" Type="String" />
-	<Attribute Name="_98DDDF5F" Type="String" />
-	<Attribute Name="_996136B2" Type="Byte" />
-	<Attribute Name="_9A71F855" Type="String" />
-	<Attribute Name="_9A806BC3" Type="String" />
-	<Attribute Name="_9AB2C785" Type="String" />
-	<Attribute Name="_9AB7CEBB" Type="String" />
-	<Attribute Name="_9B84CE1F" Type="Byte" />
-	<Attribute Name="_9BB5DB9E" Type="String" />
-	<Attribute Name="_9CBA17A9" Type="String" />
-	<Attribute Name="_9D02E8B1" Type="String" />
-	<Attribute Name="_9D0F693F" Type="String" />
-	<Attribute Name="_9D27E14D" Type="String" />
-	<Attribute Name="_9E1EA80B" Type="String" />
-	<Attribute Name="_9E86E76B" Type="String" />
-	<Attribute Name="_9EA59A1B" Type="String" />
-	<Attribute Name="_9EABDBDA" Type="String" />
-	<Attribute Name="_9EF664C5" Type="String" />
-	<Attribute Name="_A042E094" Type="String" />
-	<Attribute Name="_A11DB85B" Type="String" />
-	<Attribute Name="_A1702450" Type="String" />
-	<Attribute Name="_A1888097" Type="String" />
-	<Attribute Name="_A18A0633" Type="String" />
-	<Attribute Name="_A1F49CBC" Type="String" />
-	<Attribute Name="_A20C70A2" Type="Byte" />
-	<Attribute Name="_A20E0B6A" Type="String" />
-	<Attribute Name="_A3CD0AD0" Type="String" />
-	<Attribute Name="_A50E9815" Type="String" />
-	<Attribute Name="_A6741E4A" Type="String" />
-	<Attribute Name="_A7CB2BDD" Type="Float" />
-	<Attribute Name="_A80523FA" Type="Float" />
-	<Attribute Name="_A8832FBB" Type="String" />
-	<Attribute Name="_A8B01B74" Type="String" />
-	<Attribute Name="_AA3C33FA" Type="String" />
-	<Attribute Name="_AA56E7EB" Type="String" />
-	<Attribute Name="_AA8D91B9" Type="String" />
-	<Attribute Name="_AAA77231" Type="String" />
-	<Attribute Name="_ABB2272E" Type="Byte" />
-	<Attribute Name="_AC0F0714" Type="String" />
-	<Attribute Name="_ACA97AA8" Type="Float" />
-	<Attribute Name="_AD237553" Type="String" />
-	<Attribute Name="_AD2B0CFC" Type="String" />
-	<Attribute Name="_AD343623" Type="String" />
-	<Attribute Name="_ADD124E1" Type="String" />
-	<Attribute Name="_AEBF1478" Type="String" />
-	<Attribute Name="_AF92FC85" Type="Byte" />
-	<Attribute Name="_AFE76675" Type="String" />
-	<Attribute Name="_B0358A3D" Type="String" />
-	<Attribute Name="_B1349C3F" Type="String" />
-	<Attribute Name="_B178E688" Type="String" />
-	<Attribute Name="_B1FFE785" Type="String" />
-	<Attribute Name="_B21B169A" Type="String" />
-	<Attribute Name="_B2E5E8CC" Type="String" />
-	<Attribute Name="_B35AADB3" Type="Float" />
-	<Attribute Name="_B4B5BF38" Type="String" />
-	<Attribute Name="_B4B8F008" Type="String" />
-	<Attribute Name="_B4EC6BBC" Type="String" />
-	<Attribute Name="_B5793048" Type="String" />
-	<Attribute Name="_B987700F" Type="String" />
-	<Attribute Name="_B9B1D6E8" Type="String" />
-	<Attribute Name="_B9B7AB00" Type="String" />
-	<Attribute Name="_BA00963B" Type="String" />
-	<Attribute Name="_BA2BBD58" Type="String" />
-	<Attribute Name="_BAF05BD0" Type="Byte" />
-	<Attribute Name="_BB7CE2D8" Type="String" />
-	<Attribute Name="_BC101295" Type="String" />
-	<Attribute Name="_BC6ED67A" Type="String" />
-	<Attribute Name="_BCC9D3DF" Type="String" />
-	<Attribute Name="_BD2FF023" Type="String" />
-	<Attribute Name="_BD82D998" Type="String" />
-	<Attribute Name="_BE501FD6" Type="String" />
-	<Attribute Name="_BEC92556" Type="String" />
-	<Attribute Name="_BF662B6B" Type="Byte" />
-	<Attribute Name="_BFB9927B" Type="String" />
-	<Attribute Name="_C0A206A8" Type="String" />
-	<Attribute Name="_C0EEEF72" Type="String" />
-	<Attribute Name="_C1003FDD" Type="String" />
-	<Attribute Name="_C1642AE5" Type="String" />
-	<Attribute Name="_C1E5B4D4" Type="String" />
-	<Attribute Name="_C22F7F57" Type="String" />
-	<Attribute Name="_C23C201F" Type="String" />
-	<Attribute Name="_C2628931" Type="String" />
-	<Attribute Name="_C28A6431" Type="String" />
-	<Attribute Name="_C2ADBAE7" Type="Byte" />
-	<Attribute Name="_C3477C2A" Type="String" />
-	<Attribute Name="_C35086B9" Type="String" />
-	<Attribute Name="_C378C772" Type="String" />
-	<Attribute Name="_C392037E" Type="String" />
-	<Attribute Name="_C443FEDC" Type="String" />
-	<Attribute Name="_C5485FEE" Type="String" />
-	<Attribute Name="_C60DA173" Type="String" />
-	<Attribute Name="_C650A469" Type="String" />
-	<Attribute Name="_C673A7C3" Type="String" />
-	<Attribute Name="_C6DD432D" Type="String" />
-	<Attribute Name="_C75F71FC" Type="Byte" />
-	<Attribute Name="_C766FBAA" Type="String" />
-	<Attribute Name="_C792CEA6" Type="String" />
-	<Attribute Name="_C7A129E1" Type="Float" />
-	<Attribute Name="_C7EC2C30" Type="String" />
-	<Attribute Name="_C848E18F" Type="Byte" />
-	<Attribute Name="_C8CEEBCE" Type="String" />
-	<Attribute Name="_CA775B8A" Type="String" />
-	<Attribute Name="_CB014DB9" Type="String" />
-	<Attribute Name="_CC3C6870" Type="String" />
-	<Attribute Name="_CC9D6D25" Type="Byte" />
-	<Attribute Name="_CD201D2D" Type="String" />
-	<Attribute Name="_CD4C2ACA" Type="String" />
-	<Attribute Name="_CF6275BA" Type="Byte" />
-	<Attribute Name="_D0237189" Type="String" />
-	<Attribute Name="_D07EDE02" Type="String" />
-	<Attribute Name="_D0CCBE30" Type="String" />
-	<Attribute Name="_D1A72B4A" Type="Byte" />
-	<Attribute Name="_D20753DD" Type="Byte" />
-	<Attribute Name="_D2987C57" Type="String" />
-	<Attribute Name="_D2B3429E" Type="String" />
-	<Attribute Name="_D31E9714" Type="Byte" />
-	<Attribute Name="_D3617461" Type="String" />
-	<Attribute Name="_D57A1E79" Type="String" />
-	<Attribute Name="_D6B21DAB" Type="Int32" />
-	<Attribute Name="_D77651C8" Type="String" />
-	<Attribute Name="_D784536D" Type="String" />
-	<Attribute Name="_D821E6F9" Type="String" />
-	<Attribute Name="_D8C30842" Type="String" />
-	<Attribute Name="_D97BAB5A" Type="String" />
-	<Attribute Name="_D986CE26" Type="String" />
-	<Attribute Name="_D9DEC462" Type="String" />
-	<Attribute Name="_DA053D07" Type="String" />
-	<Attribute Name="_DA342A37" Type="String" />
-	<Attribute Name="_DA3D04C6" Type="Float" />
-	<Attribute Name="_DAF8004C" Type="String" />
-	<Attribute Name="_DB8C7F90" Type="String" />
-	<Attribute Name="_DBFA321A" Type="String" />
-	<Attribute Name="_DC5D5069" Type="String" />
-	<Attribute Name="_DC60FB17" Type="String" />
-	<Attribute Name="_DC987E1D" Type="Byte" />
-	<Attribute Name="_DCE92CC9" Type="String" />
-	<Attribute Name="_DD80D3C6" Type="Byte" />
-	<Attribute Name="_DE2711F7" Type="Byte" />
-	<Attribute Name="_DE4299C0" Type="String" />
-	<Attribute Name="_DE668CC8" Type="String" />
-	<Attribute Name="_DF12B802" Type="String" />
-	<Attribute Name="_DFD859F8" Type="Float" />
-	<Attribute Name="_DFF634CE" Type="String" />
-	<Attribute Name="_E0E9537B" Type="String" />
-	<Attribute Name="_E0ED5CFB" Type="String" />
-	<Attribute Name="_E19022E3" Type="String" />
-	<Attribute Name="_E19E0D6F" Type="String" />
-	<Attribute Name="_E1A0EE56" Type="String" />
-	<Attribute Name="_E24C4BBF" Type="String" />
-	<Attribute Name="_E34FC631" Type="String" />
-	<Attribute Name="_E35801BF" Type="String" />
-	<Attribute Name="_E40233E6" Type="String" />
-	<Attribute Name="_E4AA7EFD" Type="String" />
-	<Attribute Name="_E4F57A5D" Type="Float" />
-	<Attribute Name="_E6655990" Type="String" />
-	<Attribute Name="_E713612B" Type="Float" />
-	<Attribute Name="_E75DBAA3" Type="String" />
-	<Attribute Name="_E7B211ED" Type="Float" />
-	<Attribute Name="_E7F925D4" Type="String" />
-	<Attribute Name="_E89BF94E" Type="String" />
-	<Attribute Name="_E8DE4D33" Type="String" />
-	<Attribute Name="_E9017891" Type="String" />
-	<Attribute Name="_E90EE0FB" Type="String" />
-	<Attribute Name="_E91EC4F1" Type="String" />
-	<Attribute Name="_E942AD8B" Type="String" />
-	<Attribute Name="_EA15878E" Type="Float" />
-	<Attribute Name="_EA76BEA1" Type="String" />
-	<Attribute Name="_EB9553EC" Type="String" />
-	<Attribute Name="_EBAF99E4" Type="String" />
-	<Attribute Name="_EC3B6026" Type="String" />
-	<Attribute Name="_EC48F079" Type="String" />
-	<Attribute Name="_ECC41A6A" Type="String" />
-	<Attribute Name="_ECDE9F7E" Type="String" />
-	<Attribute Name="_EE1824B1" Type="Byte" />
-	<Attribute Name="_EE1B64F8" Type="String" />
-	<Attribute Name="_EE90C3F2" Type="Float" />
-	<Attribute Name="_EF03BE39" Type="String" />
-	<Attribute Name="_EF3B16A9" Type="String" />
-	<Attribute Name="_F230D46D" Type="String" />
-	<Attribute Name="_F23FCFFE" Type="String" />
-	<Attribute Name="_F3464B91" Type="String" />
-	<Attribute Name="_F36A4B55" Type="String" />
-	<Attribute Name="_F3B4A214" Type="String" />
-	<Attribute Name="_F3DD90A1" Type="Float" />
-	<Attribute Name="_F42CDBD0" Type="String" />
-	<Attribute Name="_F4FEF87E" Type="String" />
-	<Attribute Name="_F6EC7B34" Type="String" />
-	<Attribute Name="_F7E7EB4A" Type="String" />
-	<Attribute Name="_F8125C45" Type="String" />
-	<Attribute Name="_F8F1C3EF" Type="String" />
-	<Attribute Name="_F9307AD1" Type="String" />
-	<Attribute Name="_F96C74F5" Type="String" />
-	<Attribute Name="_F98AE3B5" Type="String" />
-	<Attribute Name="_F9C06634" Type="Float" />
-	<Attribute Name="_F9F2D5F4" Type="String" />
-	<Attribute Name="_FA9CC18D" Type="String" />
-	<Attribute Name="_FC25E1F1" Type="String" />
-	<Attribute Name="_FC2CDB5F" Type="String" />
-	<Attribute Name="_FD65ECC9" Type="String" />
-	<Attribute Name="_FDC61AE6" Type="String" />
-	<Attribute Name="_FDE0ABA6" Type="String" />
-	<Attribute Name="_FEA9145D" Type="String" />
-	<Attribute Name="_FF26C386" Type="String" />
-	<Attribute Name="_FF524196" Type="String" />
-	<Attribute Name="_FFB59558" Type="String" />
-	<Attribute Name="_FFCAC4CB" Type="String" />
+	<Attribute Hash="012B9F7A" Type="String" />
+	<Attribute Hash="0178F26E" Type="String" />
+	<Attribute Hash="02FAAA7B" Type="String" />
+	<Attribute Hash="0327953F" Type="String" />
+	<Attribute Hash="034AB9AA" Type="String" />
+	<Attribute Hash="07F0EC09" Type="String" />
+	<Attribute Hash="084B20B0" Type="String" />
+	<Attribute Hash="087FBE65" Type="String" />
+	<Attribute Hash="08E50480" Type="String" />
+	<Attribute Hash="0900413E" Type="String" />
+	<Attribute Hash="0955785E" Type="String" />
+	<Attribute Hash="0964801B" Type="String" />
+	<Attribute Hash="0976B341" Type="String" />
+	<Attribute Hash="0A50A924" Type="String" />
+	<Attribute Hash="0B6BC5E8" Type="String" />
+	<Attribute Hash="0BCE4752" Type="String" />
+	<Attribute Hash="0BDEFF89" Type="String" />
+	<Attribute Hash="0BF45C88" Type="String" />
+	<Attribute Hash="0D9C8B1A" Type="String" />
+	<Attribute Hash="0E9D5384" Type="String" />
+	<Attribute Hash="0FB517F4" Type="String" />
+	<Attribute Hash="1022E62B" Type="String" />
+	<Attribute Hash="1134CC78" Type="String" />
+	<Attribute Hash="11AFBF1F" Type="String" />
+	<Attribute Hash="1200CC64" Type="String" />
+	<Attribute Hash="122B8E89" Type="String" />
+	<Attribute Hash="1274496E" Type="String" />
+	<Attribute Hash="1289C98B" Type="String" />
+	<Attribute Hash="131CF115" Type="String" />
+	<Attribute Hash="134D2EF9" Type="String" />
+	<Attribute Hash="13E1DBD8" Type="String" />
+	<Attribute Hash="143E7B72" Type="String" />
+	<Attribute Hash="1543A6BC" Type="String" />
+	<Attribute Hash="16848038" Type="String" />
+	<Attribute Hash="16D01A31" Type="Byte" />
+	<Attribute Hash="16D1BE41" Type="String" />
+	<Attribute Hash="170C86A2" Type="String" />
+	<Attribute Hash="18E0D730" Type="String" />
+	<Attribute Hash="1900667A" Type="String" />
+	<Attribute Hash="19139B91" Type="String" />
+	<Attribute Hash="191665F3" Type="String" />
+	<Attribute Hash="1943B130" Type="String" />
+	<Attribute Hash="19B8945F" Type="String" />
+	<Attribute Hash="1A032A6D" Type="String" />
+	<Attribute Hash="1B96F244" Type="String" />
+	<Attribute Hash="1CB97581" Type="String" />
+	<Attribute Hash="1CC4F364" Type="String" />
+	<Attribute Hash="1D1BDA33" Type="String" />
+	<Attribute Hash="1DD4BA3F" Type="String" />
+	<Attribute Hash="1F77F457" Type="String" />
+	<Attribute Hash="1F8062E2" Type="String" />
+	<Attribute Hash="1FB4C362" Type="String" />
+	<Attribute Hash="20415141" Type="String" />
+	<Attribute Hash="209B5936" Type="String" />
+	<Attribute Hash="20CB698F" Type="String" />
+	<Attribute Hash="219FF858" Type="String" />
+	<Attribute Hash="21C1AEF1" Type="String" />
+	<Attribute Hash="23728CC1" Type="String" />
+	<Attribute Hash="24C05B65" Type="String" />
+	<Attribute Hash="257B32E3" Type="String" />
+	<Attribute Hash="25876AD3" Type="String" />
+	<Attribute Hash="25CEA882" Type="String" />
+	<Attribute Hash="25EACB4F" Type="String" />
+	<Attribute Hash="26328724" Type="String" />
+	<Attribute Hash="266F7AD1" Type="Byte" />
+	<Attribute Hash="26789509" Type="String" />
+	<Attribute Hash="27103611" Type="String" />
+	<Attribute Hash="27A97854" Type="Float" />
+	<Attribute Hash="27DC52DB" Type="String" />
+	<Attribute Hash="290A29BC" Type="String" />
+	<Attribute Hash="299CC0D8" Type="String" />
+	<Attribute Hash="29C1A24F" Type="String" />
+	<Attribute Hash="2A2FBF6C" Type="Int32" />
+	<Attribute Hash="2B8E3650" Type="String" />
+	<Attribute Hash="2BFB52AC" Type="String" />
+	<Attribute Hash="2CC55BBC" Type="String" />
+	<Attribute Hash="2CC8C55A" Type="Float" />
+	<Attribute Hash="2D1C4069" Type="String" />
+	<Attribute Hash="2D54FAB6" Type="String" />
+	<Attribute Hash="2DFAD4B4" Type="String" />
+	<Attribute Hash="2FE01C59" Type="String" />
+	<Attribute Hash="3030F2A0" Type="String" />
+	<Attribute Hash="3044DB2D" Type="String" />
+	<Attribute Hash="30914730" Type="String" />
+	<Attribute Hash="3128B110" Type="String" />
+	<Attribute Hash="31491B5F" Type="String" />
+	<Attribute Hash="3182766C" Type="String" />
+	<Attribute Hash="347B4CF0" Type="String" />
+	<Attribute Hash="35713324" Type="String" />
+	<Attribute Hash="36BF8BC0" Type="Int32" />
+	<Attribute Hash="36D66171" Type="String" />
+	<Attribute Hash="37359949" Type="String" />
+	<Attribute Hash="378378D6" Type="String" />
+	<Attribute Hash="37BAF9F3" Type="String" />
+	<Attribute Hash="37E04D75" Type="String" />
+	<Attribute Hash="37E96641" Type="String" />
+	<Attribute Hash="3863B00A" Type="String" />
+	<Attribute Hash="399D4477" Type="String" />
+	<Attribute Hash="3A097AD2" Type="String" />
+	<Attribute Hash="3C0A3824" Type="String" />
+	<Attribute Hash="3CFBE494" Type="String" />
+	<Attribute Hash="3ED2E127" Type="String" />
+	<Attribute Hash="3F742D26" Type="String" />
+	<Attribute Hash="3F896996" Type="String" />
+	<Attribute Hash="41141BB9" Type="String" />
+	<Attribute Hash="415C9112" Type="String" />
+	<Attribute Hash="41646A9F" Type="Float" />
+	<Attribute Hash="431FD918" Type="String" />
+	<Attribute Hash="43E5CAFC" Type="String" />
+	<Attribute Hash="44F43ED2" Type="String" />
+	<Attribute Hash="455955CF" Type="String" />
+	<Attribute Hash="463EA461" Type="String" />
+	<Attribute Hash="46B09C09" Type="String" />
+	<Attribute Hash="47218E00" Type="String" />
+	<Attribute Hash="474B51D8" Type="Byte" />
+	<Attribute Hash="47E40F16" Type="String" />
+	<Attribute Hash="4866A42D" Type="String" />
+	<Attribute Hash="4891040E" Type="String" />
+	<Attribute Hash="48C31CFF" Type="String" />
+	<Attribute Hash="48E7C846" Type="Float" />
+	<Attribute Hash="498DD7A3" Type="String" />
+	<Attribute Hash="4A12DEF9" Type="Float" />
+	<Attribute Hash="4A69982F" Type="String" />
+	<Attribute Hash="4C5D5824" Type="String" />
+	<Attribute Hash="4D05DB51" Type="String" />
+	<Attribute Hash="4E3D8B0A" Type="String" />
+	<Attribute Hash="4ED844F9" Type="String" />
+	<Attribute Hash="4F755AD7" Type="String" />
+	<Attribute Hash="50A0B808" Type="String" />
+	<Attribute Hash="5104CAFC" Type="String" />
+	<Attribute Hash="51684A47" Type="Byte" />
+	<Attribute Hash="52856C37" Type="String" />
+	<Attribute Hash="52B3296D" Type="String" />
+	<Attribute Hash="531A45E7" Type="String" />
+	<Attribute Hash="545CC8B4" Type="Float" />
+	<Attribute Hash="5469F08E" Type="String" />
+	<Attribute Hash="54CE5D78" Type="String" />
+	<Attribute Hash="56B6020C" Type="String" />
+	<Attribute Hash="58325F9E" Type="String" />
+	<Attribute Hash="58338865" Type="String" />
+	<Attribute Hash="585BF3E9" Type="Byte" />
+	<Attribute Hash="588A2979" Type="Byte" />
+	<Attribute Hash="58B11CA6" Type="String" />
+	<Attribute Hash="58BAFCFC" Type="String" />
+	<Attribute Hash="5945CE6C" Type="String" />
+	<Attribute Hash="595D0033" Type="String" />
+	<Attribute Hash="59E941B0" Type="Float" />
+	<Attribute Hash="5B59FFC1" Type="String" />
+	<Attribute Hash="5B8D3BB2" Type="String" />
+	<Attribute Hash="5C934AB1" Type="String" />
+	<Attribute Hash="5CA34EE9" Type="Int32" />
+	<Attribute Hash="5D75212C" Type="String" />
+	<Attribute Hash="5DBFDBF2" Type="Byte" />
+	<Attribute Hash="5EC465CD" Type="String" />
+	<Attribute Hash="5F08C545" Type="String" />
+	<Attribute Hash="5F840C99" Type="String" />
+	<Attribute Hash="5FBC05EF" Type="String" />
+	<Attribute Hash="60B6B4B4" Type="String" />
+	<Attribute Hash="62094984" Type="String" />
+	<Attribute Hash="62B67D58" Type="Int32" />
+	<Attribute Hash="62D7B87C" Type="String" />
+	<Attribute Hash="6513C65B" Type="String" />
+	<Attribute Hash="656703F1" Type="String" />
+	<Attribute Hash="6607BD7C" Type="String" />
+	<Attribute Hash="66376232" Type="String" />
+	<Attribute Hash="665D00D6" Type="String" />
+	<Attribute Hash="6671B2D8" Type="Float" />
+	<Attribute Hash="66743FE1" Type="String" />
+	<Attribute Hash="68500092" Type="String" />
+	<Attribute Hash="686A2995" Type="String" />
+	<Attribute Hash="69741F08" Type="String" />
+	<Attribute Hash="6AB3A189" Type="String" />
+	<Attribute Hash="6B0D0F01" Type="String" />
+	<Attribute Hash="6CA916E6" Type="String" />
+	<Attribute Hash="6CFED958" Type="String" />
+	<Attribute Hash="6D1E1959" Type="String" />
+	<Attribute Hash="6D569356" Type="String" />
+	<Attribute Hash="6DBC0779" Type="String" />
+	<Attribute Hash="6ED35D9D" Type="String" />
+	<Attribute Hash="6FAAE5C1" Type="String" />
+	<Attribute Hash="70020FCD" Type="String" />
+	<Attribute Hash="7018DFB2" Type="String" />
+	<Attribute Hash="7043614E" Type="String" />
+	<Attribute Hash="70CAFA74" Type="String" />
+	<Attribute Hash="71746190" Type="String" />
+	<Attribute Hash="71F3E3CB" Type="String" />
+	<Attribute Hash="74377F48" Type="String" />
+	<Attribute Hash="74428960" Type="String" />
+	<Attribute Hash="745F87D3" Type="String" />
+	<Attribute Hash="7491BE2D" Type="String" />
+	<Attribute Hash="74DE4E90" Type="Byte" />
+	<Attribute Hash="75D7B00C" Type="String" />
+	<Attribute Hash="75E92BEA" Type="String" />
+	<Attribute Hash="7617B9D5" Type="String" />
+	<Attribute Hash="7640D911" Type="String" />
+	<Attribute Hash="766BFB99" Type="String" />
+	<Attribute Hash="76E2473C" Type="String" />
+	<Attribute Hash="76E701B4" Type="String" />
+	<Attribute Hash="77089ED1" Type="String" />
+	<Attribute Hash="78031226" Type="String" />
+	<Attribute Hash="795F32D4" Type="String" />
+	<Attribute Hash="7A82EE06" Type="String" />
+	<Attribute Hash="7B87B004" Type="String" />
+	<Attribute Hash="7BD7C5F5" Type="String" />
+	<Attribute Hash="7D522BBE" Type="Byte" />
+	<Attribute Hash="7DC670E6" Type="String" />
+	<Attribute Hash="7FC21A3C" Type="String" />
+	<Attribute Hash="8034B7D9" Type="String" />
+	<Attribute Hash="80F7DFED" Type="String" />
+	<Attribute Hash="81578A03" Type="String" />
+	<Attribute Hash="82344CDF" Type="String" />
+	<Attribute Hash="8490D407" Type="String" />
+	<Attribute Hash="85D2FB27" Type="String" />
+	<Attribute Hash="87E038DB" Type="String" />
+	<Attribute Hash="881DA5D1" Type="String" />
+	<Attribute Hash="891363E2" Type="String" />
+	<Attribute Hash="89647578" Type="String" />
+	<Attribute Hash="8972696E" Type="String" />
+	<Attribute Hash="8994AF5B" Type="String" />
+	<Attribute Hash="89A1D4BD" Type="Float" />
+	<Attribute Hash="89FEF18A" Type="String" />
+	<Attribute Hash="8A02CD6D" Type="String" />
+	<Attribute Hash="8A6739BA" Type="String" />
+	<Attribute Hash="8B06392D" Type="String" />
+	<Attribute Hash="8B26E03A" Type="String" />
+	<Attribute Hash="8B325542" Type="Byte" />
+	<Attribute Hash="8B6DE45A" Type="String" />
+	<Attribute Hash="8B8B08ED" Type="String" />
+	<Attribute Hash="8BF2C7C7" Type="String" />
+	<Attribute Hash="8BF742CE" Type="String" />
+	<Attribute Hash="8CFE90A2" Type="String" />
+	<Attribute Hash="8DD32D82" Type="String" />
+	<Attribute Hash="8DEB1326" Type="String" />
+	<Attribute Hash="8E0EA160" Type="String" />
+	<Attribute Hash="8E5555F6" Type="String" />
+	<Attribute Hash="8EDE3D5A" Type="Byte" />
+	<Attribute Hash="8F595815" Type="String" />
+	<Attribute Hash="8F6B04FD" Type="String" />
+	<Attribute Hash="8FA15F81" Type="String" />
+	<Attribute Hash="8FD4B96F" Type="String" />
+	<Attribute Hash="90665ACB" Type="String" />
+	<Attribute Hash="92210DFC" Type="String" />
+	<Attribute Hash="924218C6" Type="String" />
+	<Attribute Hash="9301DFBD" Type="String" />
+	<Attribute Hash="9323E6DC" Type="String" />
+	<Attribute Hash="93CC8A38" Type="String" />
+	<Attribute Hash="94D003B4" Type="String" />
+	<Attribute Hash="9603D6F2" Type="Float" />
+	<Attribute Hash="96534E80" Type="String" />
+	<Attribute Hash="978B22AC" Type="String" />
+	<Attribute Hash="97FC9696" Type="String" />
+	<Attribute Hash="98DDDF5F" Type="String" />
+	<Attribute Hash="996136B2" Type="Byte" />
+	<Attribute Hash="9A71F855" Type="String" />
+	<Attribute Hash="9A806BC3" Type="String" />
+	<Attribute Hash="9AB2C785" Type="String" />
+	<Attribute Hash="9AB7CEBB" Type="String" />
+	<Attribute Hash="9BB5DB9E" Type="String" />
+	<Attribute Hash="9CBA17A9" Type="String" />
+	<Attribute Hash="9D02E8B1" Type="String" />
+	<Attribute Hash="9D0F693F" Type="String" />
+	<Attribute Hash="9D27E14D" Type="String" />
+	<Attribute Hash="9E1EA80B" Type="String" />
+	<Attribute Hash="9E86E76B" Type="String" />
+	<Attribute Hash="9EA59A1B" Type="String" />
+	<Attribute Hash="9EABDBDA" Type="String" />
+	<Attribute Hash="9EF664C5" Type="String" />
+	<Attribute Hash="A042E094" Type="String" />
+	<Attribute Hash="A11DB85B" Type="String" />
+	<Attribute Hash="A1702450" Type="String" />
+	<Attribute Hash="A1888097" Type="String" />
+	<Attribute Hash="A18A0633" Type="String" />
+	<Attribute Hash="A1F49CBC" Type="String" />
+	<Attribute Hash="A20C70A2" Type="Byte" />
+	<Attribute Hash="A20E0B6A" Type="String" />
+	<Attribute Hash="A3CD0AD0" Type="String" />
+	<Attribute Hash="A50E9815" Type="String" />
+	<Attribute Hash="A6741E4A" Type="String" />
+	<Attribute Hash="A7CB2BDD" Type="Float" />
+	<Attribute Hash="A8832FBB" Type="String" />
+	<Attribute Hash="A8B01B74" Type="String" />
+	<Attribute Hash="AA3C33FA" Type="String" />
+	<Attribute Hash="AA56E7EB" Type="String" />
+	<Attribute Hash="AA8D91B9" Type="String" />
+	<Attribute Hash="AAA77231" Type="String" />
+	<Attribute Hash="AC0F0714" Type="String" />
+	<Attribute Hash="AD237553" Type="String" />
+	<Attribute Hash="AD2B0CFC" Type="String" />
+	<Attribute Hash="AD343623" Type="String" />
+	<Attribute Hash="ADD124E1" Type="String" />
+	<Attribute Hash="AEBF1478" Type="String" />
+	<Attribute Hash="AF92FC85" Type="Byte" />
+	<Attribute Hash="AFE76675" Type="String" />
+	<Attribute Hash="B0358A3D" Type="String" />
+	<Attribute Hash="B1349C3F" Type="String" />
+	<Attribute Hash="B178E688" Type="String" />
+	<Attribute Hash="B1FFE785" Type="String" />
+	<Attribute Hash="B21B169A" Type="String" />
+	<Attribute Hash="B2E5E8CC" Type="String" />
+	<Attribute Hash="B4B5BF38" Type="String" />
+	<Attribute Hash="B4B8F008" Type="String" />
+	<Attribute Hash="B4EC6BBC" Type="String" />
+	<Attribute Hash="B5793048" Type="String" />
+	<Attribute Hash="B987700F" Type="String" />
+	<Attribute Hash="B9B1D6E8" Type="String" />
+	<Attribute Hash="B9B7AB00" Type="String" />
+	<Attribute Hash="BA00963B" Type="String" />
+	<Attribute Hash="BA2BBD58" Type="String" />
+	<Attribute Hash="BB7CE2D8" Type="String" />
+	<Attribute Hash="BC101295" Type="String" />
+	<Attribute Hash="BC6ED67A" Type="String" />
+	<Attribute Hash="BCC9D3DF" Type="String" />
+	<Attribute Hash="BD2FF023" Type="String" />
+	<Attribute Hash="BD82D998" Type="String" />
+	<Attribute Hash="BE501FD6" Type="String" />
+	<Attribute Hash="BEC92556" Type="String" />
+	<Attribute Hash="BF662B6B" Type="Byte" />
+	<Attribute Hash="BFB9927B" Type="String" />
+	<Attribute Hash="C0A206A8" Type="String" />
+	<Attribute Hash="C0EEEF72" Type="String" />
+	<Attribute Hash="C1003FDD" Type="String" />
+	<Attribute Hash="C1642AE5" Type="String" />
+	<Attribute Hash="C1E5B4D4" Type="String" />
+	<Attribute Hash="C22F7F57" Type="String" />
+	<Attribute Hash="C23C201F" Type="String" />
+	<Attribute Hash="C2628931" Type="String" />
+	<Attribute Hash="C28A6431" Type="String" />
+	<Attribute Hash="C2ADBAE7" Type="Byte" />
+	<Attribute Hash="C3477C2A" Type="String" />
+	<Attribute Hash="C35086B9" Type="String" />
+	<Attribute Hash="C378C772" Type="String" />
+	<Attribute Hash="C392037E" Type="String" />
+	<Attribute Hash="C443FEDC" Type="String" />
+	<Attribute Hash="C5485FEE" Type="String" />
+	<Attribute Hash="C60DA173" Type="String" />
+	<Attribute Hash="C650A469" Type="String" />
+	<Attribute Hash="C673A7C3" Type="String" />
+	<Attribute Hash="C6DD432D" Type="String" />
+	<Attribute Hash="C75F71FC" Type="Byte" />
+	<Attribute Hash="C766FBAA" Type="String" />
+	<Attribute Hash="C792CEA6" Type="String" />
+	<Attribute Hash="C7A129E1" Type="Float" />
+	<Attribute Hash="C7EC2C30" Type="String" />
+	<Attribute Hash="C8CEEBCE" Type="String" />
+	<Attribute Hash="CA775B8A" Type="String" />
+	<Attribute Hash="CB014DB9" Type="String" />
+	<Attribute Hash="CC3C6870" Type="String" />
+	<Attribute Hash="CC9D6D25" Type="Byte" />
+	<Attribute Hash="CD201D2D" Type="String" />
+	<Attribute Hash="CD4C2ACA" Type="String" />
+	<Attribute Hash="CF6275BA" Type="Byte" />
+	<Attribute Hash="D0237189" Type="String" />
+	<Attribute Hash="D07EDE02" Type="String" />
+	<Attribute Hash="D0CCBE30" Type="String" />
+	<Attribute Hash="D2987C57" Type="String" />
+	<Attribute Hash="D3617461" Type="String" />
+	<Attribute Hash="D57A1E79" Type="String" />
+	<Attribute Hash="D6B21DAB" Type="Int32" />
+	<Attribute Hash="D77651C8" Type="String" />
+	<Attribute Hash="D784536D" Type="String" />
+	<Attribute Hash="D821E6F9" Type="String" />
+	<Attribute Hash="D8C30842" Type="String" />
+	<Attribute Hash="D97BAB5A" Type="String" />
+	<Attribute Hash="D986CE26" Type="String" />
+	<Attribute Hash="D9DEC462" Type="String" />
+	<Attribute Hash="DA053D07" Type="String" />
+	<Attribute Hash="DA342A37" Type="String" />
+	<Attribute Hash="DAF8004C" Type="String" />
+	<Attribute Hash="DB8C7F90" Type="String" />
+	<Attribute Hash="DBFA321A" Type="String" />
+	<Attribute Hash="DC5D5069" Type="String" />
+	<Attribute Hash="DC60FB17" Type="String" />
+	<Attribute Hash="DD80D3C6" Type="Byte" />
+	<Attribute Hash="DE4299C0" Type="String" />
+	<Attribute Hash="DE668CC8" Type="String" />
+	<Attribute Hash="DF12B802" Type="String" />
+	<Attribute Hash="DFF634CE" Type="String" />
+	<Attribute Hash="E0E9537B" Type="String" />
+	<Attribute Hash="E0ED5CFB" Type="String" />
+	<Attribute Hash="E19022E3" Type="String" />
+	<Attribute Hash="E19E0D6F" Type="String" />
+	<Attribute Hash="E1A0EE56" Type="String" />
+	<Attribute Hash="E24C4BBF" Type="String" />
+	<Attribute Hash="E34FC631" Type="String" />
+	<Attribute Hash="E35801BF" Type="String" />
+	<Attribute Hash="E40233E6" Type="String" />
+	<Attribute Hash="E4AA7EFD" Type="String" />
+	<Attribute Hash="E6655990" Type="String" />
+	<Attribute Hash="E713612B" Type="Float" />
+	<Attribute Hash="E75DBAA3" Type="String" />
+	<Attribute Hash="E7F925D4" Type="String" />
+	<Attribute Hash="E89BF94E" Type="String" />
+	<Attribute Hash="E8DE4D33" Type="String" />
+	<Attribute Hash="E9017891" Type="String" />
+	<Attribute Hash="E90EE0FB" Type="String" />
+	<Attribute Hash="E91EC4F1" Type="String" />
+	<Attribute Hash="E942AD8B" Type="String" />
+	<Attribute Hash="EA15878E" Type="Float" />
+	<Attribute Hash="EA76BEA1" Type="String" />
+	<Attribute Hash="EB9553EC" Type="String" />
+	<Attribute Hash="EBAF99E4" Type="String" />
+	<Attribute Hash="EC3B6026" Type="String" />
+	<Attribute Hash="EC48F079" Type="String" />
+	<Attribute Hash="ECC41A6A" Type="String" />
+	<Attribute Hash="ECDE9F7E" Type="String" />
+	<Attribute Hash="EE1824B1" Type="Byte" />
+	<Attribute Hash="EE1B64F8" Type="String" />
+	<Attribute Hash="EE90C3F2" Type="Float" />
+	<Attribute Hash="EF03BE39" Type="String" />
+	<Attribute Hash="EF3B16A9" Type="String" />
+	<Attribute Hash="F230D46D" Type="String" />
+	<Attribute Hash="F23FCFFE" Type="String" />
+	<Attribute Hash="F3464B91" Type="String" />
+	<Attribute Hash="F3B4A214" Type="String" />
+	<Attribute Hash="F3DD90A1" Type="Float" />
+	<Attribute Hash="F42CDBD0" Type="String" />
+	<Attribute Hash="F4FEF87E" Type="String" />
+	<Attribute Hash="F6EC7B34" Type="String" />
+	<Attribute Hash="F7E7EB4A" Type="String" />
+	<Attribute Hash="F8125C45" Type="String" />
+	<Attribute Hash="F8F1C3EF" Type="String" />
+	<Attribute Hash="F9307AD1" Type="String" />
+	<Attribute Hash="F96C74F5" Type="String" />
+	<Attribute Hash="F98AE3B5" Type="String" />
+	<Attribute Hash="F9F2D5F4" Type="String" />
+	<Attribute Hash="FA9CC18D" Type="String" />
+	<Attribute Hash="FC25E1F1" Type="String" />
+	<Attribute Hash="FC2CDB5F" Type="String" />
+	<Attribute Hash="FD65ECC9" Type="String" />
+	<Attribute Hash="FDC61AE6" Type="String" />
+	<Attribute Hash="FDE0ABA6" Type="String" />
+	<Attribute Hash="FEA9145D" Type="String" />
+	<Attribute Hash="FF26C386" Type="String" />
+	<Attribute Hash="FF524196" Type="String" />
+	<Attribute Hash="FFB59558" Type="String" />
+	<Attribute Hash="FFCAC4CB" Type="String" />
+	<Attribute Hash="E702942A" Type="BinHex" />
+	<Attribute Hash="C47D77ED" Type="BinHex" />
+	<Attribute Hash="30F1019F" Type="BinHex" />
+	<Attribute Hash="50A9DBCC" Type="BinHex" />
+	<Attribute Hash="69087902" Type="BinHex" />
+	<Attribute Hash="3A063ED6" Type="BinHex" />
+	
+	<!-- Known attribute names with unknown types -->
+	<Attribute Name="selReflectorTimeCurve" Type="BinHex" />
+	<Attribute Name="selHighlightType" Type="BinHex" />
+	<Attribute Name="hidResourceIndex" Type="BinHex" />
+	<Attribute Name="SoundId" Type="BinHex" />
+	<Attribute Name="selBlendType" Type="BinHex" />
+	
+	<Attribute Name="ResourceIndex" Type="BinHex" />
+	<Attribute Name="LayerCount" Type="BinHex" />
+	<Attribute Name="selLocomotionFilter" Type="BinHex" />
+	<Attribute Name="nNumLanesLeft" Type="BinHex" />
+	<Attribute Name="nNumLanesRight" Type="BinHex" />
+	<Attribute Name="selMovementType" Type="BinHex" />
+	<Attribute Name="hidSingleObject" Type="BinHex" />
+	<Attribute Name="hidValidationFailed" Type="BinHex" />
+	<Attribute Name="iShareChannel" Type="BinHex" />
+	<Attribute Name="uiStepIndex" Type="BinHex" />
+	<Attribute Name="iRandomSeedBias" Type="BinHex" />
+	<Attribute Name="nStartTextureStateIndex" Type="BinHex" />
+	<Attribute Name="animalCanJumpAgainst" Type="BinHex" />
+	<Attribute Name="iVal" Type="BinHex" />
+	<Attribute Name="selInitialRotation" Type="BinHex" />
+	<Attribute Name="affectedByTimeOfDay" Type="BinHex" />
+	<Attribute Name="uiPawnInteractionMonitorUpdateDelay" Type="BinHex" />
+	<Attribute Name="Usable" Type="BinHex" />
+	<Attribute Name="selAffiliation" Type="BinHex" />
+	<Attribute Name="selNpcSpeedType" Type="BinHex" />
+	<Attribute Name="selPointType" Type="BinHex" />
+	<Attribute Name="iPriority" Type="BinHex" />
+	<Attribute Name="selShowcaseValue" Type="BinHex" />
+	<Attribute Name="selReinforcementCallerMode" Type="BinHex" />
+	<Attribute Name="selPatrolType" Type="BinHex" />
+	<Attribute Name="selFleeDirection" Type="BinHex" />
+	<Attribute Name="selFOVType" Type="BinHex" />
+	
+	<Attribute Name="selCollectibleType" Type="BinHex" />
+	<Attribute Name="selDirection" Type="BinHex" />
+	<Attribute Name="StartOnLoad" Type="BinHex" />
+	<Attribute Name="selShapeTessellationType" Type="BinHex" />
+	<Attribute Name="iStartHour" Type="BinHex" />
+	<Attribute Name="iStartMinute" Type="BinHex" />
+	<Attribute Name="iEndHour" Type="BinHex" />
+	<Attribute Name="iEndMinute" Type="BinHex" />
+	<Attribute Name="SharedFaces0" Type="BinHex" />
+    <Attribute Name="SharedFaces1" Type="Byte" />
+	<Attribute Name="Vertices0" Type="BinHex" />
+	<Attribute Name="Vertices1" Type="BinHex" />
+	<Attribute Name="selRespawnObjectType" Type="BinHex" />
+	<Attribute Name="selBlendMode" Type="BinHex" />
+	<Attribute Name="selArenaAffiliation" Type="BinHex" />
+	<Attribute Name="iFCount" Type="BinHex" />
+	<Attribute Name="uiMaxRobotCount" Type="BinHex" />
+	<Attribute Name="uiMaxAnimalCount" Type="BinHex" />
+	<Attribute Name="nMinReinforcementCallerCount" Type="BinHex" />
+	<Attribute Name="nMaxReinforcementCallerCount" Type="BinHex" />
+	<Attribute Name="uiNumShapeSides" Type="BinHex" />
+	<Attribute Name="DamagePerJet" Type="BinHex" />
+	<Attribute Name="nMaterialIdx" Type="BinHex" />
+	<Attribute Name="uiTextureSelection" Type="BinHex" />
+	<Attribute Name="selNavmeshType" Type="BinHex" />
+	<Attribute Name="selTagType" Type="BinHex" />
+	<Attribute Name="iMaxHeathLevel" Type="BinHex" />
+	<Attribute Name="IsRiver" Type="BinHex" />
+	<Attribute Name="SortingLayer" Type="BinHex" />
+	
+    <Attribute Name="LocalizationId" 				            /><!--Type="Int16" />-->
+	<Attribute Name="Amount" 						            /><!--Type="Int32" />-->
+    <Attribute Name="AngleOffset" 					            /><!--Type="Vector3" />-->
+    <Attribute Name="AntiTankGun" 					            /><!--Type="Int32" />-->
+    <Attribute Name="AvoidSelfOcclusion" 			            /><!--Type="Int32" />-->
+    <Attribute Name="BoneName" 						            /><!--Type="Int32" />-->
+    <Attribute Name="BoxSize" 						            /><!--Type="Vector3" />-->
+    <Attribute Name="BulletCaseBone" 				            /><!--Type="Int32" />-->
+    <Attribute Name="BulletCaseEjectionDelay" 		            /><!--Type="Int32" />-->
+    <Attribute Name="CollisionBark" 				            /><!--Type="Int32" />-->
+    <Attribute Name="ColBoxParentBoneID" 			            /><!--Type="Byte" />-->
+    <Attribute Name="Color" 						            /><!--Type="Vector4" />-->
+    <Attribute Name="Darkness" 						            /><!--Type="Int32" />-->
+    <Attribute Name="Dead" 							            /><!--Type="Int32" />-->
+    <Attribute Name="DistanceMax" 					            /><!--Type="Int32" />-->
+    <Attribute Name="EnergyPickUp" 					            /><!--Type="Int32" />-->
+    <Attribute Name="ExplosionImpulseDividerHACK" 	            /><!--Type="Int32" />-->
+    <Attribute Name="ExplosionCenter" 				            /><!--Type="Vector3" />-->
+    <Attribute Name="FadeOutStartDistance" 			            /><!--Type="Int32" />-->
+    <Attribute Name="FadeInStartDistance" 			            /><!--Type="Int32" />-->
+    <Attribute Name="FadeoutStart" 					            /><!--Type="Int32" />-->
+    <Attribute Name="FallingBark" 					            /><!--Type="Int32" />-->
+    <Attribute Name="FadeOutEndDistance" 			            /><!--Type="Int32" />-->
+    <Attribute Name="FadeInEndStartDistance" 		            /><!--Type="Int32" />-->
+    <Attribute Name="FleeAnimRatio" 				            /><!--Type="Int32" />-->
+    <Attribute Name="FollowerScreenStringId" 		            /><!--Type="Int32" />-->
+    <Attribute Name="GatlingGun" 					            /><!--Type="Int32" />-->
+    <Attribute Name="HeavyDamages" 					            /><!--Type="Int32" />-->
+    <Attribute Name="HighEnd" 						            /><!--Type="Int32" />-->
+    <Attribute Name="IdleBark" 						            /><!--Type="Int32" />-->
+    <Attribute Name="InteractStimDelay" 			            /><!--Type="Int32" />-->
+    <Attribute Name="Info" 							            /><!--Type="Vector4" />-->
+    <Attribute Name="Indices" 						            /><!--Type="Int32" />-->
+    <Attribute Name="LOD0Distance" 					            /><!--Type="Int32" />-->
+    <Attribute Name="LightName" 					            /><!--Type="Int32" />-->
+    <Attribute Name="LicensePlateText" 				            /><!--Type="Byte" />-->
+    <Attribute Name="LicensePlateText" 				            /><!--Type="Int32" />-->
+    <Attribute Name="LightName" 					            /><!--Type="Vector4" />-->
+    <Attribute Name="LightDamages" 					            /><!--Type="Int32" />-->
+    <Attribute Name="LocalizationId" 				            /><!--Type="Int32" />-->
+    <Attribute Name="LocalizationId" 				            /><!--Type="Byte" />-->
+    <Attribute Name="LockBone" 						            /><!--Type="Int32" />-->
+    <Attribute Name="LoggingSize" 					            /><!--Type="Byte" />-->
+    <Attribute Name="LogicMaterial" 				            /><!--Type="Byte" />-->
+    <Attribute Name="MaxNumberOfJets" 				            /><!--Type="Byte" />-->
+    <Attribute Name="MediumDamages" 				            /><!--Type="Int32" />-->
+    <Attribute Name="MinTimeBetweenCollisions" 		            /><!--Type="Int32" />-->
+    <Attribute Name="MultistateThreshold" 			            /><!--Type="Int32" />-->
+    <Attribute Name="MuzzleBone" 					            /><!--Type="Int32" />-->
+    <Attribute Name="NodeName" 						            /><!--Type="Int32" />-->
+    <Attribute Name="Normal" 						            /><!--Type="Int32" />-->
+    <Attribute Name="Offset" 						            /><!--Type="Vector3" />-->
+    <Attribute Name="Orientation" 					            /><!--Type="Vector3" />-->
+    <Attribute Name="OriginalShape" 				            /><!--Type="Int32" />-->
+    <Attribute Name="PartCount" 					            /><!--Type="Byte" />-->
+    <Attribute Name="PillStart" 					            /><!--Type="Int32" />-->
+    <Attribute Name="Plane" 						            /><!--Type="Vector4" />-->
+    <Attribute Name="Pos" 							            /><!--Type="Vector3" />-->
+    <Attribute Name="Points" 						            /><!--Type="Int32" />-->
+    <Attribute Name="RagdollCollideSpeedLimit" 		            /><!--Type="Int32" />-->
+    <Attribute Name="RegionSeparatorCount" 			            /><!--Type="Vector3" />-->
+    <Attribute Name="ResourceTypeID" 				            /><!--Type="Int32" />-->
+    <Attribute Name="Rotation" 						            /><!--Type="Vector3" />-->
+    <Attribute Name="SKToDefaultTrigger" 			            /><!--Type="Int32" />-->
+    <Attribute Name="SKGreetingTrigger" 			            /><!--Type="Int32" />-->
+    <Attribute Name="SKPurchaseMadeTrigger" 		            /><!--Type="Int32" />-->
+    <Attribute Name="SKNoPurchaseMadeTrigger" 		            /><!--Type="Int32" />-->
+    <Attribute Name="SKWakeupDistance" 				            /><!--Type="Int32" />-->
+    <Attribute Name="SKStartSleepTrigger" 			            /><!--Type="Int32" />-->
+    <Attribute Name="Scalar" 						            /><!--Type="Int32" />-->
+    <Attribute Name="SecondaryColBoxParentBoneID" 	            /><!--Type="Byte" />-->
+    <Attribute Name="SeatBone" 						            /><!--Type="Int32" />-->
+    <Attribute Name="SeatBoneAnchor" 				            /><!--Type="Int32" />-->
+    <Attribute Name="SectorID" 						            /><!--Type="Byte" />-->
+    <Attribute Name="Shapes" 						            /><!--Type="Int32" />-->
+    <Attribute Name="Size" 							            /><!--Type="Vector3" />-->
+    <Attribute Name="SlotStringId" 					            /><!--Type="Int32" />-->
+    <Attribute Name="SlideBone" 					            /><!--Type="Int32" />-->
+    <Attribute Name="SnapToTerrain" 				            /><!--Type="Byte" />-->
+    <Attribute Name="SpawnDelay" 					            /><!--Type="Int32" />-->
+    <Attribute Name="SpinningBark" 					            /><!--Type="Int32" />-->
+    <Attribute Name="StimDuration" 					            /><!--Type="Int32" />-->
+    <Attribute Name="TalkBark" 						            /><!--Type="Int32" />-->
+    <Attribute Name="TreeName" 						            /><!--Type="Int32" />-->
+    <Attribute Name="aiagentzoneTypeClassID" 		            /><!--Type="Int32" />-->
+    <Attribute Name="areaLightRadius" 				            /><!--Type="Int32" />-->
+    <Attribute Name="autoCloseNPCDetectionRadius" 	            /><!--Type="Int32" />-->
+    <Attribute Name="autoClosePlayerDetectionRadius"            /><!--Type="Int32" />-->       
+    
+    
+    
 </AttributeTypes>
