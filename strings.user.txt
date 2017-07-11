@@ -1,0 +1,2 @@
+# Add your custom strings for hash lookups below this line :)
+The Bastard Was Here
