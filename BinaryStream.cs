@@ -416,6 +416,11 @@ namespace System.IO
         {
             Write((float)value);
         }
+
+        public void Write(byte[] bytes)
+        {
+            Write(bytes, 0, bytes.Length);
+        }
         
         public void Write(byte value)
         {
