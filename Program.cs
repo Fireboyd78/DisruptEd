@@ -18,8 +18,6 @@ namespace Disrupt.FCBastard
 
     public enum AttributeType
     {
-        Reserved,
-
         BinHex,
 
         Bool,
@@ -82,6 +80,14 @@ namespace Disrupt.FCBastard
             return null;
         }
 
+        public static string GetHashString(int hash)
+        {
+            if (CanResolveHash(hash))
+                return m_lookup[hash];
+
+            return $"_{hash:X8}";
+        }
+
         public static void AddLookupsFile(string lookupFile)
         {
             var lines = File.ReadAllLines(lookupFile);
@@ -120,6 +126,97 @@ namespace Disrupt.FCBastard
             return str;
         }
 
+        public static int GetTotalNumberOfNodes(NodeClass node)
+        {
+            var nChildren = 0;
+
+            if ((node != null) && (node.Children.Count > 0))
+            {
+                foreach (var subNode in node.Children)
+                {
+                    nChildren += 1;
+
+                    if (subNode.Children.Count > 0)
+                        nChildren += GetTotalNumberOfNodes(subNode);
+                }
+            }
+
+            return nChildren;
+        }
+
+        public static int GetTotalNumberOfAttributes(NodeClass node)
+        {
+            var nAttributes = 0;
+
+            if (node != null)
+            {
+                nAttributes = node.Attributes.Count;
+
+                if (node.Children.Count > 0)
+                {
+                    foreach (var subNode in node.Children)
+                        nAttributes += GetTotalNumberOfAttributes(subNode);
+                }
+            }
+
+            return nAttributes;
+        }
+
+        public static bool IsAttributeBufferStrangeSize(AttributeData data)
+        {
+            var fixedSize = false;
+            var size = (data.Buffer != null) ? data.Buffer.Length : 0;
+
+            var zeroOrFullSize = false;
+
+            switch (data.Type)
+            {
+            // we don't know -- variable-sized buffer :(
+            case AttributeType.BinHex:
+            case AttributeType.String:
+                return false;
+
+            case AttributeType.Float:
+                zeroOrFullSize = true;
+                break;
+                
+            case AttributeType.Vector2:
+            case AttributeType.Vector3:
+            case AttributeType.Vector4:
+                fixedSize = true;
+                break;
+            }
+            
+            var typeSize = GetAttributeTypeSize(data.Type);
+
+            // if it's a fixed-size type, it must be
+            if (fixedSize)
+                return ((size != 0) && (size != typeSize));
+            
+            // zero is never strange!
+            if (size == 0)
+                return false;
+
+            // biggest type should be 8-bytes long
+            // so at this point, it's very strange!
+            if ((size & 0xF) != size)
+                return true;
+            
+            var isStrange = ((typeSize % size) == 1);
+
+            // type can either be zero or its full-size
+            if (zeroOrFullSize && (size != typeSize))
+                isStrange = true;
+
+            return isStrange;
+        }
+
+        public static AttributeType GetAttributeTypeBestGuess(AttributeData data)
+        {
+            var size = (data.Buffer != null) ? data.Buffer.Length : 0;
+            return GetAttributeTypeBestGuess(size);
+        }
+
         public static AttributeType GetAttributeTypeBestGuess(int size)
         {
             switch (size)
@@ -139,6 +236,91 @@ namespace Disrupt.FCBastard
             return AttributeType.BinHex;
         }
 
+        // tries to minify the buffer
+        public static byte[] GetAttributeDataMiniBuffer(byte[] buffer, AttributeType type)
+        {
+            // don't even think about it!
+            if (type == AttributeType.BinHex)
+                return buffer;
+
+            var empty = new byte[0];
+
+            var maxSize = GetAttributeTypeSize(type);
+
+            // you're on your own, dude
+            if ((maxSize != -1) && (buffer.Length > maxSize))
+                return buffer;
+
+            var attrBuf = GetAttributeDataBuffer(buffer, type);
+            var value = 0uL;
+
+            switch (type)
+            {
+            case AttributeType.Bool:
+            case AttributeType.Byte:
+                value = attrBuf[0];
+                break;
+
+            case AttributeType.Int16:
+            case AttributeType.UInt16:
+                value = BitConverter.ToUInt16(attrBuf, 0);
+                break;
+
+            case AttributeType.Int32:
+            case AttributeType.UInt32:
+            case AttributeType.StringHash:
+                value = BitConverter.ToUInt32(attrBuf, 0);
+                break;
+
+            /* these types can only be minified if they're actually zero/empty */
+            case AttributeType.String:
+                {
+                    var str = Encoding.UTF8.GetString(attrBuf);
+
+                    if (String.IsNullOrEmpty(str))
+                        return empty;
+
+                    return attrBuf;
+                }
+            case AttributeType.Float:
+                var fVal = BitConverter.ToSingle(attrBuf, 0);
+
+                if (fVal == 0.0f)
+                    return empty;
+
+                return attrBuf;
+
+            /* vectors cannot be minified :( */
+            case AttributeType.Vector2:
+            case AttributeType.Vector3:
+            case AttributeType.Vector4:
+                return buffer;
+            }
+
+            // now that's what I call small :)
+            if (value == 0)
+                return empty;
+
+#if ALLOW_MINI_SIZE_DATA
+            var miniSize = 8;
+
+            // try to make the integer as small as possible
+            if ((value & 0xFFFFFFFF) == value)
+                miniSize -= 4;
+            if ((value & 0xFFFF) == value)
+                miniSize -= 2;
+            if ((value & 0xFF) == value)
+                miniSize -= 1;
+
+            var miniBuf = new byte[miniSize];
+
+            Array.Copy(attrBuf, miniBuf, miniSize);
+            return miniBuf;
+#else
+            return attrBuf;
+#endif
+        }
+
         public static int GetAttributeTypeSize(AttributeType type)
         {
             switch (type)
@@ -156,6 +338,10 @@ namespace Disrupt.FCBastard
             case AttributeType.Float:
             case AttributeType.StringHash:
                 return 4;
+
+            /* shared with the other form hash not yet implemented */
+            case AttributeType.Vector2:
+                return 8;
 
             case AttributeType.Vector3:
                 return 12;
@@ -178,17 +364,17 @@ namespace Disrupt.FCBastard
             case AttributeType.UInt16:
             case AttributeType.Int32:
             case AttributeType.UInt32:
-            case AttributeType.StringHash:
                 return "0";
 
             case AttributeType.BinHex:
             case AttributeType.String:
+            case AttributeType.StringHash:
                 return "";
 
             case AttributeType.Vector2:
             case AttributeType.Vector3:
             case AttributeType.Vector4:
-                return "[]";
+                return "";
             }
 
             return "???";
@@ -224,11 +410,26 @@ namespace Disrupt.FCBastard
             // return a properly-sized buffer :)
             return data;
         }
+
+        public static byte[] GetCountBuffer(int count)
+        {
+            if (count >= 254)
+            {
+                // you're gonna need a bigger buffer ;)
+                var largeSize = (0xFF | ((count & 0xFFFFFF) << 8));
+
+                return BitConverter.GetBytes(largeSize);
+            }
+            else
+            {
+                return new byte[1] { (byte)count };
+            }
+        }
     }
 
     public struct AttributeTypeValue
     {
-        AttributeType Type;
+        public AttributeType Type;
 
         public static implicit operator AttributeType(AttributeTypeValue typeVal)
         {
@@ -258,8 +459,8 @@ namespace Disrupt.FCBastard
 
     public struct AttributeData
     {
-        byte[] Buffer;
-        AttributeType Type;
+        public byte[] Buffer;
+        public AttributeType Type;
 
         public bool IsBufferValid()
         {
@@ -398,16 +599,16 @@ namespace Disrupt.FCBastard
                             {
                                 var w = BitConverter.ToSingle(buffer, 12);
 
-                                return $"[{x},{y},{z},{w}]";
+                                return $"{x},{y},{z},{w}";
                             }
                             else
                             {
-                                return $"[{x},{y},{z}]";
+                                return $"{x},{y},{z}";
                             }
                         }
                     }
 
-                    return $"[{x},{y}]";
+                    return $"{x},{y}";
                 }
             case AttributeType.StringHash:
                 {
@@ -417,14 +618,294 @@ namespace Disrupt.FCBastard
 
             return ToHexString();
         }
+
+        public void WriteTo(BinaryStream stream)
+        {
+            //var size = 0;
+            //
+            //if (Buffer != null)
+            //{
+            //    size = Utils.GetAttributeTypeSize(Type);
+            //
+            //    if (size == -1)
+            //    {
+            //        // can be any length
+            //        size = Buffer.Length;
+            //    }
+            //    else
+            //    {
+            //        if (Buffer.Length > size)
+            //            throw new InvalidOperationException("Buffer is too large to fit into the specified type");
+            //
+            //        // cool, it's minified
+            //        if (size > Buffer.Length)
+            //            size = Buffer.Length;
+            //    }
+            //}
+
+            if ((Buffer != null) && (Buffer.Length > 0))
+            {
+                var buffer = Utils.GetAttributeDataMiniBuffer(Buffer, Type);
+
+                stream.Write(Utils.GetCountBuffer(buffer.Length));
+                stream.Write(buffer);
+            }
+            else
+            {
+                // nothing to write!
+                stream.WriteByte(0);
+            }
+        }
+
+        public AttributeData(byte[] buffer)
+        {
+            Type = AttributeType.BinHex;
+            Buffer = buffer;
+        }
+
+        public AttributeData(AttributeType type)
+        {
+            Type = type;
+            Buffer = Utils.GetAttributeDataBuffer(null, type);
+        }
         
-        public AttributeData(byte[] buffer, AttributeType type = AttributeType.BinHex)
+        public AttributeData(AttributeType type, byte[] buffer)
         {
             Buffer = buffer;
             Type = type;
         }
     }
+
+    public abstract class NodeBase
+    {
+        private string m_name;
+        private int m_hash;
+
+        public string Name
+        {
+            get { return m_name; }
+            set
+            {
+                m_name = value;
+                m_hash = (m_name != null) ? StringHasher.GetHash(m_name) : 0;
+            }
+        }
+
+        public int Hash
+        {
+            get { return m_hash; }
+            set
+            {
+                m_hash = value;
+                m_name = $"_{m_hash:X8}";
+            }
+        }
+
+        public virtual void WriteTo(BinaryStream stream)
+        {
+            stream.Write(Hash);
+        }
+        
+        public override string ToString()
+        {
+            return (m_name != null) ? m_name : String.Empty;
+        }
+        
+        protected NodeBase(string name)
+        {
+            Name = name;
+        }
+
+        protected NodeBase(int hash)
+        {
+            Hash = hash;
+        }
+
+        protected NodeBase(int hash, string name)
+        {
+            m_name = name;
+            m_hash = hash;
+        }
+    }
     
+    public class NodeAttribute : NodeBase
+    {
+        public AttributeData Data { get; set; }
+        
+        public void WriteTo(BinaryStream stream, bool writeHash)
+        {
+            if (writeHash)
+            {
+                base.WriteTo(stream);
+            }
+            else
+            {
+                Data.WriteTo(stream);
+            }
+        }
+
+        public override void WriteTo(BinaryStream stream)
+        {
+            Data.WriteTo(stream);
+        }
+
+        public NodeAttribute(string name)
+            : this(name, AttributeType.BinHex) { }
+
+        public NodeAttribute(int hash)
+            : this(hash, AttributeType.BinHex) { }
+
+        public NodeAttribute(int hash, string name)
+        : this(hash, name, AttributeType.BinHex) { }
+
+        public NodeAttribute(string name, AttributeType type)
+            : base(name)
+        {
+            Data = new AttributeData(type);
+        }
+        
+        public NodeAttribute(int hash, AttributeType type)
+            : base(hash)
+        {
+            Data = new AttributeData(type);
+        }
+        
+        public NodeAttribute(int hash, string name, AttributeType type)
+            : base(hash, name)
+        {
+            Data = new AttributeData(type);
+        }
+    }
+
+    public class NodeClass : NodeBase
+    {
+        public List<NodeAttribute> Attributes { get; set; }
+        public List<NodeClass> Children { get; set; }
+
+        public override void WriteTo(BinaryStream stream)
+        {
+            var nChildren = Children.Count;
+            var nAttributes = Attributes.Count;
+
+            stream.Write(Utils.GetCountBuffer(nChildren));
+            stream.Write(Hash);
+            
+            var attrsPtr = stream.Position;
+            stream.Position += 2;
+
+            stream.Write(Utils.GetCountBuffer(nAttributes));
+
+            // step 1: write hashes
+            foreach (var attribute in Attributes)
+                attribute.WriteTo(stream, true);
+            // step 2: write data
+            foreach (var attribute in Attributes)
+                attribute.WriteTo(stream);
+
+            var attrsSize = (int)(stream.Position - (attrsPtr + 2));
+
+            if (attrsSize > 65535)
+                throw new InvalidOperationException("Attribute data too large.");
+
+            var childrenPtr = stream.Position;
+            
+            stream.Position = attrsPtr;
+            stream.Write((short)attrsSize);
+            
+            stream.Position = childrenPtr;
+
+            // now write the children out
+            foreach (var child in Children)
+                child.WriteTo(stream);
+        }
+
+        public NodeClass(int hash)
+            : this(hash, -1, -1) { }
+        public NodeClass(string name)
+            : this(name, -1, -1) { }
+        
+        public NodeClass(int hash, int nChildren, int nAttributes)
+            : base(hash)
+        {
+            Children = (nChildren == -1) ? new List<NodeClass>() : new List<NodeClass>(nChildren);
+            Attributes = (nAttributes == -1) ? new List<NodeAttribute>() : new List<NodeAttribute>(nAttributes);
+        }
+
+        public NodeClass(string name, int nChildren, int nAttributes)
+            : base(name)
+        {
+            Children = (nChildren == -1) ? new List<NodeClass>() : new List<NodeClass>(nChildren);
+            Attributes = (nAttributes == -1) ? new List<NodeAttribute>() : new List<NodeAttribute>(nAttributes);
+        }
+    }
+
+    public class NodeLibrary
+    {
+        static readonly MagicNumber Magic = "nbCF";
+        static readonly int Type = 0x4005;
+
+        public class InfoEntry
+        {
+            public long ID { get; set; }
+
+            public int Unknown { get; set; }
+
+            public int Count1 { get; set; }
+            public int Count2 { get; set; }
+
+            public void WriteTo(BinaryStream stream)
+            {
+                stream.Write(ID);
+                stream.Write(Unknown);
+                stream.Write((short)Count1);
+                stream.Write((short)Count2);
+            }
+        }
+
+        public int Count1 { get; set; }
+        public int Count2 { get; set; }
+
+        public NodeClass Root { get; set; }
+
+        public List<InfoEntry> Infos { get; set; }
+
+        public void WriteTo(BinaryStream stream)
+        {
+            var nInfos = Infos.Count;
+
+            // we need to write the offset to our infos here
+            var ptr = stream.Position;
+            stream.Position += 4;
+            
+            stream.Write(nInfos);
+            stream.Write((int)Magic);
+            stream.Write((int)Type);
+
+            stream.Write(Count1);
+            stream.Write(Count2);
+
+            Root.WriteTo(stream);
+
+            var infosOffset = (int)(Memory.Align(stream.Position, 8) - ptr);
+            
+            // write the infos offset
+            stream.Position = ptr;
+            stream.Write(infosOffset);
+
+            // write the infos
+            stream.Position = infosOffset;
+
+            foreach (var info in Infos)
+                info.WriteTo(stream);
+        }
+
+        public NodeLibrary()
+        {
+            Root = new NodeClass("EntityLibraries");
+            Infos = new List<InfoEntry>();
+        }
+    }
+
     class Program
     {
         static readonly MagicNumber FCBMagic = "nbCF";
@@ -487,34 +968,50 @@ namespace Disrupt.FCBastard
             }
         }
 
-        static byte[] ReadAttribute(BinaryStream bs)
+        static AttributeData ReadAttribute(BinaryStream bs, string name, AttributeType type = AttributeType.BinHex)
         {
-            byte[] buffer;
-
             var ptr = (int)bs.Position;
             var nC = bs.ReadByte();
 
+            var isOffset = (nC == 254);
+
+            // will either be an offset or >=255 count
             if (nC >= 254)
-            {
-                // ????
-                if (nC == 255)
-                    throw new InvalidOperationException("Unknown attribute, cannot process data!");
-                
                 nC = ReadOffset(bs);
 
+            if (isOffset)
+            {
                 bs.Position = (ptr - nC);
-                buffer = ReadAttribute(bs);
-                
+                var attr = ReadAttribute(bs, name, type);
+
                 // move past offset
                 bs.Position = (ptr + 4);
+
+                return attr;
             }
             else
             {
-                buffer = new byte[nC];
-                bs.Read(buffer, 0, nC);
-            }
+                var typeSize = Utils.GetAttributeTypeSize(type);
 
-            return buffer;
+                if ((typeSize != -1) && (nC > typeSize))
+                {
+                    if (type != AttributeType.StringHash)
+                    {
+                        WriteUniqueHint($"WARNING: '{name}' is defined as a '{type.ToString()}' but the buffer overflowed (size: 0x{nC:X}) -- forcing BinHex");
+                        type = AttributeType.BinHex;
+                    }
+                    else
+                    {
+                        // is this literally a part of the spec?!
+                        type = AttributeType.String;
+                    }
+                }
+
+                var buffer = new byte[nC];
+                bs.Read(buffer, 0, nC);
+
+                return new AttributeData(type, buffer);
+            }
         }
 
         static StringBuilder fcbBuilder = new StringBuilder();
@@ -525,6 +1022,9 @@ namespace Disrupt.FCBastard
             IndentChars = "\t",
 
             NewLineOnAttributes = true,
+
+            // gotta write my own :/
+            OmitXmlDeclaration = true,
         });
 
         static XmlReaderSettings xmlAttrTypeSettings = new XmlReaderSettings() {
@@ -640,7 +1140,7 @@ namespace Disrupt.FCBastard
                                     // try adding this to the lookup
                                     if (!StringHasher.CanResolveHash(attrHash))
                                     {
-                                        Console.WriteLine($"- Adding '{name}' to lookup");
+                                        Debug.WriteLine($"- Adding '{name}' to lookup");
                                         StringHasher.AddToLookup(name);
                                     }
                                 }
@@ -661,11 +1161,11 @@ namespace Disrupt.FCBastard
                                     {
                                         var knownType = GetAttributeType(attrHash);
 
-                                        WriteUniqueHint($"<Attribute Hash=\"{attrHash:X8}\" Type=\"{attrType.ToString()}\" /> <!-- EqualTo --> <Attribute Name=\"{name}\" Type=\"{knownType.ToString()}\" />");
+                                        //WriteUniqueHint($"<!-- Remove: --><Attribute Hash=\"{attrHash:X8}\" Type=\"{attrType.ToString()}\" /><!-- SameAs --><Attribute Name=\"{name}\" Type=\"{knownType.ToString()}\" />");
                                     }
                                     else
                                     {
-                                        WriteUniqueHint($"<Attribute Hash=\"{attrHash:X8}\" Type=\"{attrType.ToString()}\" /> <!-- CanEqual --> <Attribute Name=\"{name}\" Type=\"{attrType.ToString()}\" />");
+                                        //WriteUniqueHint($"<!-- Rename: --><Attribute Hash=\"{attrHash:X8}\" Type=\"{attrType.ToString()}\" /><!-- EqualTo --><Attribute Name=\"{name}\" Type=\"{attrType.ToString()}\" />");
                                     }
                                 }
                             }
@@ -678,27 +1178,30 @@ namespace Disrupt.FCBastard
             }
         }
         
-        static void ReadEntry(BinaryStream bs/*, int level*/)
+        static NodeClass ReadNode(BinaryStream bs, bool logStuff = false)
         {
             var ptrA = (int)bs.Position;
-            
             var nChildren = bs.ReadByte();
-
-            // not actually an offset,
-            // but rather a tri-byte (because there's so many children)
+            
+            // probably not an offset, but rather a tri-byte
+            // allows for children > 253
             if (nChildren >= 254)
                 nChildren = ReadOffset(bs);
             
             var hash = bs.ReadInt32();
             var size = bs.ReadInt16();
-
+            
             var name = StringHasher.ResolveHash(hash);
 
             if (name == null)
                 name = $"_{hash:X6}";
 
+            if (logStuff)
+                Console.WriteLine($"{ptrA:X8}: [Node : {nChildren:X4}] ; {name}");
+
             fcbLog.WriteStartElement(name);
-            
+
+            var node = new NodeClass(hash);
             var next = ((int)bs.Position + size);
             
             if (size != 0)
@@ -708,9 +1211,13 @@ namespace Disrupt.FCBastard
                 
                 // move to beginning of attributes
                 bs.Position = attrsPtr;
-                
+
+                if (logStuff)
+                    Console.WriteLine($"{attrsPtr:X8}:   [Attributes : {attrs.Length:X4}]");
+
                 for (int i = 0; i < attrs.Length; i++)
                 {
+                    var attrPtr = bs.Position;
                     var attrHash = attrs[i];
 
                     var attrName = StringHasher.ResolveHash(attrHash);
@@ -720,9 +1227,7 @@ namespace Disrupt.FCBastard
 
                     // cannot be null or contain spaces
                     if (!isResolved || attrName.Contains(" "))
-                    {
                         attrName = $"_{attrHash:X8}";
-                    }
 
                     var attrClassName = $"{name}.{attrName}";
                     var attrClassHash = StringHasher.GetHash(attrClassName);
@@ -730,14 +1235,19 @@ namespace Disrupt.FCBastard
                     if (IsAttributeTypeKnown(attrClassHash))
                         attrType = GetAttributeType(attrClassHash);
                     
-                    var buffer = ReadAttribute(bs);
-                    var attrValue = new AttributeData(buffer, attrType);
+                    //var buffer = ReadAttribute(bs);
+                    //var attrValue = new AttributeData(attrType, buffer);
+
+                    var attrValue = ReadAttribute(bs, attrName, attrType);
+
+                    if (logStuff)
+                        Console.WriteLine($"{attrPtr:X8}:     [Attribute : {attrValue.Buffer.Length:X4}] ; {attrClassName}");
 
                     if (!IsAttributeTypeKnown(attrHash))
                     {
                         if (attrValue.IsBufferValid())
                         {
-                            var guess = Utils.GetAttributeTypeBestGuess(buffer.Length);
+                            var guess = Utils.GetAttributeTypeBestGuess(attrValue);
 
                             if (guess != AttributeType.BinHex)
                             {
@@ -756,8 +1266,19 @@ namespace Disrupt.FCBastard
                             WriteUniqueHint($"<!-- UnknownType: --><Attribute Hash=\"{attrHash:X8}\" Type=\"BinHex\" />");
                         }
                     }
-                    
+                    else
+                    {
+                        if (Utils.IsAttributeBufferStrangeSize(attrValue))
+                            WriteUniqueHint($"INFO: Attribute '{attrClassName}' is defined as a '{attrType}' and has a strange size of {attrValue.Buffer.Length} byte(s).");
+                    }
+
                     fcbLog.WriteAttributeString(attrName, attrValue.ToString());
+
+                    var attr = new NodeAttribute(attrHash, attrType) {
+                        Data = attrValue,
+                    };
+
+                    node.Attributes.Add(attr);
                 }
             }
             else
@@ -777,35 +1298,52 @@ namespace Disrupt.FCBastard
                 if (nC >= 254)
                     nC = ReadOffset(bs);
 
+                NodeClass subNode;
+
                 if (isOffset)
                 {
                     bs.Position -= (nC + 4);
-                    ReadEntry(bs);
+
+                    if (logStuff)
+                        Console.WriteLine($"{next:X8}: [Reference : {nC:X4}] -> {bs.Position:X8}");
+
+                    subNode = ReadNode(bs);
 
                     bs.Position = (next += 4);
                 }
                 else
                 {
                     bs.Position = next;
-                    ReadEntry(bs);
+                    subNode = ReadNode(bs, logStuff);
 
                     next = (int)bs.Position;
                 }
+                
+                node.Children.Add(subNode);
             }
+
+            if (logStuff)
+                Console.WriteLine($"{bs.Position:X8}: [End] ; {name}");
             
             fcbLog.WriteEndElement();
+            return node;
         }
         
-        static async Task AsyncRead(BinaryStream bs, int maxAddress)
+        static async Task<NodeClass> AsyncRead(BinaryStream bs, int maxAddress)
         {
+            NodeClass ret = null;
+
             await Task.Run(() => {
                 lock (bs)
                 {
-                    while ((bs.Position + 7) < maxAddress)
-                        ReadEntry(bs/*, 0*/);
+                    ret = ReadNode(bs);
                 }
             });
+
+            return ret;
         }
+
+        static NodeLibrary Library { get; set; }
         
         static void LoadLibrary(BinaryStream bs, string logFile)
         {
@@ -821,31 +1359,113 @@ namespace Disrupt.FCBastard
 
             if (type != LibraryType)
                 throw new InvalidOperationException("FCB library reported the incorrect type?!");
-
+            
             var count1 = bs.ReadInt32(); // * 3
             var count2 = bs.ReadInt32(); // * 4
             
             var memSize = ((count1 * 3) + count2) * 4;
             var memSizeAlign = Memory.Align(memSize, 16);
+
+            var fcbHeader = (int)bs.Position;
             
+            // read the unknown data
+            bs.Position = datOffset;
+
+            // what the actual F$%^!!!!
+            // WHY DO I HAVE TO DO THIS?!
+            fcbLog.WriteRaw("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n");
+            
+            Library = new NodeLibrary() {
+                Count1 = count1,
+                Count2 = count2,
+            };
+
+            var nInfosCount1 = 0;
+            var nInfosCount2 = 0;
+
+            for (int i = 0; i < datCount; i++)
+            {
+                var field1 = bs.ReadInt64();
+                var field2 = bs.ReadInt32();
+                var field3 = bs.ReadInt16();
+                var field4 = bs.ReadInt16();
+
+                var hexVal = Utils.Bytes2HexString(BitConverter.GetBytes(field1));
+                
+                var info = new NodeLibrary.InfoEntry() {
+                    ID = field1,
+                    Unknown = field2,
+                    Count1 = field3,
+                    Count2 = field4,
+                };
+
+                nInfosCount1 += info.Count1;
+                nInfosCount2 += info.Count2;
+
+                Library.Infos.Add(info);
+            }
+
+            var count1Diff = (count1 - nInfosCount1);
+            var count2Diff = (count2 - nInfosCount2);
+            
+            Console.WriteLine("[Library.Header]");
+            Console.WriteLine($"  Count1: {count1} ({count1:X8})");
+            Console.WriteLine($"  Count2: {count2} ({count2:X8})");
+            Console.WriteLine($"  SizeTally: {memSize:X8}");
+            Console.WriteLine("[Library.Infos]");
+            Console.WriteLine($"  Count1Total: {nInfosCount1} ({nInfosCount1:X8})");
+            Console.WriteLine($"  Count2Total: {nInfosCount2} ({nInfosCount2:X8})");
+            Console.WriteLine("[Library.Logging]");
+            Console.WriteLine($"  Count1Diff: {count1Diff} ({count1Diff:X8})");
+            Console.WriteLine($"  Count2Diff: {count2Diff} ({count2Diff:X8})");
+
+            // read fcb data
+            bs.Position = fcbHeader;
+
+            var root = new NodeClass("EntityLibraries");
+            fcbLog.WriteStartElement(root.Name);
+
             try
             {
-                var readTask = AsyncRead(bs, datOffset);
-                readTask.Wait();
+                foreach (var info in Library.Infos)
+                {
+                    fcbLog.WriteStartElement("EntityLibrary");
+                    fcbLog.WriteAttributeString("UID", Utils.Bytes2HexString(BitConverter.GetBytes(info.ID)));
+                    
+                    // relative to 'nbCF' header (DOH!)
+                    var infoPtr = (info.Unknown + 8);
+                    bs.Position = infoPtr;
+                    
+                    var nodePtr = bs.Position;
+
+                    var node = ReadNode(bs, false);
+                    var nodeTotal = Utils.GetTotalNumberOfNodes(node);
+                    
+                    root.Children.Add(node);
+
+                    fcbLog.WriteEndElement();
+                }
+
+                Console.WriteLine($"Finished reading {root.Children.Count} infos. Collected {Utils.GetTotalNumberOfNodes(root)} nodes in total.");
+
+                Library.Root = root;
             }
-            catch (Exception e)
-            {
-                throw new ApplicationException("Fatal error while reading data!", e);
-            }
+            //catch (Exception e)
+            //{
+            //    throw new ApplicationException("Fatal error while reading data!", e);
+            //}
             finally
             {
+                if (fcbLog.WriteState != WriteState.Error)
+                    fcbLog.WriteEndElement();
+
                 File.WriteAllText(logFile, fcbBuilder.ToString());
             }
         }
         
         static void Main(string[] args)
         {
-            var filename = (args.Length >= 1) ? args[0] : @"C:\Dev\Research\WD2\entitylibrary.fcb";
+            var filename = (args.Length >= 1) ? args[0] : @"C:\Dev\Research\WD2\entitylibrary_rt.fcb";
             var xmlFile = (args.Length >= 2) ? args[1] : Path.ChangeExtension(filename, ".xml");
 
             StringHasher.AddLookupsFile(Path.Combine(Environment.CurrentDirectory, "strings.txt"));
@@ -857,6 +1477,30 @@ namespace Disrupt.FCBastard
             using (var bs = new BinaryStream(filename))
             {
                 LoadLibrary(bs, xmlFile);
+
+                var writeTest = false;
+
+                if (writeTest)
+                {
+                    byte[] buffer;
+
+                    using (var tmp = new BinaryStream(4096 * 1024))
+                    {
+                        // lol
+                        //Library.Count1 *= 32;
+                        //Library.Count2 *= 32;
+
+                        Library.WriteTo(tmp);
+
+                        var size = (int)tmp.Position;
+                        buffer = new byte[size];
+
+                        tmp.Position = 0;
+                        tmp.Read(buffer, 0, size);
+                    }
+
+                    File.WriteAllBytes(Path.ChangeExtension(filename, ".out"), buffer);
+                }
             }
         }
     }
