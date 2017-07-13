@@ -1098,7 +1098,6 @@
 		<Attribute Name="fPreBlackoutFullDurationMin" />
 		<Attribute Name="fPreBlackoutRadius" />
 		<Attribute Name="fPrimaryVehicleImpulseFactor" />
-		<Attribute Name="fPriority" />
 		<Attribute Name="fPriorityAdd" />
 		<Attribute Name="fPriorityMul" />
 		<Attribute Name="fProfileTime" />
