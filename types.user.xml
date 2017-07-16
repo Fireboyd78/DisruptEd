@@ -89,7 +89,7 @@
     <Attribute Name="Entry.name"                                        Type="StringHash" />
     
     <!-- This pesky little punk tricked me! -->
-    <Attribute Name="StaticData.fPriority"                              Type="Byte" />
+    <Attribute Name="fPriority"                                         Type="Byte" />
 
     <Attribute Name="Light.LightName"                                   Type="StringHash" />
     <Attribute Name="Vehicle.LightName"                                 Type="String" />

@@ -66,6 +66,7 @@
 		<Attribute Name="bAllowInput" />
 		<Attribute Name="bAllowPersistanceOverride" />
 		<Attribute Name="bAllowRetryAfterSuccess" />
+        <Attribute Name="bAllowSkip" />
 		<Attribute Name="bAllowSpawnInFOV" />
 		<Attribute Name="bAllowedToHandleProp" />
 		<Attribute Name="bAlwaysCutNavMesh" />
