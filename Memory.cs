@@ -96,12 +96,9 @@ namespace System
             0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94, 0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
         };
 
-        public static uint GetCRC32(byte[] buffer)
+        public static uint GetCRC32(byte[] buffer, uint crc)
         {
-            var crc     = 0xFFFFFFFF;
-            var size    = buffer.Length;
-
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < buffer.Length; i++)
                 crc = ((crc >> 8) & 0x00FFFFFF) ^ CRC32Table[(crc ^ buffer[i]) & 0xFF];
 
             crc = ~crc;
@@ -110,6 +107,11 @@ namespace System
                 crc = (crc & 0x7FFFFFFF) + 0x80000000;
 
             return crc;
+        }
+
+        public static uint GetCRC32(byte[] buffer)
+        {
+            return GetCRC32(buffer, 0xFFFFFFFF);
         }
         
         /// <summary>
