@@ -13,6 +13,36 @@ namespace DisruptEd.IO
         public List<NodeAttribute> Attributes { get; set; }
         public List<NodeClass> Children { get; set; }
 
+        public void Serialize(XmlElement xml)
+        {
+            var xmlDoc = xml.OwnerDocument;
+            var elem = xmlDoc.CreateElement(Name);
+
+            foreach (var attr in Attributes)
+                attr.Serialize(elem);
+            foreach (var node in Children)
+                node.Serialize(elem);
+
+            xml.AppendChild(elem);
+        }
+
+        public void Deserialize(XmlElement xml)
+        {
+            Name = xml.Name;
+
+            foreach (XmlAttribute attr in xml.Attributes)
+            {
+                var attrNode = new NodeAttribute(attr);
+                Attributes.Add(attrNode);
+            }
+
+            foreach (XmlElement elem in xml.ChildNodes)
+            {
+                var child = new NodeClass(elem);
+                Children.Add(child);
+            }
+        }
+
         public override void Serialize(BinaryStream stream)
         {
             Offset = (int)stream.Position;
@@ -53,27 +83,6 @@ namespace DisruptEd.IO
             // now write the children out
             foreach (var child in Children)
                 child.Serialize(stream);
-        }
-
-        public override void Serialize(XmlElement xml)
-        {
-            var xmlDoc = xml.OwnerDocument;
-            var elem = xmlDoc.CreateElement(Name);
-
-            foreach (var attr in Attributes)
-                attr.Serialize(xml);
-            foreach (var node in Children)
-                node.Serialize(xml);
-
-            xml.AppendChild(elem);
-        }
-
-        public override void Serialize(XmlDocument xml)
-        {
-            var elem = xml.CreateElement("Class");
-            Serialize(xml);
-
-            xml.AppendChild(elem);
         }
         
         public override void Deserialize(BinaryStream stream)
@@ -141,10 +150,7 @@ namespace DisruptEd.IO
 
                     for (int i = 0; i < nAttrs; i++)
                     {
-                        var attr = new NodeAttribute(stream) {
-                            Class = Name,
-                        };
-
+                        var attr = new NodeAttribute(stream, Name);
                         Attributes.Add(attr);
                     }
 
@@ -176,6 +182,14 @@ namespace DisruptEd.IO
         public NodeClass(BinaryStream stream)
         {
             Deserialize(stream);
+        }
+
+        public NodeClass(XmlElement elem)
+        {
+            Children = new List<NodeClass>();
+            Attributes = new List<NodeAttribute>();
+
+            Deserialize(elem);
         }
         
         public NodeClass(int hash)

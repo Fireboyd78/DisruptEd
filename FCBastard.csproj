@@ -53,7 +53,7 @@
     <Compile Include="Node.cs" />
     <Compile Include="NodeAttribute.cs" />
     <Compile Include="NodeClass.cs" />
-    <Compile Include="NodeLibrary.cs" />
+    <Compile Include="EntityLibrary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types.cs" />

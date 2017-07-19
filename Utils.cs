@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 using DisruptEd.IO;
 
@@ -10,12 +13,41 @@ namespace DisruptEd
 {
     public static class Utils
     {
+        public static void SaveFormatted(this XmlDocument xml, string filename, bool newLineAttributes = false)
+        {
+            using (var xmlWriter = XmlWriter.Create(filename, new XmlWriterSettings() {
+                Indent              = true,
+                IndentChars         = "\t",
+
+                NewLineOnAttributes = newLineAttributes,
+            }))
+            {
+                xml.WriteTo(xmlWriter);
+                xmlWriter.Flush();
+            }
+        }
+
+        public static string FormatVector(params float[] inputs)
+        {
+            var vecs = new string[inputs.Length];
+
+            for (int v = 0; v < inputs.Length; v++)
+                vecs[v] = inputs[v].ToString("0.0###########");
+
+            return String.Join(",", vecs);
+        }
+
+        public static string ToBoolStr(bool value)
+        {
+            return (value) ? "1" : "0";
+        }
+
         public static int GetSizeInMB(int size)
         {
             // fast way of doing (size * 1024) * 1024
             return (size << 20);
         }
-
+        
         public static string Bytes2HexString(byte[] bytes)
         {
             var str = "";
@@ -29,6 +61,33 @@ namespace DisruptEd
             }
 
             return str;
+        }
+
+        public static byte[] HexString2Bytes(string value)
+        {
+            var hexBytes = value.Split(' ');
+            var length = hexBytes.Length;
+
+            var bytes = new byte[length];
+
+            for (int i = 0; i < length; i++)
+                bytes[i] = byte.Parse(hexBytes[i], NumberStyles.HexNumber);
+
+            return bytes;
+        }
+
+        public static byte[] GetStringBuffer(string value)
+        {
+            // empty/null strings MUST have a null-terminator!
+            if ((value == null) || (value.Length == 0))
+                return new byte[1] { 0 };
+
+            var strBuf = Encoding.UTF8.GetBytes(value);
+
+            var buf = new byte[strBuf.Length + 1];
+            Array.Copy(strBuf, buf, strBuf.Length);
+
+            return buf;
         }
 
         public static int GetTotalNumberOfNodes(NodeClass node)
@@ -157,73 +216,113 @@ namespace DisruptEd
                 return buffer;
 
             var attrBuf = GetAttributeDataBuffer(buffer, type);
-            var value = 0uL;
 
+            // empty strings _must_ have at least 1 byte
+            // or else the game will shit the bed!!!
+            if (type == DataType.String)
+            {
+                if ((attrBuf.Length == 1)
+                    && (attrBuf[0] == 0))
+                    return attrBuf;
+            }
+
+            var canMinify = true;
+            
             switch (type)
             {
-            case DataType.Bool:
-            case DataType.Byte:
-                value = attrBuf[0];
-                break;
-
-            case DataType.Int16:
-            case DataType.UInt16:
-                value = BitConverter.ToUInt16(attrBuf, 0);
-                break;
-
-            case DataType.Int32:
-            case DataType.UInt32:
-            case DataType.StringHash:
-                value = BitConverter.ToUInt32(attrBuf, 0);
-                break;
-
-            /* these types can only be minified if they're actually zero/empty */
-            case DataType.String:
-                {
-                    var str = Encoding.UTF8.GetString(attrBuf);
-
-                    if (String.IsNullOrEmpty(str))
-                        return empty;
-
-                    return attrBuf;
-                }
             case DataType.Float:
-                var fVal = BitConverter.ToSingle(attrBuf, 0);
-
-                if (fVal == 0.0f)
-                    return empty;
-
-                return attrBuf;
-
-            /* vectors cannot be minified :( */
             case DataType.Vector2:
             case DataType.Vector3:
             case DataType.Vector4:
-                return buffer;
+            case DataType.String:
+                canMinify = false;
+                break;
             }
 
-            // now that's what I call small :)
-            if (value == 0)
-                return empty;
+            if (canMinify)
+            {
+                // completely empty?
+                var isEmpty = true;
 
-#if ALLOW_MINI_SIZE_DATA
-            var miniSize = 8;
+                for (int i = 0; i < attrBuf.Length; i++)
+                {
+                    if (attrBuf[i] != 0)
+                    {
+                        isEmpty = false;
+                        break;
+                    }
+                }
 
-            // try to make the integer as small as possible
-            if ((value & 0xFFFFFFFF) == value)
-                miniSize -= 4;
-            if ((value & 0xFFFF) == value)
-                miniSize -= 2;
-            if ((value & 0xFF) == value)
-                miniSize -= 1;
+                if (isEmpty)
+                    return empty;
 
-            var miniBuf = new byte[miniSize];
+                // not empty, let's try minifying it
+                var miniSize = attrBuf.Length;
 
-            Array.Copy(attrBuf, miniBuf, miniSize);
-            return miniBuf;
-#else
-            return attrBuf;
-#endif
+                switch (type)
+                {
+                case DataType.Bool:
+                case DataType.Byte:
+                    {
+                        // we've already determined it's not empty
+                        // and well, a byte can't be much smaller...
+                        return new byte[1] { attrBuf[0] };
+                    }
+                case DataType.Int16:
+                    {
+                        var value = BitConverter.ToInt16(attrBuf, 0);
+
+                        if ((short)(value & 0xFF) == value)
+                            miniSize = 1;
+                    }
+                    break;
+                case DataType.UInt16:
+                    {
+                        var value = BitConverter.ToUInt16(attrBuf, 0);
+
+                        if ((ushort)(value & 0xFF) == value)
+                            miniSize = 1;
+                    }
+                    break;
+                case DataType.Int32:
+                    {
+                        var value = BitConverter.ToInt32(attrBuf, 0);
+
+                        if ((value & 0xFFFF) == value)
+                            miniSize = 2;
+                        if ((value & 0xFF) == value)
+                            miniSize = 1;
+                    }
+                    break;
+                case DataType.UInt32:
+                case DataType.StringHash:
+                    {
+                        var value = BitConverter.ToUInt32(attrBuf, 0);
+
+                        if ((value & 0xFFFF) == value)
+                            miniSize = 2;
+                        if ((value & 0xFF) == value)
+                            miniSize = 1;
+                    }
+                    break;
+                }
+
+                // in case we somehow missed an edge case
+                if (miniSize == 0)
+                    return empty;
+
+                if (miniSize < attrBuf.Length)
+                {
+                    //Debug.WriteLine($"Minified {type.ToString()} data from {attrBuf.Length}->{miniSize} bytes!");
+
+                    var miniBuf = new byte[miniSize];
+
+                    Array.Copy(attrBuf, miniBuf, miniSize);
+                    return miniBuf;
+                }
+            }
+            
+            return buffer;
         }
 
         public static int GetAttributeTypeSize(DataType type)
@@ -271,34 +370,49 @@ namespace DisruptEd
             case DataType.UInt32:
                 return "0";
 
-            case DataType.BinHex:
-            case DataType.String:
+            // trying to fix a bug
             case DataType.StringHash:
-                return "";
+                return "$0";
 
             case DataType.Vector2:
+                return FormatVector(0, 0);
             case DataType.Vector3:
+                return FormatVector(0, 0, 0);
             case DataType.Vector4:
-                return "";
+                return FormatVector(0, 0, 0, 0);
             }
 
-            return "???";
+            // binhex & string
+            return "";
         }
 
         public static byte[] GetAttributeDataBuffer(byte[] buffer, DataType type)
         {
             var size = GetAttributeTypeSize(type);
-
+            
             if (size == -1)
             {
                 var len = (buffer != null) ? buffer.Length : 0;
+
+                if ((len == 0)
+                    && (type == DataType.String))
+                {
+                    // strings must have at least 1 byte
+                    len = 1;
+                }
 
                 var newBuffer = new byte[len];
 
                 // return a copy of the data if not null
                 // otherwise return an empty array
-                if (buffer != null)
-                    Array.Copy(buffer, newBuffer, buffer.Length);
+                if (len != 0)
+                {
+                    if (buffer != null)
+                    {
+                        var copyLen = (buffer.Length < len) ? buffer.Length : len;
+                        Array.Copy(buffer, newBuffer, copyLen);
+                    }
+                }
 
                 return newBuffer;
             }

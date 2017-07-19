@@ -167,16 +167,6 @@ namespace DisruptEd.IO
         }
         
         public abstract void Serialize(BinaryStream stream);
-        public abstract void Serialize(XmlElement xml);
-
-        public virtual void Serialize(XmlDocument xml)
-        {
-            var elem = xml.CreateElement(Name);
-            Serialize(elem);
-
-            xml.AppendChild(elem);
-        }
-
         public abstract void Deserialize(BinaryStream stream);
 
         public override string ToString()
