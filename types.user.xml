@@ -78,6 +78,10 @@
 		<Attribute Name="text_hidResourceId"							Type="String" />
         <Attribute Name="text_hidType"							        Type="String" />
 	</AttributeGroup>
+
+    <!-- Actually a string hash?? -->
+    <Attribute Name="CBreakableHackableComponent.sPartName" Type="StringHash" />
+    <Attribute Name="CLightEffectComponent.hidType" Type="StringHash" />
 	
 	<Attribute Name="Knot.Type"											Type="Byte" />
 	<Attribute Name="Knot.Info"											Type="Vector4" />
@@ -92,6 +96,8 @@
     <Attribute Name="fPriority"                                         Type="Byte" />
 
     <Attribute Name="Light.LightName"                                   Type="StringHash" />
+    <Attribute Name="IntegerVariable.iVal"                              Type="Int32" />
+    <Attribute Name="StringVariable.Val"                                Type="String" />
     <Attribute Name="Vehicle.LightName"                                 Type="String" />
 	
 	<Attribute Name="boneMovementBoneName"								Type="Int32" />
@@ -840,7 +846,7 @@
 	<Attribute Hash="143E7B72" Type="String" />
 	<Attribute Hash="1543A6BC" Type="String" />
 	<Attribute Hash="16848038" Type="String" />
-	<Attribute Hash="16D01A31" Type="Byte" />
+	<Attribute Hash="16D01A31" Type="String" />
 	<Attribute Hash="16D1BE41" Type="String" />
 	<Attribute Hash="170C86A2" Type="String" />
 	<Attribute Hash="18E0D730" Type="String" />
@@ -1133,7 +1139,7 @@
 	<Attribute Hash="C23C201F" Type="String" />
 	<Attribute Hash="C2628931" Type="String" />
 	<Attribute Hash="C28A6431" Type="String" />
-	<Attribute Hash="C2ADBAE7" Type="Byte" />
+	<Attribute Hash="C2ADBAE7" Type="String" />
 	<Attribute Hash="C3477C2A" Type="String" />
 	<Attribute Hash="C35086B9" Type="String" />
 	<Attribute Hash="C378C772" Type="String" />
