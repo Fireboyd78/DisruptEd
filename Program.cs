@@ -127,7 +127,7 @@ namespace DisruptEd.FCBastard
             var loadType = FileType.Other;
             var saveType = FileType.Other;
             
-            var inFile = (args.Length >= 1) ? args[0] : @"C:\Dev\Research\WD2\bin\entitylibrary_rt.xml";
+            var inFile = (args.Length >= 1) ? args[0] : @"C:\Dev\Research\W_D\entitylibrary_rt.fcb";
             loadType = GetFileType(inFile);
 
             if (loadType == FileType.Other)

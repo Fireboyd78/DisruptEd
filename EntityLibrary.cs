@@ -23,10 +23,12 @@ namespace DisruptEd.IO
         {
             if (Use32Bit)
             {
-                stream.Write((int)UID);
+                var uid32 = (int)(UID & 0xFFFFFFFF);
+                stream.Write(uid32);
             }
             else
             {
+                Console.WriteLine($"Serializing 64-bit EntityReferenceData...");
                 stream.Write(UID);
             }
 
@@ -39,7 +41,7 @@ namespace DisruptEd.IO
         {
             if (Use32Bit)
             {
-                UID = stream.ReadInt32();
+                UID = stream.ReadUInt32();
             }
             else
             {
@@ -75,14 +77,14 @@ namespace DisruptEd.IO
                 throw new InvalidOperationException("Too many nodes in entity reference.");
             if (totalCount > 65535)
                 throw new InvalidOperationException("Too many total nodes+attributes in entity reference.");
+
+            Use32Bit = reference.Use32Bit;
             
-            UID = reference.UID;
+            UID = (Use32Bit) ? reference.UID32 : reference.UID;
             Offset = node.Offset;
             
             TotalCount = totalCount;
             NodesCount = nodesCount;
-
-            Use32Bit = reference.IsUID32Bits;
         }
     }
 
@@ -90,10 +92,12 @@ namespace DisruptEd.IO
     {
         public long UID { get; set; }
 
-        public bool IsUID32Bits
+        public int UID32
         {
-            get { return ((UID & 0xFFFFFFFF) == UID); }
+            get { return (int)(UID & 0xFFFFFFFF); }
         }
+
+        public bool Use32Bit { get; set; }
 
         // TODO: fix this crap
         public NodeClass GroupNode { get; set; }
@@ -103,9 +107,8 @@ namespace DisruptEd.IO
         {
             var xmlDoc = xml.OwnerDocument;
             var elem = xmlDoc.CreateElement("EntityReference");
-
-            // quick 'n dirty
-            var uidHex = (IsUID32Bits) ? BitConverter.GetBytes((int)UID) : BitConverter.GetBytes(UID);
+            
+            var uidHex = (Use32Bit) ? BitConverter.GetBytes(UID32) : BitConverter.GetBytes(UID);
 
             elem.SetAttribute("UID", Utils.Bytes2HexString(uidHex));
 
@@ -133,9 +136,8 @@ namespace DisruptEd.IO
                 if (uidAttr != null)
                 {
                     var uidHex = AttributeData.Parse(uidAttr.Value);
-                    var use32bit = (uidHex.Length <= 4);
-
-                    if (use32bit)
+                    
+                    if (Use32Bit)
                     {
                         UID = BitConverter.ToInt32(uidHex, 0);
                     }
@@ -148,7 +150,7 @@ namespace DisruptEd.IO
 
             if (UID == 0)
                 throw new InvalidOperationException("Attempted to deserialize a reference with no UID attribute!");
-
+            
             // yuck!!!
             GroupNode = new NodeClass(0x256A1FF9);
             EntityNode = new NodeClass(entNode);
@@ -162,6 +164,8 @@ namespace DisruptEd.IO
         public string Name { get; set; }
         
         public List<EntityReference> Entries { get; set; }
+
+        public bool Use32Bit { get; set; }
 
         public NodeClass GetNodeClass()
         {
@@ -236,7 +240,10 @@ namespace DisruptEd.IO
 
             foreach (XmlElement node in children)
             {
-                var entry = new EntityReference();
+                var entry = new EntityReference() {
+                    Use32Bit = Use32Bit,
+                };
+
                 entry.Deserialize(node);   
 
                 Entries.Add(entry);
@@ -268,8 +275,9 @@ namespace DisruptEd.IO
                     throw new InvalidOperationException("Houston, we got a bit of a problem...");
 
                 var entry = new EntityReference() {
-                    GroupNode = group,
-                    EntityNode = group.Children[0],
+                    Use32Bit    = Use32Bit,
+                    GroupNode   = group,
+                    EntityNode  = group.Children[0],
                 };
 
                 Entries.Add(entry);
@@ -286,6 +294,8 @@ namespace DisruptEd.IO
         
         public List<EntityLibrary> Libraries { get; set; }
 
+        public bool Use32Bit { get; set; }
+
         public List<EntityReference> GetEntityReferences(bool sorted)
         {
             if (Libraries == null)
@@ -296,7 +306,7 @@ namespace DisruptEd.IO
             foreach (var library in Libraries)
                 refs.AddRange(library.Entries);
             
-            return (sorted) ? refs.OrderBy((e) => e.UID).ToList() : refs;
+            return (sorted) ? refs.OrderBy((e) => (ulong)e.UID).ToList() : refs;
         }
 
         public NodeClass GetNodeClass()
@@ -320,7 +330,7 @@ namespace DisruptEd.IO
                 var infosOffset = stream.ReadInt32();
                 var infosCount = stream.ReadInt32();
 
-                var use32BitInfos = ((stream.Length - (infosCount * 0xC)) == infosOffset);
+                Use32Bit = ((stream.Length - (infosCount * 0xC)) == infosOffset);
 
                 Debug.WriteLine(">> Reading FCB header...");
                 var magic = stream.ReadInt32();
@@ -361,7 +371,7 @@ namespace DisruptEd.IO
                 
                 for (int i = 0; i < infosCount; i++)
                 {
-                    var refData = new EntityReferenceData(stream, use32BitInfos);
+                    var refData = new EntityReferenceData(stream, Use32Bit);
 
                     nInfosTotal += refData.TotalCount;
                     nInfosNodes += refData.NodesCount;
@@ -392,7 +402,10 @@ namespace DisruptEd.IO
                 foreach (var library in root.Children)
                 {
                     // deserialize from the class
-                    var lib = new EntityLibrary();
+                    var lib = new EntityLibrary() {
+                        Use32Bit = Use32Bit,
+                    };
+
                     lib.Deserialize(library);
 
                     // update UIDs
@@ -464,7 +477,10 @@ namespace DisruptEd.IO
 
                 foreach (var reference in references)
                 {
-                    var refData = new EntityReferenceData(reference);
+                    var refData = new EntityReferenceData(reference) {
+                        Use32Bit = Use32Bit,
+                    };
+
                     refData.Serialize(stream);
                 }
 
@@ -495,6 +511,9 @@ namespace DisruptEd.IO
             if ((libsElem == null) || (libsElem.Name != "EntityLibraries"))
                 throw new InvalidOperationException("Not a valid EntityLibraries node");
 
+            var attr32Bit = new AttributeData(DataType.Bool, libsElem.GetAttribute("Use32Bit"));
+            Use32Bit = attr32Bit.ToBool();
+
             Debug.WriteLine(">> Loading libraries...");
             foreach (var child in libsElem.ChildNodes)
             {
@@ -518,6 +537,7 @@ namespace DisruptEd.IO
                     libDoc.Load(libFile);
 
                     var library = new EntityLibrary() {
+                        Use32Bit = Use32Bit,
                         Name = libName,
                     };
 
@@ -547,6 +567,9 @@ namespace DisruptEd.IO
 
             var xml = new XmlDocument();
             var libsElem = xml.CreateElement("EntityLibraries");
+
+            if (Use32Bit)
+                libsElem.SetAttribute("Use32Bit", "1");
 
             Debug.WriteLine(">> Parsing libraries...");
             foreach (var library in Libraries)

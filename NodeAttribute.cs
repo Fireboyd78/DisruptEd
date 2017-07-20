@@ -52,6 +52,11 @@ namespace DisruptEd.IO
             var buffer = Utils.GetAttributeDataBuffer(Buffer, Type);
             return fnConvert(buffer, 0);
         }
+
+        public bool ToBool()
+        {
+            return (ToByte() == 1);
+        }
         
         public byte ToByte()
         {
