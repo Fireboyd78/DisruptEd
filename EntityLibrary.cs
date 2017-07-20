@@ -12,13 +12,24 @@ namespace DisruptEd.IO
     public struct EntityReferenceData : IBinarySerializer
     {
         public long UID;
+
         public int Offset;
         public int TotalCount;
         public int NodesCount;
 
+        public bool Use32Bit { get; set; }
+
         public void Serialize(BinaryStream stream)
         {
-            stream.Write(UID);
+            if (Use32Bit)
+            {
+                stream.Write((int)UID);
+            }
+            else
+            {
+                stream.Write(UID);
+            }
+
             stream.Write(Offset - 8);
             stream.Write((ushort)TotalCount);
             stream.Write((ushort)NodesCount);
@@ -26,15 +37,24 @@ namespace DisruptEd.IO
 
         public void Deserialize(BinaryStream stream)
         {
-            UID = stream.ReadInt64();
+            if (Use32Bit)
+            {
+                UID = stream.ReadInt32();
+            }
+            else
+            {
+                UID = stream.ReadInt64();
+            }
+
             Offset = stream.ReadInt32() + 8;
             TotalCount = stream.ReadUInt16();
             NodesCount = stream.ReadUInt16();
         }
 
-        public EntityReferenceData(BinaryStream stream)
+        public EntityReferenceData(BinaryStream stream, bool use32Bit)
             : this()
         {
+            Use32Bit = use32Bit;
             Deserialize(stream);
         }
 
@@ -55,18 +75,25 @@ namespace DisruptEd.IO
                 throw new InvalidOperationException("Too many nodes in entity reference.");
             if (totalCount > 65535)
                 throw new InvalidOperationException("Too many total nodes+attributes in entity reference.");
-
+            
             UID = reference.UID;
             Offset = node.Offset;
-
+            
             TotalCount = totalCount;
             NodesCount = nodesCount;
+
+            Use32Bit = reference.IsUID32Bits;
         }
     }
 
     public class EntityReference
     {
         public long UID { get; set; }
+
+        public bool IsUID32Bits
+        {
+            get { return ((UID & 0xFFFFFFFF) == UID); }
+        }
 
         // TODO: fix this crap
         public NodeClass GroupNode { get; set; }
@@ -77,7 +104,10 @@ namespace DisruptEd.IO
             var xmlDoc = xml.OwnerDocument;
             var elem = xmlDoc.CreateElement("EntityReference");
 
-            elem.SetAttribute("UID", Utils.Bytes2HexString(BitConverter.GetBytes(UID)));
+            // quick 'n dirty
+            var uidHex = (IsUID32Bits) ? BitConverter.GetBytes((int)UID) : BitConverter.GetBytes(UID);
+
+            elem.SetAttribute("UID", Utils.Bytes2HexString(uidHex));
 
             EntityNode.Serialize(elem);
             xml.AppendChild(elem);
@@ -101,7 +131,19 @@ namespace DisruptEd.IO
                 var uidAttr = attrs.GetNamedItem("UID");
 
                 if (uidAttr != null)
-                    UID = BitConverter.ToInt64(AttributeData.Parse(uidAttr.Value), 0);
+                {
+                    var uidHex = AttributeData.Parse(uidAttr.Value);
+                    var use32bit = (uidHex.Length <= 4);
+
+                    if (use32bit)
+                    {
+                        UID = BitConverter.ToInt32(uidHex, 0);
+                    }
+                    else
+                    {
+                        UID = BitConverter.ToInt64(uidHex, 0);
+                    }
+                }
             }
 
             if (UID == 0)
@@ -278,6 +320,8 @@ namespace DisruptEd.IO
                 var infosOffset = stream.ReadInt32();
                 var infosCount = stream.ReadInt32();
 
+                var use32BitInfos = ((stream.Length - (infosCount * 0xC)) == infosOffset);
+
                 Debug.WriteLine(">> Reading FCB header...");
                 var magic = stream.ReadInt32();
 
@@ -317,7 +361,7 @@ namespace DisruptEd.IO
                 
                 for (int i = 0; i < infosCount; i++)
                 {
-                    var refData = new EntityReferenceData(stream);
+                    var refData = new EntityReferenceData(stream, use32BitInfos);
 
                     nInfosTotal += refData.TotalCount;
                     nInfosNodes += refData.NodesCount;

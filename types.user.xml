@@ -51,13 +51,13 @@
 		<Attribute Name="hidName"										Type="String" />
 		<Attribute Name="hidNodeName"									Type="StringHash" />
 		<Attribute Name="hidNodeNameLOD0"								Type="StringHash" />
-		<Attribute Name="hidNumKnots"									Type="Byte" />
+		<Attribute Name="hidNumKnots"									Type="Int32" />
 		<Attribute Name="hidParentBoneNameID"							Type="StringHash" />
 		<Attribute Name="hidPartIndex"									Type="Byte" />
 		<Attribute Name="hidPoints"										Type="Float" />
 		<Attribute Name="hidPos"										Type="Vector3" />
 		<Attribute Name="hidPos_precise"								Type="Vector3" />
-		<Attribute Name="hidResourceCount"								Type="Byte" />
+		<Attribute Name="hidResourceCount"								Type="Int32" />
 		<Attribute Name="hidRightWheelIndex"							Type="Byte" />
 		<Attribute Name="hidShape"										Type="Float" />
 		<Attribute Name="hidShapePoints"								Type="Float" />

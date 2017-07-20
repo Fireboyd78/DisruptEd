@@ -32,6 +32,10 @@ namespace DisruptEd.IO
 
             foreach (XmlAttribute attr in xml.Attributes)
             {
+                // temp fix: no debug stuff
+                if (attr.Name.StartsWith("text_"))
+                    continue;
+
                 var attrNode = new NodeAttribute(attr);
                 Attributes.Add(attrNode);
             }

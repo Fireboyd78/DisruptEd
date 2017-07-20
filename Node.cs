@@ -77,7 +77,7 @@ namespace DisruptEd.IO
                     int value = (Value & 0xFFFFFF);
 
                     if (value != Value)
-                        throw new InvalidOperationException("Node descriptor value too large!");
+                        throw new InvalidOperationException($"Node descriptor value too large! Value {Value} cannot fit into 24-bits :(");
 
                     if (IsOffset)
                     {
