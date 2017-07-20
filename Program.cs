@@ -19,6 +19,34 @@ using DisruptEd.IO;
 
 namespace DisruptEd.FCBastard
 {
+    class BastardConfig
+    {
+        public static readonly string[] Types = {
+            "dev",
+            "rel",
+        };
+
+        public static readonly int Type;
+        public static readonly Version Version;
+
+        public static CultureInfo Culture = new CultureInfo("en-US", false);
+
+        public static string VersionString
+        {
+            get { return $"v{Version.ToString()}-{Types[Type]}"; }
+        }
+        
+        static BastardConfig()
+        {
+            Version = Assembly.GetExecutingAssembly().GetName().Version;
+        #if RELEASE
+            Type = 1;
+        #else
+            Type = 0;
+        #endif
+        }
+    }
+
     class Program
     {
         enum FileType
@@ -70,10 +98,13 @@ namespace DisruptEd.FCBastard
         
         static void Main(string[] args)
         {
-            Console.WriteLine($"<<< FCBastard >>>");
+            // make sure the user's culture won't fuck up program operations :/
+            Thread.CurrentThread.CurrentCulture = BastardConfig.Culture;
+            Thread.CurrentThread.CurrentUICulture = BastardConfig.Culture;
 
-
-#if !DEBUG
+            Console.WriteLine($"<<< FCBastard {BastardConfig.VersionString} >>>");
+            
+#if RELEASE
             if (args.Length == 0)
             {
                 Console.WriteLine("Usage: <input> <:output>");
@@ -124,7 +155,7 @@ namespace DisruptEd.FCBastard
 
                 Abort($"The input and output file types are the same ('{loadType}' == '{saveType}'), perhaps you should just copy the file?");
             }
-#endif      
+#endif
             Console.WriteLine($"Input file: '{inFile}' ({loadType.ToString()})");
             Console.WriteLine($"Output file: '{outFile}' ({saveType.ToString()})");
 
@@ -147,20 +178,14 @@ namespace DisruptEd.FCBastard
             if (!Directory.Exists(outDir))
                 Directory.CreateDirectory(outDir);
 
-            Library = new EntityLibraryCollection() {
-                RootDirectory = Path.GetDirectoryName(inFile),
-            };
+            Library = new EntityLibraryCollection();
 
             switch (loadType)
             {
             case FileType.BinaryData:
                 {
                     Console.WriteLine("Loading binary data...");
-
-                    using (var bs = new BinaryStream(inFile))
-                    {
-                        Library.Deserialize(bs);
-                    }
+                    Library.LoadBinary(inFile);
                 } break;
             case FileType.Xml:
                 {
@@ -173,23 +198,8 @@ namespace DisruptEd.FCBastard
             {
             case FileType.BinaryData:
                 {
-                    byte[] buffer;
-
-                    using (var tmp = new BinaryStream(Utils.GetSizeInMB(16)))
-                    {
-                        Console.WriteLine("Generating binary data...");
-                        Library.Serialize(tmp);
-
-                        var size = (int)tmp.Position;
-                        buffer = new byte[size];
-
-                        Console.WriteLine("Copying to buffer...");
-                        tmp.Position = 0;
-                        tmp.Read(buffer, 0, size);
-                    }
-
-                    Console.WriteLine("Writing to file...");
-                    File.WriteAllBytes(outFile, buffer);
+                    Console.WriteLine("Saving binary data...");
+                    Library.SaveBinary(outFile);
                 } break;
             case FileType.Xml:
                 {
