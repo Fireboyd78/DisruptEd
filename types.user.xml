@@ -692,7 +692,6 @@
 	<Attribute Name="selBodyStance"										Type="Int32" />
 	<Attribute Name="selBone"											Type="Int32" />
 	<Attribute Name="selBroadcastChannel"								Type="Int32" />
-	<Attribute Name="selButtonType"										Type="Int32" />
 	<Attribute Name="selCategory"										Type="Int32" />
 	<Attribute Name="selCollisionLayer"									Type="Int32" />
 	<Attribute Name="selColorMode"										Type="Int32" />
@@ -812,6 +811,7 @@
 	<Attribute Name="selMassHackNPC" Type="Byte" />
 	
 	<!-- Known attribute names with unknown types -->
+	<Attribute Name="selButtonType"	Type="BinHex" />
 	<Attribute Name="selReflectorTimeCurve" Type="BinHex" />
 	<Attribute Name="selHighlightType" Type="BinHex" />
 	<Attribute Name="hidResourceIndex" Type="BinHex" />
