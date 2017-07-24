@@ -313,8 +313,6 @@ namespace DisruptEd
 
                 if (miniSize < attrBuf.Length)
                 {
-                    //Debug.WriteLine($"Minified {type.ToString()} data from {attrBuf.Length}->{miniSize} bytes!");
-
                     var miniBuf = new byte[miniSize];
 
                     Array.Copy(attrBuf, miniBuf, miniSize);

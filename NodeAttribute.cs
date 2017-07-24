@@ -597,14 +597,14 @@ namespace DisruptEd.IO
 
                     if (guess != DataType.BinHex)
                     {
-                        //Debug.WriteLine($"Attribute type for '{Name}' (hash={Hash:X8}) in '{Class}' may be '{guess.ToString()}'");
-                        //Trace.WriteLine($"<Attribute Name=\"{FullName}\" Type=\"{guess.ToString()}\" />");
+                        //Debug.WriteLine($"[INFO] Attribute type for '{Name}' (hash={Hash:X8}) in '{Class}' may be '{guess.ToString()}'");
+                        Debug.WriteLine($"<!-- GUESS: --><Attribute Name=\"{FullName}\" Type=\"{guess.ToString()}\" />");
                     }
                 }
                 else
                 {
                     // really really slow
-                    //Debug.WriteLine($"Attribute type for '{Name}' (hash={Hash:X8}) in '{Class}' is unknown.");
+                    Debug.WriteLine($"[INFO] Attribute type for '{Name}' (hash={Hash:X8}) in '{Class}' is unknown.");
                 }
             }
             else

@@ -167,6 +167,10 @@ namespace DisruptEd.FCBastard
 
 #if DEBUG
             var debugLog = Path.Combine(appDir, "debug.log");
+
+            if (File.Exists(debugLog))
+                File.Delete(debugLog);
+
             var debugListener = new TextWriterTraceListener(debugLog, "DEBUG_LOG");
 
             Debug.Listeners.Clear();

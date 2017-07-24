@@ -28,7 +28,6 @@ namespace DisruptEd.IO
             }
             else
             {
-                Console.WriteLine($"Serializing 64-bit EntityReferenceData...");
                 stream.Write(UID);
             }
 
