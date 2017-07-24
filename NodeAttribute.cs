@@ -23,7 +23,7 @@ namespace DisruptEd.IO
 
         public bool CanBeCached
         {
-            get { return (Size > 4); }
+            get { return (Size > 2); }
         }
 
         public bool IsBufferValid()
