@@ -20,7 +20,7 @@
     </PropertyGroup>
   
     <!-- Debug configuration -->
-    <PropertyGroup Condition=" '$(Configuration) == 'Debug' ">
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
