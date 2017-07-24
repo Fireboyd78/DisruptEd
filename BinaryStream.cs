@@ -485,6 +485,14 @@ namespace DisruptEd.IO
             InternalWrite(BitConverter.GetBytes(value), 0, sizeof(double), true);
         }
         #endregion
+
+        public byte[] ToArray()
+        {
+            if (m_stream is MemoryStream)
+                return ((MemoryStream)m_stream).ToArray();
+
+            throw new InvalidOperationException("Cannot use ToArray() on a non-MemoryStream stream!");
+        }
         
         public BinaryStream(Stream stream)
         {
@@ -501,7 +509,7 @@ namespace DisruptEd.IO
 
         public BinaryStream(byte[] buffer)
         {
-            m_stream = new MemoryStream(buffer);
+            m_stream = new MemoryStream(buffer, true);
         }
 
         public BinaryStream(string filename)
