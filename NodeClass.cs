@@ -36,9 +36,15 @@ namespace DisruptEd.IO
                 Attributes.Add(attrNode);
             }
 
-            foreach (XmlElement elem in xml.ChildNodes)
+            foreach (var childNode in xml.ChildNodes)
             {
-                var child = new NodeClass(elem);
+                var node = childNode as XmlElement;
+
+                // skip anything that's not a node
+                if (node == null)
+                    continue;
+
+                var child = new NodeClass(node);
                 Children.Add(child);
             }
         }
