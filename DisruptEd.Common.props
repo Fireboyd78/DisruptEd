@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- Shared properties -->
+    <PropertyGroup>
+        <RootNamespace>DisruptEd</RootNamespace>
+        <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- ??? -->
+        <Prefer32Bit>false</Prefer32Bit>
+    </PropertyGroup>
+    
+    <!-- Platform-specific settings (will not override existing settings) -->
+    <PropertyGroup Condition=" '$(PlatformTarget)' == '' ">
+        <!-- Default to x86 -->
+        <PlatformTarget>x86</PlatformTarget>
+        <PlatformTarget Condition="'$(Platform)' == 'x86'">x86</PlatformTarget>
+        <PlatformTarget Condition="'$(Platform)' == 'x64'">x64</PlatformTarget>
+    </PropertyGroup>
+  
+    <!-- Debug configuration -->
+    <PropertyGroup Condition=" '$(Configuration) == 'Debug' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    
+    <!-- Release configuration -->
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <DefineConstants>TRACE;RELEASE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    
+    <!-- Global properties -->
+    <PropertyGroup>
+        <RootDir>$(MSBuildThisFileDirectory)</RootDir>
+        <SrcDir>$(ProjectDir)Source\</SrcDir>
+    </PropertyGroup>
+</Project>

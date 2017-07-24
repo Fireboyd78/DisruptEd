@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{29BCD934-C730-44B0-93F0-3DD38D0A6AAC}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>FCBastard</AssemblyName>
+  </PropertyGroup>
+  <!-- DisruptEd properties -->
+  <PropertyGroup>
+    <RootDir>$(ProjectDir)..\</RootDir>
+    <PropsFile>$(RootDir)DisruptEd.Common.props</PropsFile>
+  </PropertyGroup>
+  <Import Project="$(PropsFile)" Condition="Exists('$(PropsFile)')" />
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="$(SrcDir)BinaryStream.cs" />
+    <Compile Include="$(SrcDir)Cache.cs" />
+    <Compile Include="$(SrcDir)EntityLibrary.cs" />
+    <Compile Include="$(SrcDir)Hash.cs" />
+    <Compile Include="$(SrcDir)Memory.cs" />
+    <Compile Include="$(SrcDir)Node.cs" />
+    <Compile Include="$(SrcDir)NodeAttribute.cs" />
+    <Compile Include="$(SrcDir)NodeClass.cs" />
+    <Compile Include="$(SrcDir)Program.cs" />
+    <Compile Include="$(SrcDir)Types.cs" />
+    <Compile Include="$(SrcDir)Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="strings.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="strings.user.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="types.default.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="types.user.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
