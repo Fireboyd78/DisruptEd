@@ -43,6 +43,7 @@ namespace DisruptEd.IO
             }
         }
 
+        // TODO: Allow classes to be cached (can't do it properly because of reliance on offset shit)
         public override void Serialize(BinaryStream stream)
         {
             Offset = (int)stream.Position;
@@ -58,16 +59,24 @@ namespace DisruptEd.IO
             var attrsPtr = stream.Position;
             stream.Position += 2;
 
-            var nhD = new NodeDescriptor(nAttributes, false);
-            nhD.Serialize(stream);
+            if (nAttributes > 0)
+            {
+                var ahD = new NodeDescriptor(nAttributes, false);
+                ahD.Serialize(stream);
 
-            // step 1: write hashes
-            foreach (var attribute in Attributes)
-                attribute.Serialize(stream, true);
-            // step 2: write data
-            foreach (var attribute in Attributes)
-                attribute.Serialize(stream);
-
+                // write attribute hashes
+                foreach (var attribute in Attributes)
+                    attribute.Serialize(stream, true);
+                // write attribute data
+                foreach (var attribute in Attributes)
+                    attribute.Serialize(stream);
+            }
+            else
+            {
+                // no attributes to write!
+                stream.WriteByte(0);
+            }
+            
             var attrsSize = (int)(stream.Position - (attrsPtr + 2));
 
             if (attrsSize > 65535)
