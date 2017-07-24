@@ -255,7 +255,7 @@ namespace DisruptEd.IO
             {
                 foreach (var attr in node.Attributes)
                 {
-                    if (attr.Name == "Name")
+                    if (attr.Hash == StringHasher.GetHash("Name"))
                     {
                         Name = attr.Data.ToString();
                         break;

@@ -127,7 +127,7 @@ namespace DisruptEd.FCBastard
             var loadType = FileType.Other;
             var saveType = FileType.Other;
             
-            var inFile = (args.Length >= 1) ? args[0] : @"C:\Dev\Research\W_D\entitylibrary_rt.fcb";
+            var inFile = (args.Length >= 1) ? args[0] : @"C:\Dev\Research\WD2\entitylibrary_rt.fcb";
             loadType = GetFileType(inFile);
 
             if (loadType == FileType.Other)
@@ -147,7 +147,7 @@ namespace DisruptEd.FCBastard
             if (saveType == FileType.Other)
                 Abort($"Can't determine output file type of '{outFile}', aborting...");
 
-#if RELEASE
+#if NO_BINARY_REGEN
             if (loadType == saveType)
             {
                 if (String.Compare(inFile, outFile, StringComparison.OrdinalIgnoreCase) == 0)
