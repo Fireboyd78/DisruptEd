@@ -41,6 +41,5 @@
     <!-- Global properties -->
     <PropertyGroup>
         <RootDir>$(MSBuildThisFileDirectory)</RootDir>
-        <SrcDir>$(ProjectDir)Source\</SrcDir>
     </PropertyGroup>
 </Project>
