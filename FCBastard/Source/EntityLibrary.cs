@@ -190,10 +190,44 @@ namespace DisruptEd.IO
 
         public void Serialize(NodeClass parent)
         {
-            var node = GetNodeClass();            
+            var node = GetNodeClass();
             parent.Children.Add(node);
         }
 
+        public void Deserialize(NodeClass node)
+        {
+            if (node.Attributes.Count > 0)
+            {
+                foreach (var attr in node.Attributes)
+                {
+                    if (attr.Hash == StringHasher.GetHash("Name"))
+                    {
+                        Name = attr.Data.ToString();
+                        break;
+                    }
+                }
+            }
+
+            var nChildren = node.Children.Count;
+
+            Entries = new List<EntityReference>(nChildren);
+
+            // _256A1FF9 nodes
+            foreach (var group in node.Children)
+            {
+                if (group.Children.Count != 1)
+                    throw new InvalidOperationException("Houston, we got a bit of a problem...");
+
+                var entry = new EntityReference() {
+                    Use32Bit = Use32Bit,
+                    GroupNode = group,
+                    EntityNode = group.Children[0],
+                };
+
+                Entries.Add(entry);
+            }
+        }
+        
         public void Serialize(XmlDocument xml)
         {
             var parent = xml.DocumentElement;
@@ -232,12 +266,10 @@ namespace DisruptEd.IO
 
             if ((elem == null) || (elem.Name != "EntityLibrary"))
                 throw new InvalidOperationException("Not a EntityLibrary node!");
+            
+            Entries = new List<EntityReference>();
 
-            var children = elem.ChildNodes;
-
-            Entries = new List<EntityReference>(children.Count);
-
-            foreach (XmlElement node in children)
+            foreach (var node in elem.ChildNodes.OfType<XmlElement>())
             {
                 var entry = new EntityReference() {
                     Use32Bit = Use32Bit,
@@ -248,43 +280,9 @@ namespace DisruptEd.IO
                 Entries.Add(entry);
             }
         }
-        
-        public void Deserialize(NodeClass node)
-        {
-            if (node.Attributes.Count > 0)
-            {
-                foreach (var attr in node.Attributes)
-                {
-                    if (attr.Hash == StringHasher.GetHash("Name"))
-                    {
-                        Name = attr.Data.ToString();
-                        break;
-                    }
-                }
-            }
-            
-            var nChildren = node.Children.Count;
-
-            Entries = new List<EntityReference>(nChildren);
-
-            // _256A1FF9 nodes
-            foreach (var group in node.Children)
-            {
-                if (group.Children.Count != 1)
-                    throw new InvalidOperationException("Houston, we got a bit of a problem...");
-
-                var entry = new EntityReference() {
-                    Use32Bit    = Use32Bit,
-                    GroupNode   = group,
-                    EntityNode  = group.Children[0],
-                };
-
-                Entries.Add(entry);
-            }
-        }
     }
     
-    public class EntityLibraryCollection
+    public class EntityLibraryCollection : IResourceFile
     {
         static readonly MagicNumber Magic = "nbCF";
         static readonly int Type = 0x4005;
@@ -465,6 +463,18 @@ namespace DisruptEd.IO
 
                 root.Serialize(stream);
 
+                //Debug.WriteLine(">> Optimizing data...");
+                //using (var bs = new BinaryStream(BufferSize))
+                //{
+                //    root.Serialize(bs);
+                //
+                //    var dataLen = bs.Position;
+                //    bs.SetLength(dataLen);
+                //
+                //    var data = OptimizedData.Create(nodesCount, bs.ToArray());
+                //    data.WriteTo(stream);
+                //}
+
                 var refsOffset = (int)(Memory.Align(stream.Position, 8) - ptr);
 
                 Debug.WriteLine(">> Writing infos offset...");
@@ -514,14 +524,8 @@ namespace DisruptEd.IO
             Use32Bit = attr32Bit.ToBool();
 
             Debug.WriteLine(">> Loading libraries...");
-            foreach (var child in libsElem.ChildNodes)
+            foreach (var node in libsElem.ChildNodes.OfType<XmlElement>())
             {
-                var node = child as XmlElement;
-
-                // skip anything that's not a node
-                if (node == null)
-                    continue;
-
                 if (node.Name != "EntityLibrary")
                     throw new InvalidOperationException($"What the hell do I do with a '{node.Name}' element?!");
 

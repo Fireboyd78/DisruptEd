@@ -108,7 +108,43 @@ namespace DisruptEd
             return nChildren;
         }
 
+        public static int GetTotalNumberOfNodes(NodeObject node)
+        {
+            var nChildren = 0;
+
+            if ((node != null) && (node.Children.Count > 0))
+            {
+                foreach (var subNode in node.Children)
+                {
+                    nChildren += 1;
+
+                    if (subNode.Children.Count > 0)
+                        nChildren += GetTotalNumberOfNodes(subNode);
+                }
+            }
+
+            return nChildren;
+        }
+
         public static int GetTotalNumberOfAttributes(NodeClass node)
+        {
+            var nAttributes = 0;
+
+            if (node != null)
+            {
+                nAttributes = node.Attributes.Count;
+
+                if (node.Children.Count > 0)
+                {
+                    foreach (var subNode in node.Children)
+                        nAttributes += GetTotalNumberOfAttributes(subNode);
+                }
+            }
+
+            return nAttributes;
+        }
+
+        public static int GetTotalNumberOfAttributes(NodeObject node)
         {
             var nAttributes = 0;
 

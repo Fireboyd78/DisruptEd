@@ -15,71 +15,123 @@ namespace DisruptEd.IO
     }
 
     public interface IBinarySerializer : ISerializer<BinaryStream> { }
-    
-    public struct NodeDescriptor : IBinarySerializer
+
+    public interface IResourceFile
     {
-        public enum ControlCodeType
+        void LoadBinary(string filename);
+        void SaveBinary(string filename);
+
+        void LoadXml(string filename);
+        void SaveXml(string fileanme);
+    }
+
+    [Flags]
+    public enum DescriptorFlags
+    {
+        None = 0,
+        Use24Bit = 1,
+    }
+
+    public enum DescriptorType
+    {
+        None = -1,
+
+        BigValue,
+        Reference,
+    }
+    
+    public enum ReferenceType
+    {
+        None,
+
+        Index,
+        Offset,
+    }
+
+    public struct NodeDescriptor
+    {
+        int m_value;
+        DescriptorType m_type;
+        ReferenceType m_refType;
+
+        public static DescriptorFlags GlobalFlags { get; set; }
+
+        public static DescriptorType GetDescriptorType(int code)
         {
-            BigValue,
-            Offset,
+            switch (code)
+            {
+            case 254: return DescriptorType.Reference;
+            case 255: return DescriptorType.BigValue;
+            }
 
-            None = -1,
+            return DescriptorType.None;
         }
-        
-        public int Value { get; set; }
 
-        public bool IsOffset { get; set; }
+        public int Value
+        {
+            get { return m_value; }
+        }
+
+        public DescriptorType Type
+        {
+            get { return m_type; }
+        }
+
+        public ReferenceType ReferenceType
+        {
+            get { return m_refType; }
+        }
 
         public int Size
         {
             get
             {
-                // offsets are always 4-bytes long
-                if (IsOffset)
-                    return 4;
+                switch (Type)
+                {
+                case DescriptorType.None:
+                    return 1;
+                case DescriptorType.BigValue:
+                case DescriptorType.Reference:
+                    return (GlobalFlags.HasFlag(DescriptorFlags.Use24Bit) ? 4 : 5);
+                }
 
-                return (Value < 254) ? 1 : 4;
+                throw new InvalidOperationException("Unknown descriptor type, cannot determine size!");
             }
         }
 
-        public ControlCodeType ControlCode
+        public bool IsOffset
         {
             get
             {
-                if (IsOffset)
-                    return ControlCodeType.Offset;
-
-                return (Value >= 254) ? ControlCodeType.BigValue : ControlCodeType.None;
+                return (m_type == DescriptorType.Reference) 
+                    && (ReferenceType == ReferenceType.Offset);
             }
         }
 
-        private ControlCodeType GetControlCodeType(int code)
+        public bool IsIndex
         {
-            switch (code)
+            get
             {
-            case 254: return ControlCodeType.Offset;
-            case 255: return ControlCodeType.BigValue;
+                return (m_type == DescriptorType.Reference)
+                    && (ReferenceType == ReferenceType.Index);
             }
-
-            return ControlCodeType.None;
         }
         
-        public void Serialize(BinaryStream stream)
+        public void WriteTo(BinaryStream stream)
         {
-            switch (Size)
+            var value = Value;
+
+            switch (Type)
             {
-            case 1:
-                stream.WriteByte(Value);
+            case DescriptorType.None:
+                stream.WriteByte(value);
                 break;
-            case 4:
+            case DescriptorType.BigValue:
+            case DescriptorType.Reference:
                 {
-                    // value is either an offset or count >= 254
-                    int value = (Value & 0xFFFFFF);
-
-                    if (value != Value)
-                        throw new InvalidOperationException($"Node descriptor value too large! Value {Value} cannot fit into 24-bits :(");
-
-                    if (IsOffset)
+                    var code = (byte)~Type;
+                    
+                    if (ReferenceType == ReferenceType.Offset)
                     {
                         var ptr = (int)stream.Position;
                         var offset = (ptr - value);
@@ -90,52 +142,98 @@ namespace DisruptEd.IO
                         value = offset;
                     }
 
-                    // insert the control code
-                    value <<= 8;
-                    value |= (byte)~ControlCode;
-                    
-                    stream.Write(value);
+                    if (GlobalFlags.HasFlag(DescriptorFlags.Use24Bit))
+                    {
+                        if ((value & 0xFFFFFF) != value)
+                            throw new InvalidOperationException($"Descriptor value '{value}' too large, cannot fit into 24-bits!");
+
+                        value <<= 8;
+                        value |= code;
+
+                        stream.Write(value);
+                    }
+                    else
+                    {
+                        stream.WriteByte(code);
+                        stream.Write(value);
+                    }
                 } break;
             }
         }
-
-        public void Deserialize(BinaryStream stream)
+        
+        public static NodeDescriptor Read(BinaryStream stream, ReferenceType refType = ReferenceType.None)
         {
             var ptr = (int)stream.Position;
 
-            var n = stream.ReadByte();
-            var code = GetControlCodeType(n);
+            var value = stream.ReadByte();
+            var type = GetDescriptorType(value);
 
-            if (code != ControlCodeType.None)
+            if ((type == DescriptorType.Reference) && (refType == ReferenceType.None))
+                throw new InvalidOperationException("ID:10T error while reading a descriptor -- consumed a reference with no type defined!");
+
+            var isOffset = (type == DescriptorType.Reference)
+                        && (refType == ReferenceType.Offset);
+            
+            if (type != DescriptorType.None)
             {
-                // move back
-                stream.Position -= 1;
-
-                // read in value without control code
-                n = (int)(stream.ReadUInt32() >> 8);
-
-                if (code == ControlCodeType.Offset)
+                if (GlobalFlags.HasFlag(DescriptorFlags.Use24Bit))
                 {
-                    IsOffset = true;
+                    // move back
+                    stream.Position -= 1;
 
+                    // read in value without control code
+                    value = (int)(stream.ReadUInt32() >> 8);
+                }
+                else
+                {
+                    value = stream.ReadInt32();
+                }
+
+                if (isOffset)
+                {
                     // make offset absolute
-                    n = (ptr - n);
+                    value = (ptr - value);
                 }
             }
-            
-            Value = n;
-        }
-        
-        public NodeDescriptor(int value, bool offset)
-        {
-            Value = value;
-            IsOffset = offset;
+
+            return new NodeDescriptor(value, type, refType);
         }
 
-        public NodeDescriptor(BinaryStream bs)
-            : this()
+        public static NodeDescriptor Create(int value)
         {
-            Deserialize(bs);
+            var type = DescriptorType.None;
+
+            if (value >= 254)
+                type = DescriptorType.BigValue;
+
+            if (GlobalFlags.HasFlag(DescriptorFlags.Use24Bit))
+            {
+                if ((value & 0xFFFFFF) != value)
+                    throw new InvalidOperationException($"Descriptor value '{value}' too large, cannot fit into 24-bits!");
+            }
+
+            return new NodeDescriptor(value, type, ReferenceType.None);
+        }
+
+        public static NodeDescriptor CreateReference(int value, ReferenceType refType)
+        {
+            if (refType == ReferenceType.None)
+                throw new InvalidOperationException("ID:10T error -- why the fuck are you creating a reference with no type?!");
+
+            if (GlobalFlags.HasFlag(DescriptorFlags.Use24Bit))
+            {
+                if ((value & 0xFFFFFF) != value)
+                    throw new InvalidOperationException($"Descriptor offset '{value}' too large, cannot fit into 24-bits!");
+            }
+
+            return new NodeDescriptor(value, DescriptorType.Reference, refType);
+        }
+        
+        private NodeDescriptor(int value, DescriptorType type, ReferenceType refType)
+        {
+            m_value = value;
+            m_type = type;
+            m_refType = refType;
         }
     }
 

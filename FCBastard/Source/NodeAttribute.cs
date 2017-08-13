@@ -11,7 +11,7 @@ using System.Xml;
 
 namespace DisruptEd.IO
 {
-    public struct AttributeData : IBinarySerializer
+    public struct AttributeData : IBinarySerializer, ICacheableObject
     {
         public byte[] Buffer;
         public DataType Type;
@@ -321,33 +321,44 @@ namespace DisruptEd.IO
 
             return Utils.HexString2Bytes(s);
         }
-        
+
         public void Serialize(BinaryStream stream)
         {
             var ptr = (int)stream.Position;
-
-            var isCached = false;
-            var isMinified = false;
-            var isWritten = false;
-
             var oldSize = Size;
 
             // make sure buffer is proper size
             CommitBuffer();
-            isMinified = (Size < oldSize);
 
             if (Size > 0)
             {
+                var writeData = true;
+
                 if (CanBeCached)
                 {
                     if (WriteCache.IsCached(this))
                     {
-                        isCached = true;
-                        
                         var cache = WriteCache.GetData(this);
-                        var nD = new NodeDescriptor(cache.Offset, true);
 
-                        nD.Serialize(stream);
+                        if (cache.Size == Size)
+                        {
+                            stream.Position = (cache.Offset + 1);
+                            var buf = stream.ReadBytes(cache.Size);
+                            
+                            var key = Memory.GetCRC32(Buffer);
+                            var bufKey = Memory.GetCRC32(buf);
+
+                            stream.Position = ptr;
+
+                            // slow as fuck, but there's no room for error
+                            if (key == bufKey)
+                            {
+                                var nD = NodeDescriptor.CreateReference(cache.Offset, ReferenceType.Offset);
+                                nD.WriteTo(stream);
+
+                                writeData = false;
+                            }
+                        }
                     }
                     else
                     {
@@ -355,11 +366,11 @@ namespace DisruptEd.IO
                     }
                 }
 
-                if (!isCached)
+                if (writeData)
                 {
-                    var nD = new NodeDescriptor(Size, false);
+                    var nD = NodeDescriptor.Create(Size);
+                    nD.WriteTo(stream);
 
-                    nD.Serialize(stream);
                     stream.Write(Buffer);
                 }
             }
@@ -368,23 +379,12 @@ namespace DisruptEd.IO
                 // nothing to write!
                 stream.WriteByte(0);
             }
-            
-            var str = String.Format("\t{0,-23}-> {1}",
-                String.Format("{0,-14}({1}:{2}:{3})",
-                    String.Format("{0}[{1:D}:{2:D}]", Type.ToString(), oldSize, Size),
-                    Utils.ToBoolStr(isMinified),
-                    Utils.ToBoolStr(isCached),
-                    Utils.ToBoolStr(isWritten)),
-                ToString()
-            );
-
-            Debug.WriteLine(str);
         }
 
         public void Deserialize(BinaryStream stream)
         {
             var ptr = (int)stream.Position;
-            var nD = new NodeDescriptor(stream);
+            var nD = NodeDescriptor.Read(stream, ReferenceType.Offset);
 
             if (nD.IsOffset)
             {
@@ -392,7 +392,7 @@ namespace DisruptEd.IO
                 Deserialize(stream);
 
                 // move past offset
-                stream.Position = (ptr + 4);
+                stream.Position = (ptr + nD.Size);
             }
             else
             {
@@ -423,36 +423,16 @@ namespace DisruptEd.IO
                 }
             }
         }
-
-        public bool Equals(AttributeData data)
-        {
-            return (GetHashCode() == data.GetHashCode());
-        }
-
-        public override bool Equals(object obj)
-        {
-            var objType = obj.GetType();
-
-            if (objType == typeof(AttributeData))
-                return Equals((AttributeData)obj);
-
-            return false;
-        }
-
+        
         public override int GetHashCode()
         {
-            if (Buffer != null)
-            {
-                var size = Buffer.Length;
-                var crcKey = 0xFFFFFFFF;
+            // where the hell do I put this
+            CommitBuffer();
 
-                if (size != 0)
-                    crcKey &= (uint)((~(int)Type ^ size) | size);
+            if (Size > 0)
+                return (int)Memory.GetCRC32(Buffer);
 
-                return (int)Memory.GetCRC32(Buffer, crcKey);
-            }
-
-            return base.GetHashCode();
+            return 0;
         }
 
         public AttributeData(DataType type)
@@ -504,7 +484,7 @@ namespace DisruptEd.IO
     public class NodeAttribute : Node
     {
         public AttributeData Data;
-
+        
         public string Class { get; set; }
 
         public string FullName
@@ -547,7 +527,7 @@ namespace DisruptEd.IO
                 if (AttributeTypes.IsTypeKnown(fullHash))
                     type = AttributeTypes.GetType(fullHash);
             }
-
+            
             Data = new AttributeData(type, xml.Value);
 
             // looks to be part of the spec :/
@@ -570,8 +550,6 @@ namespace DisruptEd.IO
         public override void Serialize(BinaryStream stream)
         {
             Offset = (int)stream.Position;
-
-            Debug.WriteLine($"<{Hash:X8}> ; '{FullName}'");
             Data.Serialize(stream);
         }
 
@@ -649,7 +627,7 @@ namespace DisruptEd.IO
                     if (AttributeTypes.IsTypeKnown(fullHash))
                         type = AttributeTypes.GetType(fullHash);
                 }
-
+                
                 Data = new AttributeData(type);
             }
             else

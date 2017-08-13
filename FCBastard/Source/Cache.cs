@@ -7,24 +7,34 @@ using System.Threading.Tasks;
 
 namespace DisruptEd.IO
 {
+    public interface ICacheableObject
+    {
+        int Size { get; }
+        int GetHashCode();
+    }
+
     public struct CachedData
     {
+        private static readonly Type CacheType = typeof(ICacheableObject);
+
         public static readonly CachedData Empty = new CachedData(0, 0, -1);
 
         public int Offset;
         public int Size;
         public int Checksum;
 
+        public ICacheableObject Object;
+
         public override bool Equals(object obj)
         {
             var objType = obj.GetType();
 
-            if (objType == typeof(AttributeData))
+            if (CacheType.IsAssignableFrom(objType))
             {
-                var data = (AttributeData)obj;
+                var data = (ICacheableObject)obj;
                 return (Checksum == data.GetHashCode());
             }
-
+            
             return false;
         }
 
@@ -38,13 +48,15 @@ namespace DisruptEd.IO
             Offset = offset;
             Size = size;
             Checksum = checksum;
+            Object = null;
         }
 
-        public CachedData(int offset, AttributeData data)
+        public CachedData(int offset, ICacheableObject data)
         {
             Offset = offset;
-            Size = data.Buffer.Length;
+            Size = data.Size;
             Checksum = data.GetHashCode();
+            Object = data;
         }
     }
 
@@ -60,7 +72,7 @@ namespace DisruptEd.IO
                 var crcKey = 0xFFFFFFFF;
 
                 if (size != 0)
-                    crcKey &= (uint)((~(int)key ^ size) | size);
+                    crcKey &= (uint)((~key ^ size) | size);
 
                 return (int)Memory.GetCRC32(buffer, crcKey);
             }
@@ -74,12 +86,12 @@ namespace DisruptEd.IO
             return (m_buffers.ContainsKey(hash));
         }
 
-        public static bool IsCached(AttributeData data)
+        public static bool IsCached(ICacheableObject data)
         {
             var key = data.GetHashCode();
             return (m_buffers.ContainsKey(key));
         }
-
+        
         public static void Cache(int offset, byte[] buffer, int key)
         {
             var size = buffer.Length;
@@ -89,15 +101,12 @@ namespace DisruptEd.IO
             m_buffers.Add(entry.Checksum, entry);
         }
 
-        public static void Cache(int offset, AttributeData data)
+        public static void Cache(int offset, ICacheableObject data)
         {
-            if (!data.IsBufferValid())
-                throw new InvalidOperationException("wow");
-
             var entry = new CachedData(offset, data);
             m_buffers.Add(entry.Checksum, entry);
         }
-
+        
         public static CachedData GetData(byte[] buffer, int key)
         {
             var hashKey = CalculateHashCode(buffer, key);
@@ -108,7 +117,7 @@ namespace DisruptEd.IO
             return CachedData.Empty;
         }
 
-        public static CachedData GetData(AttributeData data)
+        public static CachedData GetData(ICacheableObject data)
         {
             var key = data.GetHashCode();
 

@@ -21,19 +21,75 @@ namespace DisruptEd.FCBastard
 {
     class BastardConfig
     {
-        public static readonly string[] Types = {
+        static string[] m_usage = {
+            "Usage: <input> <:output>",
+            " The file extension* is used to determine which operation to perform.",
+            "  * FCB/Binary: *.bin, *.dat, *.fcb, *.lib, *.obj",
+            "  * XML: ?!",
+            "  ** If you supply an invalid extension, The Bastard won't know what to do.",
+            " Output is optional* -- The Bastard can figure out what to do (e.g. 'FCB'->'XML' etc.)",
+            "  * Generated binaries will be put in a 'bin' folder where the XML file resides.",
+            "Examples:",
+            " 'fcbastard z:\\library.fcb' ; create XML file 'z:\\library.xml'",
+            " 'fcbastard z:\\library.xml' ; create FCB file 'z:\\bin\\library.fcb'",
+            " 'fcbastard z:\\library.xml z:\\final\\library.fcb' ; XML->FCB",
+            " 'fcbastard z:\\library.fcb z:\\export\\library.xml' ; FCB->XML",
+        };
+
+        static readonly string[] m_types = {
             "dev",
             "rel",
         };
 
+        static readonly string[] m_complete_msg = {
+            "My job's done here.",
+            "I'm pretty damn good at kicking ass, no?",
+            "Fin~",
+            "This successful operation sponsored in part by Deebz__(tm)",
+            "Another successful job completed. You should buy me a beer ;)",
+            "Kiss my shiny metal ass, [redacted]!",
+            "Success! What else did you expect?",
+            "[insert witty success message here]",
+            "Failed to cause an error: Operation completed successfully.",
+            "Failure is for losers. You're a WINNER!",
+            "Doesn't it feel good to be on the winning team?",
+            "I don't mean to brag, but I'm pretty fucking awesome!",
+            "Once a bastard, always a bastard. Don't fuck with me!",
+            "Who the hell wrote these awful success messages?!",
+            "Successfully completed the operation. Now, was that so hard?",
+            "Enjoy flying helicopters and shit.",
+            "I saw what you did there ;)",
+            "Are you sure about th-- nevermind, that's none of my business.",
+            "Amazing how a free and open-source tool is so useful!",
+            "Another fan-fucking-tastic operation completed!",
+            "I could really, really fucking use some beer money...please!",
+            "Runnin' a bit low on that beer money...*cough cough*",
+            "I'm addicted to success.",
+            "Definitely not sick of winning yet ;)",
+        };
+        
         public static readonly int Type;
         public static readonly Version Version;
 
         public static CultureInfo Culture = new CultureInfo("en-US", false);
 
+        public static string UsageString
+        {
+            get { return String.Join("\r\n", m_usage); }
+        }
+
         public static string VersionString
         {
-            get { return $"v{Version.ToString()}-{Types[Type]}"; }
+            get { return $"v{Version.ToString()}-{m_types[Type]}"; }
+        }
+
+        public static string GetSuccessMessage()
+        {
+            var seed = (int)(DateTime.Now.ToBinary() * ~0xF12EB12D);
+            var rand = new Random(seed);
+            
+            var idx = rand.Next(0, m_complete_msg.Length - 1);
+            return m_complete_msg[idx];
         }
         
         static BastardConfig()
@@ -57,20 +113,11 @@ namespace DisruptEd.FCBastard
             Other,
         }
 
-        static StringBuilder fcbBuilder = new StringBuilder();
-        static StringBuilder typesBuilder = new StringBuilder();
-        
-        static XmlWriter fcbLog = XmlWriter.Create(fcbBuilder, new XmlWriterSettings() {
-            Indent = true,
-            IndentChars = "\t",
-
-            NewLineOnAttributes = true,
-
-            // gotta write my own :/
-            OmitXmlDeclaration = true,
-        });
-        
-        static EntityLibraryCollection Library { get; set; }
+        enum LibraryType
+        {
+            Entities,
+            Objects,
+        }
 
         static FileType GetFileType(string filename)
         {
@@ -81,6 +128,8 @@ namespace DisruptEd.FCBastard
             case ".bin":
             case ".dat":
             case ".fcb":
+            case ".lib":
+            case ".obj":
                 return FileType.BinaryData;
 
             case ".xml":
@@ -88,6 +137,15 @@ namespace DisruptEd.FCBastard
             }
 
             return FileType.Other;
+        }
+
+        /* TODO: make this do more advanced checks */
+        static LibraryType GetLibraryType(string filename)
+        {
+            if (filename.StartsWith("entitylibrary", StringComparison.OrdinalIgnoreCase))
+                return LibraryType.Entities;
+
+            return LibraryType.Objects;
         }
 
         static void Abort(string message)
@@ -103,23 +161,11 @@ namespace DisruptEd.FCBastard
             Thread.CurrentThread.CurrentUICulture = BastardConfig.Culture;
 
             Console.WriteLine($"<<< FCBastard {BastardConfig.VersionString} >>>");
-            
+
 #if RELEASE
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage: <input> <:output>");
-                Console.WriteLine(" The file extension* is used to determine which operation to perform.");
-                Console.WriteLine("  * FCB/Binary: *.bin, *.dat, *.fcb");
-                Console.WriteLine("  * XML: ?!");
-                Console.WriteLine("  ** If you supply an invalid extension, The Bastard won't know what to do.");
-                Console.WriteLine(" Output is optional* -- The Bastard can figure out what to do (e.g. 'FCB'->'XML' etc.)");
-                Console.WriteLine("  * Generated binaries will be put in a 'bin' folder where the XML file resides.");
-                Console.WriteLine("Examples:");
-                Console.WriteLine(" 'fcbastard z:\\library.fcb' ; create XML file 'z:\\library.xml'");
-                Console.WriteLine(" 'fcbastard z:\\library.xml' ; create FCB file 'z:\\bin\\library.fcb'");
-                Console.WriteLine(" 'fcbastard z:\\library.xml z:\\final\\library.fcb' ; XML->FCB");
-                Console.WriteLine(" 'fcbastard z:\\library.fcb z:\\export\\library.xml' ; FCB->XML");
-
+                Console.WriteLine(BastardConfig.UsageString);
                 Environment.Exit(0);
             }
 #endif
@@ -127,7 +173,7 @@ namespace DisruptEd.FCBastard
             var loadType = FileType.Other;
             var saveType = FileType.Other;
             
-            var inFile = (args.Length >= 1) ? args[0] : @"C:\Dev\Research\WD2\entitylibrary_rt.fcb";
+            var inFile = args[0];
             loadType = GetFileType(inFile);
 
             if (loadType == FileType.Other)
@@ -146,16 +192,7 @@ namespace DisruptEd.FCBastard
 
             if (saveType == FileType.Other)
                 Abort($"Can't determine output file type of '{outFile}', aborting...");
-
-#if NO_BINARY_REGEN
-            if (loadType == saveType)
-            {
-                if (String.Compare(inFile, outFile, StringComparison.OrdinalIgnoreCase) == 0)
-                    Abort($"Fatal error ID:10T -- put the crack pipe away and try again.");
-
-                Abort($"The input and output file types are the same ('{loadType}' == '{saveType}'), perhaps you should just copy the file?");
-            }
-#endif
+            
             Console.WriteLine($"Input file: '{inFile}' ({loadType.ToString()})");
             Console.WriteLine($"Output file: '{outFile}' ({saveType.ToString()})");
 
@@ -182,19 +219,33 @@ namespace DisruptEd.FCBastard
             if (!Directory.Exists(outDir))
                 Directory.CreateDirectory(outDir);
 
-            Library = new EntityLibraryCollection();
+            IResourceFile library = null;
 
+            var libType = GetLibraryType(inFile);
+
+            switch (libType)
+            {
+            case LibraryType.Entities:
+                library = new EntityLibraryCollection();
+                NodeDescriptor.GlobalFlags = DescriptorFlags.Use24Bit;
+                break;
+            case LibraryType.Objects:
+                library = new ObjectLibrary();
+                NodeDescriptor.GlobalFlags = DescriptorFlags.None;
+                break;
+            }
+            
             switch (loadType)
             {
             case FileType.BinaryData:
                 {
                     Console.WriteLine("Loading binary data...");
-                    Library.LoadBinary(inFile);
+                    library.LoadBinary(inFile);
                 } break;
             case FileType.Xml:
                 {
                     Console.WriteLine("Loading xml data...");
-                    Library.LoadXml(inFile);
+                    library.LoadXml(inFile);
                 } break;
             }
 
@@ -203,12 +254,12 @@ namespace DisruptEd.FCBastard
             case FileType.BinaryData:
                 {
                     Console.WriteLine("Saving binary data...");
-                    Library.SaveBinary(outFile);
+                    library.SaveBinary(outFile);
                 } break;
             case FileType.Xml:
                 {
                     Console.WriteLine("Saving xml...");
-                    Library.SaveXml(outFile);
+                    library.SaveXml(outFile);
                 } break;
             }
 
@@ -216,7 +267,8 @@ namespace DisruptEd.FCBastard
             debugListener.Flush();
 #endif
 
-            Console.WriteLine("The Bastard has successfully completed his job.");
+            var success = BastardConfig.GetSuccessMessage();
+            Console.WriteLine(success);
         }
     }
 }

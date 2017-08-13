@@ -39,6 +39,8 @@
     <Compile Include="Source\Program.cs" />
     <Compile Include="Source\Types.cs" />
     <Compile Include="Source\Utils.cs" />
+    <Compile Include="Source\ObjectLibrary.cs" />
+    <Compile Include="Source\NodeObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
