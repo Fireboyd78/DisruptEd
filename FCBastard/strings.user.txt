@@ -1,8 +1,22 @@
 # Add your custom strings for hash lookups below this line :)
 The Bastard Was Here
 
+libobj
+
+fShieldCoop
+fDetectionCoop
+fBulletDamageCurveCoop
+fChaseEfficiencyTimeModifierCoop
+fChaseEfficiencyValueModifierCoop
+
+ScanRateModifier
+fScanRateModifierEasy
+fScanRateModifierMedium
+fScanRateModifierHard
+fScanRateModifierInsane
+fScanRateModifierCoop
+
 annotation
-C       {}
 32bit
 64bit
 _lowres
@@ -62,7 +76,6 @@ Partial
 Container
 PropertyPathItem
 ContainerElement
-C       ::
 xxx
 Size
 Allocate
@@ -70,7 +83,6 @@ long
 long
 bool
 c
-s
 UiTypeAttribute
 UiDescription
 None
@@ -93,11 +105,7 @@ selPatchType
 CRigidPhysComponent
 CPilotNavMeshResource
 CPilotFacade
-s
 cpp
-\\
-s
-s
 n
 LoadNavMesh_Internal
 enum
@@ -168,7 +176,6 @@ short
 ndString
 ndVec3
 ndQuat
->
 CPathID
 CMoveStringID
 Undefined

@@ -48,7 +48,7 @@
 		<Attribute Name="hidMaxKnotInEaseTime"							Type="Float" />
 		<Attribute Name="hidMaxKnotTime"								Type="Float" />
 		<Attribute Name="hidMeshName"									Type="StringHash" />
-		<Attribute Name="hidName"										Type="String" />
+		<Attribute Name="hidName"										Type="StringHash" />
 		<Attribute Name="hidNodeName"									Type="StringHash" />
 		<Attribute Name="hidNodeNameLOD0"								Type="StringHash" />
 		<Attribute Name="hidNumKnots"									Type="Int32" />
@@ -59,6 +59,7 @@
 		<Attribute Name="hidPos_precise"								Type="Vector3" />
 		<Attribute Name="hidResourceCount"								Type="Int32" />
 		<Attribute Name="hidRightWheelIndex"							Type="Byte" />
+    <Attribute Name="hidSingleObject"             Type="Bool" />
 		<Attribute Name="hidShape"										Type="Float" />
 		<Attribute Name="hidShapePoints"								Type="Float" />
 		<Attribute Name="hidTireDeformationIndex"						Type="Byte" />
@@ -72,6 +73,7 @@
         <Attribute Name="text_hidEventName"							    Type="String" />
         <Attribute Name="text_hidGeometryResourceForGamePlay"           Type="String" />
         <Attribute Name="text_hidMeshName"							    Type="String" />
+        <Attribute Name="text_hidName"							    Type="String" />
         <Attribute Name="text_hidNodeName"							    Type="String" />
         <Attribute Name="text_hidNodeNameLOD0"							Type="String" />
         <Attribute Name="text_hidParentBoneNameID"						Type="String" />
@@ -99,6 +101,11 @@
     <Attribute Name="IntegerVariable.iVal"                              Type="Int32" />
     <Attribute Name="StringVariable.Val"                                Type="String" />
     <Attribute Name="Vehicle.LightName"                                 Type="String" />
+  
+    <!-- ??? -->
+    <Attribute Name="AnimalMoveStateEntry.hidName" Type="BinHex" />
+    <Attribute Name="MoveStateEntry.hidName" Type="BinHex" />
+    <Attribute Name="Element.hidName" Type="BinHex" />
 	
 	<Attribute Name="boneMovementBoneName"								Type="Int32" />
 	<Attribute Name="child"												Type="Byte" />
