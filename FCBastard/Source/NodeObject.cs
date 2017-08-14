@@ -9,7 +9,7 @@ using System.Xml;
 
 namespace DisruptEd.IO
 {
-    public class NodeObject : Node
+    public class NodeObject : Node, IGetChildren<NodeObject>, IGetAttributes<NodeAttribute>
     {
         public List<NodeAttribute> Attributes { get; set; }
         public List<NodeObject> Children { get; set; }

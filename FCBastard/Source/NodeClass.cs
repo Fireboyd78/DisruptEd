@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace DisruptEd.IO
 {
-    public class NodeClass : Node, ICacheableObject
+    public class NodeClass : Node, IGetChildren<NodeClass>, IGetAttributes<NodeAttribute>, ICacheableObject
     {
         public List<NodeAttribute> Attributes { get; set; }
         public List<NodeClass> Children { get; set; }

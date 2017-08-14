@@ -237,6 +237,18 @@ namespace DisruptEd.IO
         }
     }
 
+    public interface IGetAttributes<T>
+        where T : NodeAttribute
+    {
+        List<T> Attributes { get; }
+    }
+
+    public interface IGetChildren<T>
+        where T : Node
+    {
+        List<T> Children { get; }
+    }
+    
     public abstract class Node : IBinarySerializer
     {
         private string m_name;
