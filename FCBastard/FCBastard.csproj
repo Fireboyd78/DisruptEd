@@ -36,6 +36,7 @@
     <Compile Include="Source\Node.cs" />
     <Compile Include="Source\NodeAttribute.cs" />
     <Compile Include="Source\NodeClass.cs" />
+    <Compile Include="Source\NodeContainer.cs" />
     <Compile Include="Source\Program.cs" />
     <Compile Include="Source\Types.cs" />
     <Compile Include="Source\Utils.cs" />
