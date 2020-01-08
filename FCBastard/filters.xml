@@ -1,0 +1,84 @@
+<!--
+  Resource Filter Configuration File
+  
+  In order for The Bastard to know what to do with resource data,
+  we have to use "filters" to ensure we import/export the data correctly.
+  
+  There is no fool-proof way of detecting resource types, so we have to manually define them here.
+  
+  See below for more information.
+-->
+<ResourceFilters>
+  <!--
+    Each resource filter must have the following attributes:
+      Name          In an XML document, the name of the root element.
+                    This is only the first step in identifying a resource's type.
+                    
+                    If the name is an unknown hash, use the '_DEADBEEF' notation.
+                
+      Version       The version of the resource data.
+                    This matches the value in the 'nbCF' header.
+                    
+                    For most Dunia™ games, there only exists a version 2.
+                    
+                    In Watch_Dogs™ and Watch_Dogs™ 2, all resources are version 3;
+                    however, the 'entitylibrary' files are version 5.
+                    
+                    If version 1 is specified, then RML data is assumed.
+                    
+      Type          The resource type used to create a serializer for reading/writing data.
+                    
+                    Currently supported types:
+                      * ArchetypeLibrary (only used in Watch_Dogs™ games)
+                      * Archetype
+                      * Generic
+                      * FCXMap (custom maps)
+                    
+                    Some files contain more than just resource data,
+                    which requires a custom serializer (and thus more research/coding).
+                    
+                    NOTE: RML data should always be 'Generic'.
+                    
+      FileExt       The file extension of the compiled resource data.
+                    
+    Optional attributes for more advanced stuff:
+    
+      ItemName      Specifies the name each item in the root element must be to use this filter.
+                    
+                    For example, given this hierarchy:
+                    
+                    <lib>
+                      <libobj />
+                      <libobj />
+                      <libobj />
+                    </lib>
+                      
+                    The child name of a 'lib' resource would be 'libobj'.
+                    
+                    This helps differentiate between resources that may share the same name,
+                    but only differ by what kind of items they contain.
+  -->
+  <!--
+    RML resources
+  -->
+  <Resource Name="RML_DATA"           Version="1"   Type="Generic"            FileExt=".rml" />
+  
+  <!--
+    Nomad resources
+  -->
+  <Resource Name="NomadLib"           Version="2"   Type="Generic"            FileExt=".fcb" ItemName="NomadObject" />
+  <Resource Name="NomadDBLib"         Version="2"   Type="Generic"            FileExt=".ndb" ItemName="NomadObject" />
+
+  <Resource Name="lib"                Version="3"   Type="Generic"            FileExt=".lib" ItemName="libobj" />
+  <Resource Name="obj"                Version="3"   Type="Generic"            FileExt=".obj" />
+  
+  <Resource Name="EntityLibraries"    Version="5"   Type="ArchetypeLibrary"   FileExt=".fcb" ItemName="EntityLibrary" />
+  <Resource Name="EntityPrototype"    Version="2"   Type="Archetype"          FileExt=".ark.fcb" />
+  
+  <!--
+    Custom resources
+  -->
+  <Resource Name="FCXMapData"         Version="2"   Type="FCXMap"             FileExt=".fc5map" />
+  <Resource Name="CombinedMoveFile"   Version="3"   Type="CombinedMoveFile"   FileExt=".bin" />
+</ResourceFilters>
+

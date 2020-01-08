@@ -7,38 +7,66 @@
 	* Don't add more than one attribute with the same name, you'll fuck everything up!
 -->
 <AttributeTypes Kind="UserTypes">
-	<!-- [dis]rupt -->
+    <!-- test -->
+    <AttributeGroup>
+        <Attribute Name="Test.Bool" Type="Bool" />
+        <Attribute Name="Test.Byte" Type="Byte" />
+        <Attribute Name="Test.Int16" Type="Int16" />
+        <Attribute Name="Test.Int32" Type="Int32" />
+        <Attribute Name="Test.UInt16" Type="UInt16" />
+        <Attribute Name="Test.UInt32" Type="UInt32" />
+        <Attribute Name="Test.Float" Type="Float" />
+        <Attribute Name="Test.String" Type="String" />
+        <Attribute Name="Test.StringId" Type="StringId" />
+        <Attribute Name="Test.Vector2" Type="Vector2" />
+        <Attribute Name="Test.Vector3" Type="Vector3" />
+        <Attribute Name="Test.Vector4" Type="Vector4" />
+        <Attribute Name="Test.PathId" Type="PathId" />
+    </AttributeGroup>
+    
+	<!-- dis -->
 	<AttributeGroup>
-		<Attribute Name="disLayerId"									Type="Int32" />
-		<Attribute Name="disName"										Type="StringHash" />
-		<Attribute Name="disNodeName"									Type="StringHash" />
+        <Attribute Name="disCoverFileName"                              Type="StringId" />
+        <Attribute Name="disDbObjectName"                               Type="String" />
+	    <Attribute Name="disLayerId"                                    Type="Int32" />
+        <Attribute Name="disEntityId"                                   Type="BinHex" />
+        <Attribute Name="disLibItemId"                                  Type="BinHex" />
+        <Attribute Name="disNomadObjectId"                              Type="BinHex" />
+	    <Attribute Name="disName"										Type="StringId" />
+	    <Attribute Name="disNodeName"									Type="StringId" />
+        <Attribute Name="disSlotName"                                   Type="StringId" />
         
         <Attribute Name="text_disCoverFileName"                         Type="String" />
-		<Attribute Name="text_disName"									Type="String" />
-		<Attribute Name="text_disNodeName"								Type="String" />
+		<Attribute Name="text_disName"								    Type="String" />
+		<Attribute Name="text_disNodeName"						        Type="String" />
 	</AttributeGroup>
 	
-	<!-- hid ? -->
+	<!-- hid -->
 	<AttributeGroup>
+        <Attribute Name="hid_ArchRefId"                                 Type="BinHex" />
+        <Attribute Name="hid_DbRefId"                                   Type="BinHex" />
+        <Attribute Name="hid_DbRefT"                                    Type="StringId" />
 		<Attribute Name="hidCentet"										Type="Vector3" /> <!-- Nice work on that typo! -->
 		<Attribute Name="hidCenter"										Type="Vector3" />
 		<Attribute Name="hidAngles"										Type="Vector3" />
 		<Attribute Name="hidBoneIndex"									Type="Byte" />
-		<Attribute Name="hidCanDetach"									Type="Byte" />
-		<Attribute Name="hidCanHang"									Type="Byte" />
+		<Attribute Name="hidCanDetach"									Type="Bool" />
+		<Attribute Name="hidCanHang"									Type="Bool" />
 		<Attribute Name="hidComponentClassName"							Type="String" />
-		<Attribute Name="hidConstEntity"								Type="Byte" />
+		<Attribute Name="hidConstEntity"								Type="Bool" />
 		<Attribute Name="hidDamageStatePartIndex"						Type="Byte" />
-		<Attribute Name="hidDetailObject"								Type="Byte" />
+        <Attribute Name="hid_DTCTH_ClassName"                           Type="StringId"/>
+		<Attribute Name="hidDetailObject"								Type="Bool" />
 		<Attribute Name="hidEaseTimeInMovementCurve"					Type="Float" />
 		<Attribute Name="hidEaseTimeInMovementCurveOnEaseTimeRatio"		Type="Float" />
-		<Attribute Name="hidEntityClass"								Type="StringHash" />
-		<Attribute Name="hidEventName"									Type="StringHash" />
+		<Attribute Name="hidEntityClass"								Type="StringId" />
+		<Attribute Name="hidEventName"									Type="StringId" />
 		<Attribute Name="hidEventType"									Type="Byte" />
-		<Attribute Name="hidFXNode"										Type="StringHash" />
-		<Attribute Name="hidHasAliasName"								Type="Byte" />
-		<Attribute Name="hidIndex"										Type="Byte" />
-		<Attribute Name="hidInjected"									Type="Byte" />
+		<Attribute Name="hidFXNode"										Type="StringId" />
+		<Attribute Name="hidHasAliasName"								Type="Bool" />
+		<Attribute Name="hidIndex"										Type="Int32" />
+		<Attribute Name="hidInjected"									Type="Bool" />
+        <Attribute Name="hidKey"                                        Type="BinHex" />
 		<Attribute Name="hidLayerCount"									Type="Byte" />
 		<Attribute Name="hidLeftWheelIndex"								Type="Byte" />
 		<Attribute Name="hidLightIndex"									Type="Byte" />
@@ -47,74 +75,174 @@
 		<Attribute Name="hidLightRotation"								Type="Vector3" />
 		<Attribute Name="hidMaxKnotInEaseTime"							Type="Float" />
 		<Attribute Name="hidMaxKnotTime"								Type="Float" />
-		<Attribute Name="hidMeshName"									Type="StringHash" />
-		<Attribute Name="hidName"										Type="StringHash" />
-		<Attribute Name="hidNodeName"									Type="StringHash" />
-		<Attribute Name="hidNodeNameLOD0"								Type="StringHash" />
+		<Attribute Name="hidMeshName"									Type="StringId" />
+		<Attribute Name="hidName"										Type="String" />
+		<Attribute Name="hidNodeName"									Type="StringId" />
+		<Attribute Name="hidNodeNameLOD0"								Type="StringId" />
 		<Attribute Name="hidNumKnots"									Type="Int32" />
-		<Attribute Name="hidParentBoneNameID"							Type="StringHash" />
+        <Attribute Name="hidOriginalMaterial"							Type="PathId" />
+		<Attribute Name="hidParentBoneNameID"							Type="StringId" />
 		<Attribute Name="hidPartIndex"									Type="Byte" />
 		<Attribute Name="hidPoints"										Type="Float" />
 		<Attribute Name="hidPos"										Type="Vector3" />
 		<Attribute Name="hidPos_precise"								Type="Vector3" />
 		<Attribute Name="hidResourceCount"								Type="Int32" />
 		<Attribute Name="hidRightWheelIndex"							Type="Byte" />
-    <Attribute Name="hidSingleObject"             Type="Bool" />
+        <Attribute Name="hidSingleObject"                               Type="Bool" />
 		<Attribute Name="hidShape"										Type="Float" />
 		<Attribute Name="hidShapePoints"								Type="Float" />
 		<Attribute Name="hidTireDeformationIndex"						Type="Byte" />
-		<Attribute Name="hidType"										Type="StringHash" />
-		<Attribute Name="hidUseAlternateSimpleCollision"				Type="Byte" />
-		<Attribute Name="hidUseHierarchial"								Type="Byte" />
+		<Attribute Name="hidType"										Type="StringId" />
+		<Attribute Name="hidUseAlternateSimpleCollision"				Type="Bool" />
+		<Attribute Name="hidUseHierarchial"								Type="Bool" />
 		<Attribute Name="hidVehiclePartIndex"							Type="Byte" />
-        
-		<Attribute Name="text_hidEntityClass"							Type="String" />
+
+        <Attribute Name="text_hid_ArchRefId"                            Type="String" />
+        <Attribute Name="text_hid_DbRefId"                              Type="String" />
+        <Attribute Name="text_hid_DbRefT"                               Type="String" />
+        <Attribute Name="text_hid_DTCTH_ClassName"                      Type="String" />
+	    <Attribute Name="text_hidEntityClass"							Type="String" />
         <Attribute Name="text_hidFXNode"							    Type="String" />
         <Attribute Name="text_hidEventName"							    Type="String" />
         <Attribute Name="text_hidGeometryResourceForGamePlay"           Type="String" />
         <Attribute Name="text_hidMeshName"							    Type="String" />
-        <Attribute Name="text_hidName"							    Type="String" />
         <Attribute Name="text_hidNodeName"							    Type="String" />
         <Attribute Name="text_hidNodeNameLOD0"							Type="String" />
         <Attribute Name="text_hidParentBoneNameID"						Type="String" />
-		<Attribute Name="text_hidResourceId"							Type="String" />
         <Attribute Name="text_hidType"							        Type="String" />
 	</AttributeGroup>
 
+    <AttributeGroup>
+        <Attribute Name="libobj.hidName"                                Type="StringId" />
+        <Attribute Name="libobj.sAccessId"                              Type="StringId" />
+    </AttributeGroup>
+
+    <AttributeGroup>
+        <Attribute Name="LibraryId"                                     Type="BinHex" />
+        <Attribute Name="LibraryPathName"                               Type="String" />
+        <Attribute Name="LibraryVersion"                                Type="Int32" />
+
+        <Attribute Name="SpawnThreadSafe"                               Type="Bool" />
+
+        <Attribute Name="text_LibraryId"                                Type="String" />
+    </AttributeGroup>
+
+    <AttributeGroup>
+        <Attribute Name="something.hash" Type="StringId" />
+        
+        <Attribute Name="something.AnimID" Type="PathId" />
+        <Attribute Name="something.AnimBlendRatio" Type="Float" />
+        <Attribute Name="something.AnimInjectionRatio" Type="Float" />
+        
+        <Attribute Name="something.PMSValue" Type="StringId" />
+    </AttributeGroup>
+
+    <AttributeGroup Type="Array">
+        <Attribute Name="offsetsArray" />
+        <Attribute Name="hashesArray" />
+
+        <Attribute Name="PerMoveResourceInfo.sizes" />
+        <Attribute Name="PerMoveResourceInfo.rootNodeIds" />
+
+        <Attribute Name="ArchetypeNameIds" />
+        <Attribute Name="ArchetypeIds" />
+    </AttributeGroup>
+
     <!-- Actually a string hash?? -->
-    <Attribute Name="CBreakableHackableComponent.sPartName" Type="StringHash" />
-    <Attribute Name="CLightEffectComponent.hidType" Type="StringHash" />
+    <Attribute Name="CBreakableHackableComponent.sPartName"             Type="StringId" />
+    <Attribute Name="CLightEffectComponent.hidType"                     Type="StringId" />
 	
-	<Attribute Name="Knot.Type"											Type="Byte" />
+	<Attribute Name="Knot.Type"											Type="Int32" />
 	<Attribute Name="Knot.Info"											Type="Vector4" />
 	<Attribute Name="Knot.Value"										Type="Vector4" />
 	
-	<Attribute Name="Elem.Value"										Type="StringHash" />
+	<Attribute Name="Elem.Value"										Type="StringId" />
     
     <Attribute Name="Entry.text_name"                                   Type="String" />
-    <Attribute Name="Entry.name"                                        Type="StringHash" />
+    <Attribute Name="Entry.name"                                        Type="StringId" />
     
     <!-- This pesky little punk tricked me! -->
     <Attribute Name="fPriority"                                         Type="Byte" />
 
-    <Attribute Name="Light.LightName"                                   Type="StringHash" />
+    <Attribute Name="Light.LightName"                                   Type="StringId" />
     <Attribute Name="IntegerVariable.iVal"                              Type="Int32" />
     <Attribute Name="StringVariable.Val"                                Type="String" />
     <Attribute Name="Vehicle.LightName"                                 Type="String" />
-  
+
     <!-- ??? -->
-    <Attribute Name="AnimalMoveStateEntry.hidName" Type="BinHex" />
-    <Attribute Name="MoveStateEntry.hidName" Type="BinHex" />
-    <Attribute Name="Element.hidName" Type="BinHex" />
+    <Attribute Name="AnimalMoveStateEntry.hidName"                      Type="BinHex" />
+    <Attribute Name="MoveStateEntry.hidName"                            Type="BinHex" />
+    <Attribute Name="Element.hidName"                                   Type="BinHex" />
 	
 	<Attribute Name="boneMovementBoneName"								Type="Int32" />
 	<Attribute Name="child"												Type="Byte" />
-	<Attribute Name="compobjstatdataStaticDataType"						Type="StringHash" />
+	<Attribute Name="compobjstatdataStaticDataType"						Type="StringId" />
 
 	<Attribute Name="distanceInterval"									Type="Float" />
 	<Attribute Name="driverActionMap"									Type="String" />
 	<Attribute Name="enableSpecular"									Type="Byte" />
 	<Attribute Name="entSpawnMissionTrigger"							Type="Byte" />
+
+    <Attribute Name="archAnchorArchetype"                               Type="StringId" />
+    
+    <!-- Particle system -->
+    <Attribute Name="psFx"                                              Type="PathId" />
+    <Attribute Name="psEmitter"                                         Type="PathId" />
+    <Attribute Name="psPartSys"                                         Type="PathId" />
+    <Attribute Name="psParticle"                                        Type="PathId" />
+    <Attribute Name="psParticlesEmitter"                                Type="PathId" />
+    <Attribute Name="psParticleEmitter"                                 Type="PathId" />
+    <Attribute Name="psParticleSystem"                                  Type="PathId" />
+    <Attribute Name="psParticlesSystem"                                 Type="PathId" />
+    <Attribute Name="psParticlesSystemId"                               Type="PathId" />
+    <Attribute Name="psParticlesSystemIdNoHood"                         Type="PathId" />
+    <Attribute Name="psParticlePathId"                                  Type="PathId" />
+
+    <Attribute Name="FxName"                                            Type="PathId" />
+
+    <AttributeGroup>
+	    <Attribute Name="Voices.PillStart"                              Type="PathId" />
+	    <Attribute Name="Voices.GatlingGun"                             Type="PathId" />
+	    <Attribute Name="Voices.AntiTankGun"                            Type="PathId" />
+	    <Attribute Name="Voices.LightDamages"                           Type="PathId" />
+	    <Attribute Name="Voices.MediumDamages"                          Type="PathId" />
+	    <Attribute Name="Voices.HeavyDamages"                           Type="PathId" />
+	    <Attribute Name="Voices.Dead"                                   Type="PathId" />
+	    <Attribute Name="Voices.EnergyPickUp"                           Type="PathId" />
+    </AttributeGroup>
+
+    <AttributeGroup Type="PathId">
+        <Attribute Name="fileAnimatedCamera" />
+        <Attribute Name="fileAnimationPath" />
+        <Attribute Name="fileBulletTraceTexture" />
+        <Attribute Name="fileBulletTraceBallTexture" />
+        <Attribute Name="fileModel" />
+        <Attribute Name="fileName" />
+        <Attribute Name="fileProjectedTexture" />
+        <Attribute Name="fileTexture" />
+        <Attribute Name="fileSkeleton" />
+        <Attribute Name="fileLineTexture" />
+        <Attribute Name="fileProfilerThumbnailOverride" />
+        <Attribute Name="fileRagdollResource" />
+        <Attribute Name="filePhysHighresResource" />
+        <Attribute Name="filePawnStateMachine" />
+        <Attribute Name="fileAreaOfEffectTexture" />
+        <Attribute Name="fileMapAlphaMaskTexture" />
+        <Attribute Name="filePathTexture" />
+        <Attribute Name="fileMinimapPathTexture" />
+        <Attribute Name="fileAdditionalPathTexture" />
+        <Attribute Name="fileFlagPathTexture" />
+        <Attribute Name="fileIconFile" />
+        <Attribute Name="fileHubAreaTexture" />
+        <Attribute Name="fileHub3DBoundaryTexture" />
+        <Attribute Name="fileMissionAreaTexture" />
+        <Attribute Name="fileUpwardTexture" />
+        <Attribute Name="fileDownwardTexture" />
+        <Attribute Name="fileGroundMaterialName" />
+        <Attribute Name="fileUndergroundMaterialName" />
+
+        <Attribute Name="hidResourceId" />
+    </AttributeGroup>
     
     <AttributeGroup Type="String">
         <Attribute Name="text_aiagentzoneTypeClassID" />
@@ -122,19 +250,14 @@
         <Attribute Name="text_archWreckArchetype" />
         <Attribute Name="text_compobjstatdataStaticDataType" />
         
-        <Attribute Name="text_fileAnimatedCamera" />
-        <Attribute Name="text_fileAnimationPath" />
-        <Attribute Name="text_fileBulletTraceTexture" />
-        <Attribute Name="text_fileBulletTraceBallTexture" />
-        <Attribute Name="text_fileModel" />
-        <Attribute Name="text_fileName" />
-        <Attribute Name="text_fileProjectedTexture" />
-        <Attribute Name="text_fileTexture" />
-        <Attribute Name="text_fileSkeleton" />
-        <Attribute Name="text_fileLineTexture" />
-        <Attribute Name="text_fileProfilerThumbnailOverride" />
-        <Attribute Name="text_fileRagdollResource" />
-        <Attribute Name="text_filePhysHighresResource" />
+        <Attribute Name="text_OnReceivedBarkId" />
+        <Attribute Name="text_OnReceivedAltVendorBarkId" />
+        <Attribute Name="text_OnPurchasedBarkId" />
+        <Attribute Name="text_OnDeliveredBarkId" />
+        <Attribute Name="text_OnDeliveredAltVendorBarkId" />
+        <Attribute Name="text_OnSwitchAltVendorIntroBarkId" />
+
+        <Attribute Name="text_sIconName" />
         
         <Attribute Name="text_mapicondescMapIconDBEntry" />
         
@@ -335,8 +458,8 @@
 	<Attribute Name="iVariedBulletsCountIndependenceDay"				Type="BinHex" />
 	<Attribute Name="iVariedBulletsCount"								Type="BinHex" />
     
-    <Attribute Name="SeatBone"                                          Type="StringHash" />
-    <Attribute Name="SeatBoneAnchor"                                    Type="StringHash" />
+    <Attribute Name="SeatBone"                                          Type="StringId" />
+    <Attribute Name="SeatBoneAnchor"                                    Type="StringId" />
     
     <Attribute Name="MultistateThreshold" 			                    Type="Float"/>
 	
@@ -372,11 +495,13 @@
         <Attribute Name="vectorTexSize" />
         <Attribute Name="vec2BulletTraceDimension" />
         <Attribute Name="vector2RegenSpeedMultiplierRange" />
+        <Attribute Name="vec2MapHidingZone" />
+        <Attribute Name="vec2CompassDirection" />
     </AttributeGroup>
 	<AttributeGroup Type="Vector3">
-        <Attribute Hash="155FD603" Type="Vector3" />
-        <Attribute Hash="196D5A2C" Type="Vector3" />
-        <Attribute Hash="885B44E4" Type="Vector3" />
+        <Attribute Hash="155FD603" />
+        <Attribute Hash="196D5A2C" />
+        <Attribute Hash="885B44E4" />
 
 		<Attribute Name="BBoxIncreaseMin" />
 		<Attribute Name="BBoxIncreaseMax" />
@@ -394,7 +519,7 @@
 		<Attribute Name="clrColor" />
 		<Attribute Name="clrHighLightColor" />
         
-		<Attribute Name="colorColor" />
+		<!--<Attribute Name="colorColor" />-->
 		<Attribute Name="colorLightColorWarning" />
 		<Attribute Name="colorProfilingLightColor" />
 		<Attribute Name="colorProjectilePulseColor" />
@@ -405,6 +530,7 @@
 		<Attribute Name="colorLightColor" />
 		<Attribute Name="colorLightColorConnected" />
 		<Attribute Name="colorLightColorDisconnected" />
+        <Attribute Name="colorMapColor" />
         
         <Attribute Name="v" />
 		<Attribute Name="vColor" />
@@ -421,6 +547,9 @@
 		<Attribute Name="vecFinalColor" />
 		<Attribute Name="vecInitialColor" />
 		<Attribute Name="vecIndicatorBoatAndSpeedMeterColor" />
+
+        <Attribute Name="vecStandCapsulePointA" />
+        <Attribute Name="vecStandCapsulePointB" />
 		
 		<Attribute Name="vectorBBoxMin" />
 		<Attribute Name="vectorBBoxMax" />
@@ -543,11 +672,14 @@
         <Attribute Name="vectorIndependanceDayFXPos" />
         <Attribute Name="vectorRightSideWeaponExplosionOffset" />
         <Attribute Name="vectorLeftSideWeaponExplosionOffset" />
+        <Attribute Name="vectorExtraPositionOffset" />
 	</AttributeGroup>
 	<AttributeGroup Type="Vector4">
+        <Attribute Name="colorColor" />
         <Attribute Name="colorFinal" />
         <Attribute Name="colorInit" />
         <Attribute Name="colorIntense" />
+        <Attribute Name="colorLineColor" />
         
 		<Attribute Name="vector4PostFxMask2" />
 		
@@ -557,19 +689,19 @@
 		<Attribute Name="waveMaxValues" />
 	</AttributeGroup>
 	
-	<Attribute Name="nCollisionCountToRoll"								Type="Byte" />
-	<Attribute Name="nMaxAiEntity"										Type="Byte" />
-	<Attribute Name="nMaxAnchors"										Type="Byte" />
-	<Attribute Name="nMaxPeople"										Type="Byte" />
-	<Attribute Name="nMaxSparksInSingleBurst"							Type="Byte" />
-	<Attribute Name="nMaxSplattersOnScreen"								Type="Byte" />
-	<Attribute Name="nMinAiEntity"										Type="Byte" />
+	<Attribute Name="nCollisionCountToRoll"								Type="Int32" />
+	<Attribute Name="nMaxAiEntity"										Type="Int32" />
+	<Attribute Name="nMaxAnchors"										Type="Int32" />
+	<Attribute Name="nMaxPeople"										Type="Int32" />
+	<Attribute Name="nMaxSparksInSingleBurst"							Type="Int32" />
+	<Attribute Name="nMaxSplattersOnScreen"								Type="Int32" />
+	<Attribute Name="nMinAiEntity"										Type="Int32" />
 	<Attribute Name="nNodesLimit"										Type="Float" />
-	<Attribute Name="nQuantity"											Type="Byte" />
+	<Attribute Name="nQuantity"											Type="Int32" />
 	
     <Attribute Name="name"												Type="Int32" />
 	
-    <Attribute Name="olgLightGroup"										Type="Int16" />
+    <Attribute Name="olgLightGroup"										Type="Int32" />
 	
     <Attribute Name="passengerActionMap"								Type="String" />
 	
@@ -578,7 +710,7 @@
     <Attribute Name="remoteDriverActionMap"								Type="String" />
 	<Attribute Name="remoteDriverHackingAction"							Type="String" />
     
-    <AttributeGroup Type="StringHash">
+    <AttributeGroup Type="StringId">
         <Attribute Name="sAnchorName" />
         <Attribute Name="sAnchorPartName" />
         <Attribute Name="sBehavior" />
@@ -688,114 +820,141 @@
         <Attribute Name="text_sSurfaceProximityRumbleId" />
         <Attribute Name="text_sTransitionCinemaPostFx" />
     </AttributeGroup>
-	
-	<Attribute Name="selActivityType"									Type="Int32" />
-	<Attribute Name="selAgentType"										Type="Int32" />
-	<Attribute Name="selAnchorH"										Type="Int32" />
-	<Attribute Name="selAnchorV"										Type="Int32" />
-	<Attribute Name="selAnimalSpecies"									Type="Int32" />
-	<Attribute Name="selAttachedBone"									Type="Int32" />
-	<Attribute Name="selBlockedMovementDirection"						Type="Int32" />
-	<Attribute Name="selBodyStance"										Type="Int32" />
-	<Attribute Name="selBone"											Type="Int32" />
-	<Attribute Name="selBroadcastChannel"								Type="Int32" />
-	<Attribute Name="selCategory"										Type="Int32" />
-	<Attribute Name="selCollisionLayer"									Type="Int32" />
-	<Attribute Name="selColorMode"										Type="Int32" />
-	<Attribute Name="selConstraintType"									Type="Int32" />
-	<Attribute Name="selCraneType"										Type="Int32" />
-	<Attribute Name="selDamageType"										Type="Int32" />
-	<Attribute Name="selEmitterType"									Type="Int32" />
-	<Attribute Name="selEmotes"											Type="Int32" />
-	<Attribute Name="selEventType"										Type="Int32" />
-	<Attribute Name="selFirearm"										Type="Int32" />
-	<Attribute Name="selFlyingDrone"									Type="Int32" />
-	<Attribute Name="selHackType"										Type="Int32" />
-	<Attribute Name="selHasWind"										Type="Int32" />
-	<Attribute Name="selHighlightColor"									Type="Int32" />
-	<Attribute Name="selHornStimType"									Type="Int32" />
-	<Attribute Name="selInitWeaponType"									Type="Int32" />
-	<Attribute Name="selInitialGateState"								Type="Int32" />
-	<Attribute Name="selInteractionActionMap"							Type="Int32" />
-	<Attribute Name="selInteractionIconType"							Type="Int32" />
-	<Attribute Name="selInteractionReason"								Type="Int32" />
-	<Attribute Name="selInteractionType"								Type="Int32" />
-	<Attribute Name="selInventorySlot0"									Type="Int32" />
-	<Attribute Name="selInventorySlot1"									Type="Int32" />
-	<Attribute Name="selInventorySlot10"								Type="Int32" />
-	<Attribute Name="selInventorySlot11"								Type="Int32" />
-	<Attribute Name="selInventorySlot12"								Type="Int32" />
-	<Attribute Name="selInventorySlot13"								Type="Int32" />
-	<Attribute Name="selInventorySlot14"								Type="Int32" />
-	<Attribute Name="selInventorySlot15"								Type="Int32" />
-	<Attribute Name="selInventorySlot16"								Type="Int32" />
-	<Attribute Name="selInventorySlot17"								Type="Int32" />
-	<Attribute Name="selInventorySlot18"								Type="Int32" />
-	<Attribute Name="selInventorySlot19"								Type="Int32" />
-	<Attribute Name="selInventorySlot2"									Type="Int32" />
-	<Attribute Name="selInventorySlot20"								Type="Int32" />
-	<Attribute Name="selInventorySlot3"									Type="Int32" />
-	<Attribute Name="selInventorySlot4"									Type="Int32" />
-	<Attribute Name="selInventorySlot5"									Type="Int32" />
-	<Attribute Name="selInventorySlot6"									Type="Int32" />
-	<Attribute Name="selInventorySlot7"									Type="Int32" />
-	<Attribute Name="selInventorySlot8"									Type="Int32" />
-	<Attribute Name="selInventorySlot9"									Type="Int32" />
-	<Attribute Name="selLiftToolObjectType"								Type="Int32" />
-	<Attribute Name="selLocomotionType"									Type="Int32" />
-	<Attribute Name="selLoopType"										Type="Int32" />
-	<Attribute Name="selLuminousUnit"									Type="Int32" />
-	<Attribute Name="selMaxSpeedType"									Type="Int32" />
-	<Attribute Name="selNethackColor"									Type="Int32" />
-	<Attribute Name="selNitroPerkOverride"								Type="Int32" />
-	<Attribute Name="selNoMatchMakingZonePriority"						Type="Int32" />
-	<Attribute Name="selObjectInWheel"									Type="Int32" />
-	<Attribute Name="selObjectSizePerceptionWhenBroken"					Type="Int32" />
-	<Attribute Name="selObjectType"										Type="Int32" />
-	<Attribute Name="selOffsetBone"										Type="Int32" />
-	<Attribute Name="selOnLeafBeingDetached"							Type="Int32" />
-	<Attribute Name="selPartBoneIndex"									Type="Int32" />
-	<Attribute Name="selPatchType"										Type="Int32" />
-	<Attribute Name="selPathfindType"									Type="Int32" />
-	<Attribute Name="selPermanentStimType"								Type="Int32" />
-	<Attribute Name="selPlayerRelation"									Type="Int32" />
-	<Attribute Name="selPriority"										Type="Int32" />
-	<Attribute Name="selProfileColorTypeOverride"						Type="Int32" />
-	<Attribute Name="selProjectileType"									Type="Int32" />
-	<Attribute Name="selReactionType"									Type="Int32" />
-	<Attribute Name="selReinforcementAffiliation"						Type="Int32" />
-	<Attribute Name="selRemoteObjectType"								Type="Int32" />
-	<Attribute Name="selRewardSpecificBehaviour"						Type="Int32" />
-	<Attribute Name="selRopePhysicsModelType"							Type="Int32" />
-	<Attribute Name="selSeatType"										Type="Int32" />
-	<Attribute Name="selShape"											Type="Int32" />
-	<Attribute Name="selShapeType"										Type="Int32" />
-	<Attribute Name="selSlot0"											Type="Int32" />
-	<Attribute Name="selSlot1"											Type="Int32" />
-	<Attribute Name="selSlot2"											Type="Int32" />
-	<Attribute Name="selSlot3"											Type="Int32" />
-	<Attribute Name="selSlot4"											Type="Int32" />
-	<Attribute Name="selSlot5"											Type="Int32" />
-	<Attribute Name="selSlot6"											Type="Int32" />
-	<Attribute Name="selSlot7"											Type="Int32" />
-	<Attribute Name="selSpecificInteractionType"						Type="Int32" />
-	<Attribute Name="selTakedownType"									Type="Int32" />
-	<Attribute Name="selTaser"											Type="Int32" />
-	<Attribute Name="selTexturePlane"									Type="Int32" />
-	<Attribute Name="selTile"											Type="Int32" />
-	<Attribute Name="selToyCar"											Type="Int32" />
-	<Attribute Name="selTranFromContext"								Type="Int32" />
-	<Attribute Name="selTranToContext"									Type="Int32" />
-	<Attribute Name="selTriggerType"									Type="Int32" />
-	<Attribute Name="selType"											Type="Int32" />
-	<Attribute Name="selTypeFilter"										Type="Int32" />
-	<Attribute Name="selUsageBehaviorType"								Type="Int32" />
-	<Attribute Name="selUserEntityType"									Type="Int32" />
-	<Attribute Name="selUserType"										Type="Int32" />
-	<Attribute Name="selVehicleType"									Type="Int32" />
-	<Attribute Name="selhidLampPositionFlag"							Type="Int32" />
-    
-	<Attribute Name="sohcControllerType"								Type="StringHash" />
+
+    <AttributeGroup Type="Int32">
+        <Attribute Name="selActivityType" />
+        <Attribute Name="selAgentType" />
+        <Attribute Name="selAnchorH" />
+        <Attribute Name="selAnchorV" />
+        <Attribute Name="selAnimalSpecies" />
+        <Attribute Name="selAttachedBone" />
+        <Attribute Name="selBlockedMovementDirection" />
+        <Attribute Name="selBodyStance" />
+        <Attribute Name="selBone" />
+        <Attribute Name="selBroadcastChannel" />
+        <Attribute Name="selCategory" />
+        <Attribute Name="selCollisionLayer" />
+        <Attribute Name="selColorMode" />
+        <Attribute Name="selConstraintType" />
+        <Attribute Name="selCraneType" />
+        <Attribute Name="selDamageType" />
+        <Attribute Name="selEmitterType" />
+        <Attribute Name="selEmotes" />
+        <Attribute Name="selEventType" />
+        <Attribute Name="selFirearm" />
+        <Attribute Name="selFlyingDrone" />
+        <Attribute Name="selHackType" />
+        <Attribute Name="selHasWind" />
+        <Attribute Name="selHighlightColor" />
+        <Attribute Name="selHornStimType" />
+        <Attribute Name="selInitWeaponType" />
+        <Attribute Name="selInitialGateState" />
+        <Attribute Name="selInteractionActionMap" />
+        <Attribute Name="selInteractionIconType" />
+        <Attribute Name="selInteractionReason" />
+        <Attribute Name="selInteractionType" />
+        <Attribute Name="selInventorySlot0" />
+        <Attribute Name="selInventorySlot1" />
+        <Attribute Name="selInventorySlot10" />
+        <Attribute Name="selInventorySlot11" />
+        <Attribute Name="selInventorySlot12" />
+        <Attribute Name="selInventorySlot13" />
+        <Attribute Name="selInventorySlot14" />
+        <Attribute Name="selInventorySlot15" />
+        <Attribute Name="selInventorySlot16" />
+        <Attribute Name="selInventorySlot17" />
+        <Attribute Name="selInventorySlot18" />
+        <Attribute Name="selInventorySlot19" />
+        <Attribute Name="selInventorySlot2" />
+        <Attribute Name="selInventorySlot20" />
+        <Attribute Name="selInventorySlot3" />
+        <Attribute Name="selInventorySlot4" />
+        <Attribute Name="selInventorySlot5" />
+        <Attribute Name="selInventorySlot6" />
+        <Attribute Name="selInventorySlot7" />
+        <Attribute Name="selInventorySlot8" />
+        <Attribute Name="selInventorySlot9" />
+        <Attribute Name="selLiftToolObjectType" />
+        <Attribute Name="selLocomotionType" />
+        <Attribute Name="selLoopType" />
+        <Attribute Name="selLuminousUnit" />
+        <Attribute Name="selMaxSpeedType" />
+        <Attribute Name="selNethackColor" />
+        <Attribute Name="selNitroPerkOverride" />
+        <Attribute Name="selNoMatchMakingZonePriority" />
+        <Attribute Name="selObjectInWheel" />
+        <Attribute Name="selObjectSizePerceptionWhenBroken" />
+        <Attribute Name="selObjectType" />
+        <Attribute Name="selOffsetBone" />
+        <Attribute Name="selOnLeafBeingDetached" />
+        <Attribute Name="selPartBoneIndex" />
+        <Attribute Name="selPatchType" />
+        <Attribute Name="selPathfindType" />
+        <Attribute Name="selPermanentStimType" />
+        <Attribute Name="selPlayerRelation" />
+        <Attribute Name="selPriority" />
+        <Attribute Name="selProfileColorTypeOverride" />
+        <Attribute Name="selProjectileType" />
+        <Attribute Name="selReactionType" />
+        <Attribute Name="selReinforcementAffiliation" />
+        <Attribute Name="selRemoteObjectType" />
+        <Attribute Name="selRewardSpecificBehaviour" />
+        <Attribute Name="selRopePhysicsModelType" />
+        <Attribute Name="selSeatType" />
+        <Attribute Name="selShape" />
+        <Attribute Name="selShapeType" />
+        <Attribute Name="selSlot0" />
+        <Attribute Name="selSlot1" />
+        <Attribute Name="selSlot2" />
+        <Attribute Name="selSlot3" />
+        <Attribute Name="selSlot4" />
+        <Attribute Name="selSlot5" />
+        <Attribute Name="selSlot6" />
+        <Attribute Name="selSlot7" />
+        <Attribute Name="selSpecificInteractionType" />
+        <Attribute Name="selTakedownType" />
+        <Attribute Name="selTaser" />
+        <Attribute Name="selTexturePlane" />
+        <Attribute Name="selTile" />
+        <Attribute Name="selToyCar" />
+        <Attribute Name="selTranFromContext" />
+        <Attribute Name="selTranToContext" />
+        <Attribute Name="selTriggerType" />
+        <Attribute Name="selType" />
+        <Attribute Name="selTypeFilter" />
+        <Attribute Name="selUsageBehaviorType" />
+        <Attribute Name="selUserEntityType" />
+        <Attribute Name="selUserType" />
+        <Attribute Name="selVehicleType" />
+        <Attribute Name="selhidLampPositionFlag" />
+    </AttributeGroup>
+
+    <AttributeGroup>
+        <Attribute Name="_F602B12E._5EF78913" Type="Vector4" />
+        <Attribute Name="_F602B12E._361AE180" Type="Float" />
+        <Attribute Name="_F602B12E._0A17DED9" Type="Float" />
+
+        <Attribute Name="_CC174D11.Coeff" Type="Float" />
+        <Attribute Name="_CC174D11.Time" Type="Float" />
+        <Attribute Name="_CC174D11.T" Type="Float" />
+        <Attribute Name="_CC174D11.C" Type="Float" />
+        <Attribute Name="_CC174D11.B" Type="Float" />
+        <Attribute Name="_CC174D11.Value" Type="Float" />
+
+        <Attribute Name="Begin.Day" Type="Byte" />
+        <Attribute Name="Begin.Month" Type="Byte" />
+        <Attribute Name="Begin.Year" Type="Int16" />
+        <Attribute Name="Begin.Hour" Type="Byte" />
+        <Attribute Name="Begin.Minute" Type="Byte" />
+
+        <Attribute Name="Entity.Length" Type="Float" />
+        <Attribute Name="Entity.Width" Type="Float" />
+        <Attribute Name="Entity.Height" Type="Float" />
+        <Attribute Name="Entity.Weight" Type="Float" />
+        <Attribute Name="Entity._474FAF98" Type="Float" />
+    </AttributeGroup>
+
+    <Attribute Name="sohcControllerType"								Type="StringId" />
 	<Attribute Name="spawnNormalDistance"								Type="Float" />
 	<Attribute Name="static"											Type="Byte" />
     
@@ -803,85 +962,86 @@
     
 	<Attribute Name="timeInterval"										Type="Float" />
     
-	<Attribute Name="tmplDialogActor"									Type="StringHash" />
-	<Attribute Name="tmplDialogActorHighEnd"							Type="StringHash" />
-	<Attribute Name="tmplDialogActorNormalEnd"							Type="StringHash" />
+	<Attribute Name="tmplDialogActor"									Type="StringId" />
+	<Attribute Name="tmplDialogActorHighEnd"							Type="StringId" />
+	<Attribute Name="tmplDialogActorNormalEnd"							Type="StringId" />
 	
 	<Attribute Name="useDistanceInterval"								Type="Byte" />
 	<Attribute Name="vehicleLoaded"										Type="Byte" />
 	<Attribute Name="wlucatBindToCategoryV3"							Type="Int16" />
 	<Attribute Name="wlucatLoadingUnitCategoryV3"						Type="Int16" />
 
-	<Attribute Name="TargetSwitchBark" Type="BinHex" />
-	
-	<Attribute Name="PlayerDetectedBark" Type="Int32" />
-	<Attribute Name="selMassHackNPC" Type="Byte" />
+	<Attribute Name="PlayerDetectedBark"                                Type="Int32" />
+	<Attribute Name="selMassHackNPC"                                    Type="Byte" />
 	
 	<!-- Known attribute names with unknown types -->
-	<Attribute Name="selButtonType"	Type="BinHex" />
-	<Attribute Name="selReflectorTimeCurve" Type="BinHex" />
-	<Attribute Name="selHighlightType" Type="BinHex" />
-	<Attribute Name="hidResourceIndex" Type="BinHex" />
-	<Attribute Name="SoundId" Type="BinHex" />
-	<Attribute Name="selBlendType" Type="BinHex" />
+    <Attribute Name="TargetSwitchBark"                                  Type="BinHex" />
+    
+	<Attribute Name="selButtonType"	                                    Type="BinHex" />
+	<Attribute Name="selReflectorTimeCurve"                             Type="BinHex" />
+	<Attribute Name="selHighlightType"                                  Type="BinHex" />
+	<Attribute Name="hidResourceIndex"                                  Type="BinHex" />
+	<Attribute Name="SoundId"                                           Type="BinHex" />
+	<Attribute Name="selBlendType"                                      Type="BinHex" />
 	
-	<Attribute Name="ResourceIndex" Type="BinHex" />
-	<Attribute Name="LayerCount" Type="BinHex" />
-	<Attribute Name="selLocomotionFilter" Type="BinHex" />
-	<Attribute Name="nNumLanesLeft" Type="BinHex" />
-	<Attribute Name="nNumLanesRight" Type="BinHex" />
-	<Attribute Name="selMovementType" Type="BinHex" />
-	<Attribute Name="hidSingleObject" Type="BinHex" />
-	<Attribute Name="hidValidationFailed" Type="BinHex" />
-	<Attribute Name="iShareChannel" Type="BinHex" />
-	<Attribute Name="uiStepIndex" Type="BinHex" />
-	<Attribute Name="iRandomSeedBias" Type="BinHex" />
-	<Attribute Name="nStartTextureStateIndex" Type="BinHex" />
-	<Attribute Name="animalCanJumpAgainst" Type="BinHex" />
-	<Attribute Name="iVal" Type="BinHex" />
-	<Attribute Name="selInitialRotation" Type="BinHex" />
-	<Attribute Name="affectedByTimeOfDay" Type="BinHex" />
-	<Attribute Name="uiPawnInteractionMonitorUpdateDelay" Type="BinHex" />
-	<Attribute Name="Usable" Type="BinHex" />
-	<Attribute Name="selAffiliation" Type="BinHex" />
-	<Attribute Name="selNpcSpeedType" Type="BinHex" />
-	<Attribute Name="selPointType" Type="BinHex" />
-	<Attribute Name="iPriority" Type="BinHex" />
-	<Attribute Name="selShowcaseValue" Type="BinHex" />
-	<Attribute Name="selReinforcementCallerMode" Type="BinHex" />
-	<Attribute Name="selPatrolType" Type="BinHex" />
-	<Attribute Name="selFleeDirection" Type="BinHex" />
-	<Attribute Name="selFOVType" Type="BinHex" />
+    <Attribute Name="eventMask"                                         Type="BinHex" />
+	<Attribute Name="ResourceIndex"                                     Type="BinHex" />
+	<Attribute Name="LayerCount"                                        Type="BinHex" />
+	<Attribute Name="selLocomotionFilter"                               Type="BinHex" />
+	<Attribute Name="nNumLanesLeft"                                     Type="BinHex" />
+	<Attribute Name="nNumLanesRight"                                    Type="BinHex" />
+	<Attribute Name="selMovementType"                                   Type="BinHex" />
+	<Attribute Name="hidSingleObject"                                   Type="BinHex" />
+	<Attribute Name="hidValidationFailed"                               Type="BinHex" />
+	<Attribute Name="iShareChannel"                                     Type="BinHex" />
+	<Attribute Name="uiStepIndex"                                       Type="BinHex" />
+	<Attribute Name="iRandomSeedBias"                                   Type="BinHex" />
+	<Attribute Name="nStartTextureStateIndex"                           Type="BinHex" />
+	<Attribute Name="animalCanJumpAgainst"                              Type="BinHex" />
+	<Attribute Name="iVal"                                              Type="BinHex" />
+	<Attribute Name="selInitialRotation"                                Type="BinHex" />
+	<Attribute Name="affectedByTimeOfDay"                               Type="BinHex" />
+	<Attribute Name="uiPawnInteractionMonitorUpdateDelay"               Type="BinHex" />
+	<Attribute Name="Usable"                                            Type="BinHex" />
+	<Attribute Name="selAffiliation"                                    Type="BinHex" />
+	<Attribute Name="selNpcSpeedType"                                   Type="BinHex" />
+	<Attribute Name="selPointType"                                      Type="BinHex" />
+	<Attribute Name="iPriority"                                         Type="BinHex" />
+	<Attribute Name="selShowcaseValue"                                  Type="BinHex" />
+	<Attribute Name="selReinforcementCallerMode"                        Type="BinHex" />
+	<Attribute Name="selPatrolType"                                     Type="BinHex" />
+	<Attribute Name="selFleeDirection"                                  Type="BinHex" />
+	<Attribute Name="selFOVType"                                        Type="BinHex" />
 	
-	<Attribute Name="selCollectibleType" Type="BinHex" />
-	<Attribute Name="selDirection" Type="BinHex" />
-	<Attribute Name="StartOnLoad" Type="BinHex" />
-	<Attribute Name="selShapeTessellationType" Type="BinHex" />
-	<Attribute Name="iStartHour" Type="BinHex" />
-	<Attribute Name="iStartMinute" Type="BinHex" />
-	<Attribute Name="iEndHour" Type="BinHex" />
-	<Attribute Name="iEndMinute" Type="BinHex" />
-	<Attribute Name="SharedFaces0" Type="BinHex" />
-    <Attribute Name="SharedFaces1" Type="Byte" />
-	<Attribute Name="Vertices0" Type="BinHex" />
-	<Attribute Name="Vertices1" Type="BinHex" />
-	<Attribute Name="selRespawnObjectType" Type="BinHex" />
-	<Attribute Name="selBlendMode" Type="BinHex" />
-	<Attribute Name="selArenaAffiliation" Type="BinHex" />
-	<Attribute Name="iFCount" Type="BinHex" />
-	<Attribute Name="uiMaxRobotCount" Type="BinHex" />
-	<Attribute Name="uiMaxAnimalCount" Type="BinHex" />
-	<Attribute Name="nMinReinforcementCallerCount" Type="BinHex" />
-	<Attribute Name="nMaxReinforcementCallerCount" Type="BinHex" />
-	<Attribute Name="uiNumShapeSides" Type="BinHex" />
-	<Attribute Name="DamagePerJet" Type="BinHex" />
-	<Attribute Name="nMaterialIdx" Type="BinHex" />
-	<Attribute Name="uiTextureSelection" Type="BinHex" />
-	<Attribute Name="selNavmeshType" Type="BinHex" />
-	<Attribute Name="selTagType" Type="BinHex" />
-	<Attribute Name="iMaxHeathLevel" Type="BinHex" />
-	<Attribute Name="IsRiver" Type="BinHex" />
-	<Attribute Name="SortingLayer" Type="BinHex" />
+	<Attribute Name="selCollectibleType"                                Type="BinHex" />
+	<Attribute Name="selDirection"                                      Type="BinHex" />
+	<Attribute Name="StartOnLoad"                                       Type="BinHex" />
+	<Attribute Name="selShapeTessellationType"                          Type="BinHex" />
+	<Attribute Name="iStartHour"                                        Type="BinHex" />
+	<Attribute Name="iStartMinute"                                      Type="BinHex" />
+	<Attribute Name="iEndHour"                                          Type="BinHex" />
+	<Attribute Name="iEndMinute"                                        Type="BinHex" />
+	<Attribute Name="SharedFaces0"                                      Type="BinHex" />
+    <Attribute Name="SharedFaces1"                                      Type="BinHex" />
+	<Attribute Name="Vertices0"                                         Type="BinHex" />
+	<Attribute Name="Vertices1"                                         Type="BinHex" />
+	<Attribute Name="selRespawnObjectType"                              Type="BinHex" />
+	<Attribute Name="selBlendMode"                                      Type="BinHex" />
+	<Attribute Name="selArenaAffiliation"                               Type="BinHex" />
+	<Attribute Name="iFCount"                                           Type="BinHex" />
+	<Attribute Name="uiMaxRobotCount"                                   Type="BinHex" />
+	<Attribute Name="uiMaxAnimalCount"                                  Type="BinHex" />
+	<Attribute Name="nMinReinforcementCallerCount"                      Type="BinHex" />
+	<Attribute Name="nMaxReinforcementCallerCount"                      Type="BinHex" />
+	<Attribute Name="uiNumShapeSides"                                   Type="BinHex" />
+	<Attribute Name="DamagePerJet"                                      Type="BinHex" />
+	<Attribute Name="nMaterialIdx"                                      Type="BinHex" />
+	<Attribute Name="uiTextureSelection"                                Type="BinHex" />
+	<Attribute Name="selNavmeshType"                                    Type="BinHex" />
+	<Attribute Name="selTagType"                                        Type="BinHex" />
+	<Attribute Name="iMaxHeathLevel"                                    Type="BinHex" />
+	<Attribute Name="IsRiver"                                           Type="BinHex" />
+	<Attribute Name="SortingLayer"                                      Type="BinHex" />
 	
     <Attribute Name="LocalizationId" 				            /><!--Type="Int16" />-->
 	<Attribute Name="Amount" 						            /><!--Type="Int32" />-->

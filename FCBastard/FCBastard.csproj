@@ -14,13 +14,27 @@
     <RootDir>$(ProjectDir)..\</RootDir>
     <PropsFile>$(RootDir)DisruptEd.Common.props</PropsFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
   <Import Project="$(PropsFile)" Condition="Exists('$(PropsFile)')" />
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>packages\SharpZipLib.1.1.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -28,25 +42,84 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\BinaryStream.cs" />
-    <Compile Include="Source\Cache.cs" />
-    <Compile Include="Source\EntityLibrary.cs" />
-    <Compile Include="Source\Hash.cs" />
-    <Compile Include="Source\Memory.cs" />
-    <Compile Include="Source\Node.cs" />
-    <Compile Include="Source\NodeAttribute.cs" />
-    <Compile Include="Source\NodeClass.cs" />
-    <Compile Include="Source\NodeContainer.cs" />
+    <Compile Include="Source\LZ4\ILZ4Compressor.cs" />
+    <Compile Include="Source\LZ4\LZ4Compressor64.cs" />
+    <Compile Include="Source\Nomad\Serializers\CombinedMoveFile\CombinedMoveFileSerializer.cs" />
+    <Compile Include="Source\Nomad\Serializers\NomadGenericResourceSerializer.cs" />
+    <Compile Include="Source\Nomad\Serializers\Oasis\OasisSerializer.cs" />
+    <Compile Include="Source\Nomad\Types\PathId.cs" />
+    <Compile Include="Source\Nomad\Types\StringId.cs" />
+    <Compile Include="Source\Types\ArgInfo.cs" />
+    <Compile Include="Source\Cache\CachedData.cs" />
+    <Compile Include="Source\Cache\ICacheableObject.cs" />
+    <Compile Include="Source\Cache\WriteCache.cs" />
+    <Compile Include="Source\Config.cs" />
+    <Compile Include="Source\IO\BinaryStream.cs" />
+    <Compile Include="Source\Nomad\FileFactory.cs" />
+    <Compile Include="Source\Nomad\NomadFileInfo.cs" />
+    <Compile Include="Source\Nomad\Types\Attributes\AttributeTypes.cs" />
+    <Compile Include="Source\Nomad\Types\DataTypeValue.cs" />
+    <Compile Include="Source\Nomad\Types\DataType.cs" />
+    <Compile Include="Source\Nomad\FileType.cs" />
+    <Compile Include="Source\Nomad\FileTypeFlags.cs" />
+    <Compile Include="Source\Nomad\FormatType.cs" />
+    <Compile Include="Source\Nomad\Serializers\CustomMap\FCXMapData.cs" />
+    <Compile Include="Source\Nomad\Serializers\CustomMap\FCXMapInfo.cs" />
+    <Compile Include="Source\Nomad\Serializers\CustomMap\MapDataUnpacker.cs" />
+    <Compile Include="Source\Nomad\Serializers\EntityLibrary\EntityPrototypeInfo.cs" />
+    <Compile Include="Source\Nomad\Types\Descriptors\DescriptorTag.cs" />
+    <Compile Include="Source\Nomad\Types\Descriptors\DescriptorType.cs" />
+    <Compile Include="Source\Nomad\Types\Descriptors\ReferenceType.cs" />
+    <Compile Include="Source\Nomad\Types\Descriptors\DescriptorFlags.cs" />
+    <Compile Include="Source\Legacy\Interfaces\IGetAttributes.cs" />
+    <Compile Include="Source\Legacy\Interfaces\IGetChildren.cs" />
+    <Compile Include="Source\Legacy\Interfaces\IResourceFile.cs" />
+    <Compile Include="Source\IO\Serializers\IBinarySerializer.cs" />
+    <Compile Include="Source\IO\Serializers\ISerializer.cs" />
+    <Compile Include="Source\Types\Identifier.cs" />
+    <Compile Include="Source\Types\MagicNumber.cs" />
+    <Compile Include="Source\Nomad\Types\Attributes\AttributeData.cs" />
+    <Compile Include="Source\LZ4\ILZ4Decompressor.cs" />
+    <Compile Include="Source\LZ4\LZ4Decompressor64.cs" />
+    <Compile Include="Source\LZ4\LZ4Util.cs" />
+    <Compile Include="Source\Legacy\EntityLibrary.cs" />
+    <Compile Include="Source\Nomad\ResourceFile.cs" />
+    <Compile Include="Source\Nomad\ResourceFactory.cs" />
+    <Compile Include="Source\Nomad\ResourceFilter.cs" />
+    <Compile Include="Source\Nomad\ResourceType.cs" />
+    <Compile Include="Source\Nomad\Serializers\CustomMap\FCXMapSerializer.cs" />
+    <Compile Include="Source\Nomad\Serializers\EntityLibrary\EntityLibrarySerializer.cs" />
+    <Compile Include="Source\Nomad\StringHasher.cs" />
+    <Compile Include="Source\Legacy\EntityLibraryCollection.cs" />
+    <Compile Include="Source\Legacy\EntityReference.cs" />
+    <Compile Include="Source\Legacy\EntityReferenceData.cs" />
+    <Compile Include="Source\IO\Memory.cs" />
+    <Compile Include="Source\Legacy\Node.cs" />
+    <Compile Include="Source\Legacy\NodeAttribute.cs" />
+    <Compile Include="Source\Legacy\NodeClass.cs" />
+    <Compile Include="Source\Legacy\NodeContainer.cs" />
+    <Compile Include="Source\Nomad\Serializers\NomadResourceSerializer.cs" />
+    <Compile Include="Source\Nomad\Nomad.cs" />
+    <Compile Include="Source\Nomad\NomadData.cs" />
+    <Compile Include="Source\Nomad\NomadFactory.cs" />
+    <Compile Include="Source\Nomad\NomadObject.cs" />
+    <Compile Include="Source\Nomad\NomadValue.cs" />
+    <Compile Include="Source\Nomad\Serializers\NomadRmlSerializer.cs" />
+    <Compile Include="Source\Nomad\Serializers\NomadSerializer.cs" />
+    <Compile Include="Source\Nomad\Serializers\NomadXmlSerializer.cs" />
     <Compile Include="Source\Program.cs" />
-    <Compile Include="Source\Types.cs" />
     <Compile Include="Source\Utils.cs" />
-    <Compile Include="Source\ObjectLibrary.cs" />
-    <Compile Include="Source\NodeObject.cs" />
+    <Compile Include="Source\Legacy\ObjectLibrary.cs" />
+    <Compile Include="Source\Legacy\NodeObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="filters.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="strings.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -55,10 +128,13 @@
     </Content>
     <Content Include="types.default.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="types.user.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

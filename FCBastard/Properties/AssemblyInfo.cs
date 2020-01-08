@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FCBastard")]
-[assembly: AssemblyDescription("'The Bastard' FCB Editor")]
+[assembly: AssemblyTitle("The Bastard")]
+[assembly: AssemblyDescription("Tool for managing Nomad(FCB) data in games utilizing the Dunia™ engine.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Ghettobird Software")]
+[assembly: AssemblyCompany("Fireboyd78 / Firesoft Labs")]
 [assembly: AssemblyProduct("FCBastard")]
-[assembly: AssemblyCopyright("Copyright © 2017 Mark Ludwig")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Copyright © Fireboyd78 2018. All rights reserved.")]
+[assembly: AssemblyTrademark("The Dunia™ engine and Nomad library are properties of Ubisoft™.")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.9.998.*")]
+[assembly: AssemblyFileVersion("1.9.998.0")]

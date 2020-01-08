@@ -454,7 +454,9 @@
 		<Attribute Name="bShakeEnabled" />
 		<Attribute Name="bShouldDisplayHackingReminder" />
 		<Attribute Name="bShouldReplicateDurango" />
-		<Attribute Name="bShouldReplicateOrbis" />
+        <Attribute Name="bShouldReplicatePS3" />
+        <Attribute Name="bShouldReplicateX360" />
+		<Attribute Name="bShouldReplicateWiiU" />
 		<Attribute Name="bShouldReplicateWin64" />
 		<Attribute Name="bShouldUseCraneIconOffsets" />
 		<Attribute Name="bShouldUseRootPositionForIconOffset" />
@@ -578,6 +580,16 @@
 		<Attribute Name="bVolumetricFog" />
 		<Attribute Name="bWater" />
 		<Attribute Name="bWorldStart" />
+
+        <Attribute Name="bAtm" />
+        <Attribute Name="bUnderScan" />
+        <Attribute Name="bScan" />
+        <Attribute Name="bOverScan" />
+        <Attribute Name="bFieldAI" />
+        <Attribute Name="bPlayer" />
+        <Attribute Name="bOverPlayer" />
+
+        <Attribute Name="bIsNotPowerCollectedIfLocked" />
 	</AttributeGroup>
 	<AttributeGroup Type="Float">
         <Attribute Name="fAirBlastShakeDuration" />
@@ -948,6 +960,20 @@
 		<Attribute Name="fLowHealthPercent" />
 		<Attribute Name="fLuminousValue" />
 		<Attribute Name="fMainSailMaxAngle" />
+        
+        <Attribute Name="fCompassDistance" />
+        <Attribute Name="fMapPositionX" />
+        <Attribute Name="fMapPositionY" />
+        <Attribute Name="fDeformBorderX" />
+        <Attribute Name="fFadeStartDistance" />
+        <Attribute Name="fFadeStartDistance" />
+        <Attribute Name="fMapAlpha" />
+        <Attribute Name="fGpsCamHeightToHideIcons" />
+        <Attribute Name="fGpsClampScale" />
+        <Attribute Name="fGpsClampAlpha" />
+        <Attribute Name="fMetersViewedByGps" />
+        <Attribute Name="fMapAlphaFactor" />
+        
 		<Attribute Name="fMass" />
 		<Attribute Name="fMax" />
 		<Attribute Name="fMaxAlt" />
@@ -1363,6 +1389,17 @@
 		<Attribute Name="fZoneMinRadius" />
 		<Attribute Name="fZoneZOffset" />
 		<Attribute Name="fZoomFovSpeed" />
+        
+        <Attribute Name="fLineColorAlpha" />
+        <Attribute Name="fLineSize" />
+        <Attribute Name="fRuralExtendDist" />
+        <Attribute Name="fRuralUnrollRadius" />
+        <Attribute Name="fRuralOnFootDist" />
+        <Attribute Name="fTakedownRespawnDelay" />
+        <Attribute Name="fOverrideUselessUnspawnRadius" />
+        <Attribute Name="fTimeToReachPlayerZoneOnSpawn" />
+        <Attribute Name="fPlayerZoneInMeter" />
+        
         <Attribute Name="angPitch" />
         <Attribute Name="angShadowInnerAngle" />
         <Attribute Name="angShadowOuterAngle" />
